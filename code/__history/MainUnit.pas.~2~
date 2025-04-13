@@ -20,7 +20,6 @@ type
     pnCreateObject: TPanel;
     btnCreateShop: TButton;
     btnCreateWarehouse: TButton;
-    btnCreateCancel: TButton;
     procedure imgMapClick(Sender: TObject);
   private
     { Private declarations }
