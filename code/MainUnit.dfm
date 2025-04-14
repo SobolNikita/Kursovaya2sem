@@ -10,6 +10,8 @@ object frMainForm: TfrMainForm
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Position = poDesigned
+  OnCreate = FormCreate
   TextHeight = 15
   object pnNav: TPanel
     Left = 0
@@ -18,7 +20,7 @@ object frMainForm: TfrMainForm
     Height = 89
     Align = alTop
     TabOrder = 0
-    ExplicitTop = -5
+    ExplicitWidth = 1270
     object btnNavMap: TButton
       AlignWithMargins = True
       Left = 29
@@ -39,8 +41,6 @@ object frMainForm: TfrMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitTop = 4
-      ExplicitHeight = 85
     end
     object btnNavBalance: TButton
       AlignWithMargins = True
@@ -62,8 +62,6 @@ object frMainForm: TfrMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      ExplicitTop = 4
-      ExplicitHeight = 121
     end
     object btnNavOrders: TButton
       AlignWithMargins = True
@@ -85,9 +83,6 @@ object frMainForm: TfrMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 2
-      ExplicitLeft = 516
-      ExplicitTop = 4
-      ExplicitHeight = 121
     end
     object bntNavDelivery: TButton
       AlignWithMargins = True
@@ -109,8 +104,6 @@ object frMainForm: TfrMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 3
-      ExplicitTop = 4
-      ExplicitHeight = 121
     end
     object btnNavAnalytics: TButton
       AlignWithMargins = True
@@ -132,9 +125,6 @@ object frMainForm: TfrMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 4
-      ExplicitLeft = 1109
-      ExplicitTop = 4
-      ExplicitHeight = 121
     end
   end
   object pnMapWrap: TPanel
@@ -148,10 +138,8 @@ object frMainForm: TfrMainForm
     Margins.Bottom = 0
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 656
-    ExplicitTop = 264
-    ExplicitWidth = 185
-    ExplicitHeight = 41
+    ExplicitWidth = 1270
+    ExplicitHeight = 599
     object imgMap: TImage
       Left = 1
       Top = 1
@@ -16169,20 +16157,31 @@ object frMainForm: TfrMainForm
         BF74BB0E5FEAFB33CFFEE2FFD9}
       Proportional = True
       Stretch = True
-      OnClick = imgMapClick
+      OnMouseUp = imgMapMouseUp
       ExplicitLeft = 2
-      ExplicitTop = 2
+      ExplicitTop = -1
     end
-    object pnCreateObject: TPanel
+    object spMapPoint: TShape
+      AlignWithMargins = True
+      Left = 240
+      Top = 364
+      Width = 14
+      Height = 14
+      Brush.Color = clLime
+      Shape = stCircle
+      Visible = False
+    end
+    object pnCreateSelect: TPanel
       Left = 252
-      Top = 248
+      Top = 252
       Width = 145
       Height = 127
       AutoSize = True
       ParentBackground = False
       TabOrder = 0
       Visible = False
-      object btnCreateShop: TButton
+      object btnCreateSelectShop: TButton
+        Tag = 1
         AlignWithMargins = True
         Left = 6
         Top = 6
@@ -16195,9 +16194,10 @@ object frMainForm: TfrMainForm
         Align = alTop
         Caption = #1057#1086#1079#1076#1072#1090#1100' '#1084#1072#1075#1072#1079#1080#1085
         TabOrder = 0
-        ExplicitWidth = 129
+        OnClick = callPnCreateObj
       end
-      object btnCreateWarehouse: TButton
+      object btnCreateSelectWarehouse: TButton
+        Tag = 2
         AlignWithMargins = True
         Left = 6
         Top = 46
@@ -16210,11 +16210,9 @@ object frMainForm: TfrMainForm
         Align = alTop
         Caption = #1057#1086#1079#1076#1072#1090#1100' '#1089#1082#1083#1072#1076
         TabOrder = 1
-        ExplicitLeft = 9
-        ExplicitTop = 49
-        ExplicitWidth = 125
+        OnClick = callPnCreateObj
       end
-      object btnCreateCancel: TButton
+      object btnCreateSelectCancel: TButton
         AlignWithMargins = True
         Left = 6
         Top = 96
@@ -16227,7 +16225,131 @@ object frMainForm: TfrMainForm
         Align = alTop
         Caption = #1054#1090#1084#1077#1085#1072
         TabOrder = 2
-        ExplicitWidth = 120
+        OnClick = btnCreateSelectCancelClick
+      end
+    end
+    object pnCreateObj: TPanel
+      Left = 616
+      Top = 201
+      Width = 258
+      Height = 206
+      AutoSize = True
+      Ctl3D = True
+      Padding.Left = 10
+      Padding.Top = 10
+      Padding.Right = 10
+      Padding.Bottom = 10
+      ParentBackground = False
+      ParentCtl3D = False
+      TabOrder = 1
+      Visible = False
+      object lbCreateObjName: TLabel
+        Left = 11
+        Top = 14
+        Width = 55
+        Height = 15
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+      end
+      object lbCreateObjStreet: TLabel
+        Left = 13
+        Top = 43
+        Width = 37
+        Height = 15
+        Caption = #1059#1083#1080#1094#1072':'
+      end
+      object lbCreateObjHouse: TLabel
+        Left = 13
+        Top = 72
+        Width = 27
+        Height = 15
+        Caption = #1044#1086#1084':'
+      end
+      object lbCreateObjBuilding: TLabel
+        Left = 13
+        Top = 101
+        Width = 43
+        Height = 15
+        Caption = #1050#1086#1088#1087#1091#1089':'
+      end
+      object lbCreateObjCapacity: TLabel
+        Left = 13
+        Top = 130
+        Width = 105
+        Height = 15
+        Caption = #1042#1084#1077#1089#1090#1080#1084#1086#1089#1090#1100' ('#1091'.'#1077'.):'
+      end
+      object edCreateObjName: TEdit
+        Left = 125
+        Top = 11
+        Width = 121
+        Height = 23
+        ParentShowHint = False
+        ShowHint = False
+        TabOrder = 0
+        OnChange = OnClickValidateLength
+      end
+      object edCreateObjStreet: TEdit
+        Left = 125
+        Top = 40
+        Width = 121
+        Height = 23
+        TabOrder = 1
+        OnChange = OnClickvalidateAll
+      end
+      object edCreateObjHouse: TEdit
+        Left = 125
+        Top = 69
+        Width = 121
+        Height = 23
+        NumbersOnly = True
+        TabOrder = 2
+        OnChange = OnClickValidateLength
+      end
+      object btnCreateObjConfirm: TButton
+        Left = 133
+        Top = 170
+        Width = 114
+        Height = 25
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Caption = #1057#1086#1079#1076#1072#1090#1100
+        TabOrder = 3
+        OnClick = btnCreateObjConfirmClick
+      end
+      object btnCreateObjCancel: TButton
+        Left = 13
+        Top = 170
+        Width = 114
+        Height = 25
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Caption = #1054#1090#1084#1077#1085#1072
+        TabOrder = 4
+        OnClick = btnCreateObjCancelClick
+      end
+      object edCreateObjBuilding: TEdit
+        Left = 125
+        Top = 98
+        Width = 121
+        Height = 23
+        NumbersOnly = True
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 5
+        TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+      end
+      object edCreateObjCapacity: TEdit
+        Left = 124
+        Top = 127
+        Width = 121
+        Height = 23
+        NumbersOnly = True
+        TabOrder = 6
+        OnChange = OnClickValidateLength
       end
     end
   end

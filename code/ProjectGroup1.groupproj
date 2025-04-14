@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{9C231BC3-B21B-47F1-B0D0-231E12D13517}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Project1.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\..\aisd\Lab2\Sobol_Nikita.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Project1">
+        <MSBuild Projects="Project1.dproj"/>
+    </Target>
+    <Target Name="Project1:Clean">
+        <MSBuild Projects="Project1.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project1:Make">
+        <MSBuild Projects="Project1.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Sobol_Nikita">
+        <MSBuild Projects="..\..\..\aisd\Lab2\Sobol_Nikita.dproj"/>
+    </Target>
+    <Target Name="Sobol_Nikita:Clean">
+        <MSBuild Projects="..\..\..\aisd\Lab2\Sobol_Nikita.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Sobol_Nikita:Make">
+        <MSBuild Projects="..\..\..\aisd\Lab2\Sobol_Nikita.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Project1;Sobol_Nikita"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Project1:Clean;Sobol_Nikita:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Project1:Make;Sobol_Nikita:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

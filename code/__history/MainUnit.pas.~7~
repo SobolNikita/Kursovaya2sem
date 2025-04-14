@@ -1,0 +1,117 @@
+unit MainUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
+  Vcl.Imaging.jpeg;
+
+type
+  TfrMainForm = class(TForm)
+    pnNav: TPanel;
+    btnNavMap: TButton;
+    btnNavBalance: TButton;
+    btnNavOrders: TButton;
+    bntNavDelivery: TButton;
+    btnNavAnalytics: TButton;
+    pnMapWrap: TPanel;
+    imgMap: TImage;
+    pnCreateObject: TPanel;
+    btnCreateShop: TButton;
+    btnCreateWarehouse: TButton;
+    btnCreateCancel: TButton;
+    spMapPoint: TShape;
+    pnCreateShop: TPanel;
+    lbCreateShopName: TLabel;
+    edCreateShopName: TEdit;
+    lbCreateShopStreet: TLabel;
+    edCreateShopStreet: TEdit;
+    lbCreateShopHouse: TLabel;
+    edCreateShopHouse: TEdit;
+    btnCreateShopConfirm: TButton;
+    btnCreateShopCancel: TButton;
+    lbCreateShopBuilding: TLabel;
+    edCreateShopBuilding: TEdit;
+    edCreateShopCapacity: TEdit;
+    lbCreateShopCapacity: TLabel;
+    procedure imgMapMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure btnCreateCancelClick(Sender: TObject);
+    procedure btnCreateShopClick(Sender: TObject);
+    procedure btnCreateShopCancelClick(Sender: TObject);
+  private
+    { Private declarations }
+    xPos, yPos: integer;
+  public
+    { Public declarations }
+  end;
+
+var
+  frMainForm: TfrMainForm;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TfrMainForm.btnCreateCancelClick(Sender: TObject);
+begin
+  pnCreateObject.visible := false;
+  spMapPoint.visible := false;
+end;
+
+procedure TfrMainForm.btnCreateShopCancelClick(Sender: TObject);
+begin
+  pnCreateShop.visible := false;
+  spMapPoint.visible := false;
+end;
+
+procedure TfrMainForm.btnCreateShopClick(Sender: TObject);
+begin
+  pnCreateObject.visible := false;
+
+  //check y pos
+  pnCreateShop.top := yPos;
+  if yPos >= pnCreateShop.height then
+    pnCreateShop.top := pnCreateShop.top - pnCreateShop.height;
+
+  //check x pos
+  pnCreateShop.left := xPos;
+  if xPos + pnCreateShop.width > imgMap.width then
+    pnCreateShop.left := pnCreateShop.left - pnCreateShop.width;
+
+  pnCreateShop.tag := (Sender as TButton).tag;  //tag=1 - shop, tag=2 - Warehouse
+  pnCreateShop.visible := true;
+
+end;
+
+
+procedure TfrMainForm.imgMapMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+
+  pnCreateShop.Visible := false;
+
+  xPos := X;
+  yPos := Y;
+
+  //check y pos
+  pnCreateObject.top := Y;
+  if Y >= pnCreateObject.height then
+    pnCreateObject.top := pnCreateObject.top - pnCreateObject.height;
+
+  //check x pos
+  pnCreateObject.left := X;
+  if X + pnCreateObject.width > imgMap.width then
+    pnCreateObject.left := pnCreateObject.left - pnCreateObject.width;
+
+  pnCreateObject.visible := true;
+
+  //print green point
+  spMapPoint.top := Y - spMapPoint.height shr 1;
+  spMapPoint.left := X - spMapPoint.width shr 1;
+  spMapPoint.visible := true;
+end;
+
+end.

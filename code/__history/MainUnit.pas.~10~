@@ -1,0 +1,206 @@
+unit MainUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
+  Vcl.Imaging.jpeg;
+
+type
+  TfrMainForm = class(TForm)
+    pnNav: TPanel;
+    btnNavMap: TButton;
+    btnNavBalance: TButton;
+    btnNavOrders: TButton;
+    bntNavDelivery: TButton;
+    btnNavAnalytics: TButton;
+    pnMapWrap: TPanel;
+    imgMap: TImage;
+    pnCreateSelect: TPanel;
+    btnCreateSelectShop: TButton;
+    btnCreateSelectWarehouse: TButton;
+    btnCreateSelectCancel: TButton;
+    spMapPoint: TShape;
+    pnCreateObj: TPanel;
+    lbCreateObjName: TLabel;
+    edCreateObjName: TEdit;
+    lbCreateObjStreet: TLabel;
+    edCreateObjStreet: TEdit;
+    lbCreateObjHouse: TLabel;
+    edCreateObjHouse: TEdit;
+    btnCreateObjConfirm: TButton;
+    btnCreateObjCancel: TButton;
+    lbCreateObjBuilding: TLabel;
+    edCreateObjBuilding: TEdit;
+    edCreateObjCapacity: TEdit;
+    lbCreateObjCapacity: TLabel;
+    procedure imgMapMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure btnCreateSelectCancelClick(Sender: TObject);
+    procedure btnCreateObjCancelClick(Sender: TObject);
+    procedure callPnCreateObj(Sender: TObject);
+    procedure btnCreateObjConfirmClick(Sender: TObject);
+    function validateLength(Sender: TObject): boolean;
+    function validateLetters(Sender: TObject): boolean;
+    function validateAll(Sender: TObject): boolean;
+    function validateCreateObj: boolean;
+  private
+    { Private declarations }
+    xPos, yPos: integer;
+  public
+    { Public declarations }
+  end;
+
+var
+  frMainForm: TfrMainForm;
+
+implementation
+
+{$R *.dfm}
+
+function TfrMainForm.validateAll(Sender: TObject): boolean;
+begin
+  Result := validateLength(Sender);
+  Result := Result and validateLetters(Sender);
+end;
+
+function TfrMainForm.validateLetters(Sender: TObject): boolean;
+var
+  i:integer;
+begin
+  Result := true;
+  for i := Low((Sender as TEdit).Text) to High((Sender as TEdit).Text) do
+  begin
+    if (((Sender as TEdit).Text[i] <> ' ')
+       and
+         (
+         (
+          (lowerCase((Sender as TEdit).Text[i]) > 'z')
+          or (lowerCase((Sender as TEdit).Text[i]) < 'a')
+         )
+         or
+         (
+          (lowerCase((Sender as TEdit).Text[i]) > 'ÿ')
+          or (lowerCase((Sender as TEdit).Text[i]) < 'à'))
+         )
+       ) then
+    begin
+      (Sender as TEdit).color := clRed;
+      Result := false;
+    end;
+  end;
+end;
+
+function TfrMainForm.validateLength(Sender: TObject): boolean;
+begin
+  Result := true;
+  (Sender as TEdit).Text := trim((Sender as TEdit).Text);
+  if Length((Sender as TEdit).Text) = 0 then
+  begin
+    (Sender as TEdit).color := clRed;
+    Result := false;
+  end;
+end;
+
+function TfrMainForm.validateCreateObj: boolean;
+var
+  i: integer;
+begin
+  Result := validateLength(edCreateObjName);
+
+  Result := Result and validateLength(edCreateObjStreet);
+
+  Result := Result and validateLetters(edCreateObjStreet);
+
+  Result := Result and validateLength(edCreateObjHouse);
+
+  Result := Result and validateLength(edCreateObjCapacity);
+end;
+
+procedure TfrMainForm.callPnCreateObj(Sender: TObject);
+begin
+  pnCreateSelect.visible := false;
+
+  //check y pos
+  pnCreateObj.top := yPos;
+  if yPos >= pnCreateObj.height then
+    pnCreateObj.top := pnCreateObj.top - pnCreateObj.height;
+
+  //check x pos
+  pnCreateObj.left := xPos;
+  if xPos + pnCreateObj.width > imgMap.width then
+    pnCreateObj.left := pnCreateObj.left - pnCreateObj.width;
+
+  pnCreateObj.tag := (Sender as TButton).tag;  //tag=1 - shop, tag=2 - Warehouse
+  pnCreateObj.visible := true;
+end;
+
+procedure TfrMainForm.btnCreateObjConfirmClick(Sender: TObject);
+begin
+
+  if validateCreateObj then
+  begin
+    if (Sender as TButton).tag = 1 then
+    begin
+      //create shop
+
+    end
+    else if (Sender as TButton).tag = 2 then
+    begin
+      //create warehouse
+    end
+    else
+    begin
+      //error
+    end;
+    pnCreateObj.visible := false;
+    spMapPoint.visible := false;
+  end
+  else
+  begin
+
+  end;
+end;
+
+procedure TfrMainForm.btnCreateSelectCancelClick(Sender: TObject);
+begin
+  pnCreateSelect.visible := false;
+  spMapPoint.visible := false;
+end;
+
+procedure TfrMainForm.btnCreateObjCancelClick(Sender: TObject);
+begin
+  pnCreateObj.visible := false;
+  spMapPoint.visible := false;
+end;
+
+
+procedure TfrMainForm.imgMapMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+
+  pnCreateObj.Visible := false;
+
+  xPos := X;
+  yPos := Y;
+
+  //check y pos
+  pnCreateSelect.top := Y;
+  if Y >= pnCreateSelect.height then
+    pnCreateSelect.top := pnCreateSelect.top - pnCreateSelect.height;
+
+  //check x pos
+  pnCreateSelect.left := X;
+  if X + pnCreateSelect.width > imgMap.width then
+    pnCreateSelect.left := pnCreateSelect.left - pnCreateSelect.width;
+
+  pnCreateSelect.visible := true;
+
+  //print green point
+  spMapPoint.top := Y - spMapPoint.height shr 1;
+  spMapPoint.left := X - spMapPoint.width shr 1;
+  spMapPoint.visible := true;
+end;
+
+end.
