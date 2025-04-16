@@ -3,8 +3,10 @@
 	<Transactions>
     <Transaction>1899.12.30 00:00:00.000.192,=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.921,=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.994,D:\bsuir\sem2\oaip\kursovaya\code\MainUnit.dfm=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.994,D:\bsuir\sem2\oaip\kursovaya\code\MainUnit.pas=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.499,D:\bsuir\sem2\oaip\kursovaya\code\Project1.dproj=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.994,C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\MainUnit.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.994,C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\bsuir\sem2\oaip\kursovaya\code\MainUnit.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.058,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.548,D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\CartesianTree.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.499,C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\bsuir\sem2\oaip\kursovaya\code\Project1.dproj</Transaction>
   </Transactions>
 </BorlandProject>

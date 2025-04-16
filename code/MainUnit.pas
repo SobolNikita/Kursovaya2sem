@@ -5,33 +5,20 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.Imaging.jpeg;
+  Vcl.Imaging.jpeg, System.UITypes,
+  CartesianTree, Validation, GetKeys;
 
 type
-  TLocationType = (ltStorage, ltShop);
-
-  TLocation = record
-    Name, street: string;
-    house, building, capacity: integer;
-    ID, X, Y: Integer;
-  end;
-  PLocation = ^TLocation;
-
   TShipment = record
     SourceID: Integer;       // ID склада
     DestinationID: Integer;  // ID магазина
     ProductID: integer;
     Quantity: Integer;
     DepartureTime: TDateTime;
+
   end;
   PShipment = ^TShipment;
 
-  PTreapNode = ^TTreapNode;
-  TTreapNode = record
-    Data: PLocation;
-    Left, Right: PTreapNode;
-    Priority: Integer;
-  end;
 
   TfrMainForm = class(TForm)
     pnNav: TPanel;
@@ -60,30 +47,34 @@ type
     edCreateObjBuilding: TEdit;
     edCreateObjCapacity: TEdit;
     lbCreateObjCapacity: TLabel;
+    pnSelectObject: TPanel;
+    btnSelectObjEdit: TButton;
+    btnSelectObjDelete: TButton;
+    btnSelectObjCancel: TButton;
+    pnEditObj: TPanel;
+    lbEditObjName: TLabel;
+    lbEditObjStreet: TLabel;
+    lbEditObjHouse: TLabel;
+    lbEditObjBuilding: TLabel;
+    lbEditObjCapacity: TLabel;
+    edEditObjName: TEdit;
+    edEditObjStreet: TEdit;
+    edEditObjHouse: TEdit;
+    btnEditObjConfirm: TButton;
+    btnEditObjCancel: TButton;
+    edEditObjBuilding: TEdit;
+    edEditObjCapacity: TEdit;
 
-    //tree
-    procedure InitTree;
-    procedure Insert(var Root: PTreapNode; NewData: PLocation);
-    procedure Split(Root: PTreapNode; Key: Integer; var L, R: PTreapNode);
-    procedure Delete(var Root: PTreapNode; ID: Integer);
-    procedure FreeTree(var Root: PTreapNode);
 
-    function CreateNode(NewData: PLocation): PTreapNode;
-    function Merge(L, R: PTreapNode): PTreapNode;
-    function Find(Root: PTreapNode; ID: Integer): PLocation;
-    //endtree
+    procedure createNewObj(var newObj: PLocation; const isShop: boolean);
 
     procedure imgMapMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+
     procedure btnCreateSelectCancelClick(Sender: TObject);
     procedure btnCreateObjCancelClick(Sender: TObject);
-    procedure callPnCreateObj(Sender: TObject);
+    procedure btnCreateSelectClick(Sender: TObject);
     procedure btnCreateObjConfirmClick(Sender: TObject);
-
-
-    function validateLength(Sender: TObject): boolean;
-    function validateLetters(Sender: TObject): boolean;
-    function validateAll(Sender: TObject): boolean;
 
     procedure OnClickValidateLength(Sender: TObject);
     procedure OnClickValidateLetters(Sender: TObject);
@@ -93,13 +84,39 @@ type
     procedure createWarehouse(Sender: TObject);
 
     function validateCreateObj: boolean;
+    function validateEditObj: boolean;
+
     procedure FormCreate(Sender: TObject);
+
+    procedure pnSelectObjectShow(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+
+    procedure hideAllPanels;
+
+    procedure resetPnCreateObj;
+    procedure resetPnEditObj;
+
+    procedure showPanel(const panel: TPanel; const x, y: integer);
+
+    procedure btnSelectObjDeleteClick(Sender: TObject);
+    procedure btnSelectObjCancelClick(Sender: TObject);
+    procedure btnSelectObjEditClick(Sender: TObject);
+    procedure btnEditObjConfirmClick(Sender: TObject);
+
+    function getConfirmation: boolean;
+
   private
     { Private declarations }
     xPos, yPos: integer;
-    root: PTreapNode;
+    shops, warehouses: PTreapNode;
+
+    const
+      shopColor = clHighlight;
+      warehouseColor = clMaroon;
+      mask = 1 shl 30;
   public
     { Public declarations }
+
   end;
 
 var
@@ -109,110 +126,204 @@ implementation
 
 {$R *.dfm}
 
-//tree
-  procedure TfrMainForm.InitTree;
-  begin
-    root := nil;
-  end;
+procedure TfrMainForm.resetPnCreateObj;
+begin
+  edCreateObjName.Text := '';
+  edCreateObjStreet.Text := '';
+  edCreateObjHouse.Text := '';
+  edCreateObjBuilding.Text := '';
+  edCreateObjCapacity.Text := '';
+end;
 
-  function TfrMainForm.Find(Root: PTreapNode; ID: Integer): PLocation;
-  begin
-    if Root = nil then
-      Result := nil
-    else if Root^.Data^.ID = ID then
-      Result := Root^.Data
-    else if ID < Root^.Data^.ID then
-      Result := Find(Root^.Left, ID)
-    else
-      Result := Find(Root^.Right, ID);
-  end;
+procedure TfrMainForm.resetPnEditObj;
+begin
+  edEditObjName.Text := '';
+  edEditObjStreet.Text := '';
+  edEditObjHouse.Text := '';
+  edEditObjBuilding.Text := '';
+  edEditObjCapacity.Text := '';
+end;
 
-  function TfrMainForm.CreateNode(NewData: PLocation): PTreapNode;
-  begin
-    New(Result);
-    Result^.Data := NewData;
-    Result^.Left := nil;
-    Result^.Right := nil;
-    repeat
-      Result^.Priority := Random(MaxInt); // Генерация приоритета
-    until Find(Root, NewData^.ID) <> nil;
-  end;
-
-  procedure TfrMainForm.Split(Root: PTreapNode; Key: Integer; var L, R: PTreapNode);
-  begin
-    if Root = nil then
+function TfrMainForm.getConfirmation: boolean;
+var
+  Dlg: TForm;
+  i: integer;
+begin
+    Dlg := CreateMessageDialog('Вы подтверждаете действие?',
+                             mtConfirmation, [mbYes, mbNo]);
+  try
+    Dlg.Caption := 'Подтверждение действия';
+    for i := 0 to Dlg.ComponentCount - 1 do
     begin
-      L := nil;
-      R := nil;
-    end
-    else if Root^.Data^.ID < Key then
-    begin
-      Split(Root^.Right, Key, Root^.Right, R);
-      L := Root;
-    end
-    else
-    begin
-      Split(Root^.Left, Key, L, Root^.Left);
-      R := Root;
-    end;
-  end;
-
-  function TfrMainForm.Merge(L, R: PTreapNode): PTreapNode;
-  begin
-    if (L = nil) then
-      Result := R
-    else if (R = nil) then
-      Result := L
-    else
-    begin
-      if L^.Priority > R^.Priority then
+      if Dlg.Components[i] is TButton then
       begin
-        L^.Right := Merge(L^.Right, R);
-        Result := L;
-      end
-      else
-      begin
-        R^.Left := Merge(L, R^.Left);
-        Result := R;
+        with TButton(Dlg.Components[i]) do
+        begin
+          if ModalResult = mrYes then
+            Caption := 'Да'
+          else if ModalResult = mrNo then
+            Caption := 'Нет';
+        end;
       end;
     end;
+    Result := Dlg.ShowModal = mrYes;
+  finally
+    Dlg.Free;
+  end;
+end;
+
+procedure TfrMainForm.showPanel(const panel: TPanel; const x, y: integer);
+begin
+  //check y pos
+  panel.top := y;
+  if Y >= panel.height then
+    panel.top := panel.top - panel.height;
+
+  //check x pos
+  panel.left := x;
+  if X + panel.width > imgMap.width then
+    panel.left := panel.left - panel.width;
+
+  panel.visible := true;
+end;
+
+procedure TfrMainForm.hideAllPanels;
+begin
+  pnCreateObj.Visible := false;
+  pnCreateSelect.Visible := false;
+  pnSelectObject.Visible := false;
+  pnEditObj.Visible := false;
+end;
+
+procedure TfrMainForm.btnSelectObjCancelClick(Sender: TObject);
+begin
+  pnSelectObject.Visible := false;
+end;
+
+procedure TfrMainForm.btnSelectObjEditClick(Sender: TObject);
+var
+  curNode: PTreapNode;
+begin
+  hideAllPanels;
+
+  pnEditObj.tag := pnSelectObject.tag;
+
+  if (pnSelectObject.tag and mask) <> 0 then
+  begin
+    //shop
+    curNode := FindTreap(shops, pnSelectObject.tag);
+  end
+  else
+  begin
+    //warehouse
+    curNode := FindTreap(warehouses, pnSelectObject.tag);
   end;
 
-  procedure TfrMainForm.Insert(var Root: PTreapNode; NewData: PLocation);
-  var
-    L, R: PTreapNode;
-  begin
-    Split(Root, NewData^.ID, L, R);
-    Root := Merge(Merge(L, CreateNode(NewData)), R);
-  end;
+  showPanel(pnEditObj,
+            curNode^.Data^.shape.left + (curNode^.Data^.shape.Width shr 1),
+            curNode^.Data^.shape.top + (curNode^.Data^.shape.Height shr 1)
+            );
 
-  procedure TfrMainForm.Delete(var Root: PTreapNode; ID: Integer);
-  var
-    L, M, R: PTreapNode;
-  begin
-    Split(Root, ID, L, R);
-    Split(R, ID + 1, M, R);
-    if (M <> nil) and (M^.Data^.ID = ID) then
-      Dispose(M);
-    Root := Merge(L, R);
-  end;
+  edEditObjName.Text := string(curNode^.Data^.name);
+  edEditObjStreet.Text := string(curNode^.Data^.street);
+  edEditObjHouse.Text := intToStr(curNode^.Data^.house);
+  if curNode^.Data^.building <> -1 then
+    edEditObjBuilding.Text := intToStr(curNode^.Data^.building);
+  edEditObjCapacity.Text := intToStr(curNode^.Data^.capacity);
+end;
 
-  procedure TfrMainForm.FreeTree(var Root: PTreapNode);
+procedure TfrMainForm.btnSelectObjDeleteClick(Sender: TObject);
+var
+  curNode: PTreapNode;
+begin
+  if getConfirmation then
   begin
-    if Root <> nil then
+    hideAllPanels;
+    if (pnSelectObject.tag and mask) <> 0 then
     begin
-      FreeTree(Root^.Left);
-      FreeTree(Root^.Right);
-      Dispose(Root);
-      Root := nil;
+      //shop
+      curNode := FindTreap(shops, pnSelectObject.tag);
+      FreeAndNil(curNode^.Data^.shape);
+      EraseTreap(shops, pnSelectObject.tag);
+    end
+    else
+    begin
+      //warehouse
+      curNode := FindTreap(warehouses, pnSelectObject.tag);
+      FreeAndNil(curNode^.Data^.shape);
+      EraseTreap(warehouses, pnSelectObject.tag);
     end;
   end;
-//end tree
+end;
 
+procedure TfrMainForm.pnSelectObjectShow(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+begin
+  hideAllPanels;
+  spMapPoint.Visible := false;
+
+  X := (Sender as TShape).left + ((Sender as TShape).width shr 1);
+  Y := (Sender as TShape).top + ((Sender as TShape).height shr 1);
+  showPanel(pnSelectObject, X, Y);
+
+  pnSelectObject.tag := (Sender as TShape).tag;
+end;
+
+
+procedure TfrMainForm.createNewObj(var newObj: PLocation; const isShop: boolean);
+begin
+  New(newObj);
+  newObj^.name := shortString(edCreateObjName.Text);
+  newObj^.street := shortString(edCreateObjStreet.Text);
+  newObj^.house := strToInt(edCreateObjHouse.Text);
+  newObj^.building := -1;
+  if Length(edCreateObjBuilding.Text) > 0 then
+    newObj^.building := strToInt(edCreateObjBuilding.Text);
+  newObj^.capacity := strToInt(edCreateObjCapacity.Text);
+
+  newObj^.X := xPos;
+  newObj^.Y := yPos;
+
+  newObj^.shape := TShape.Create(self);
+  newObj^.shape.Parent := spMapPoint.Parent;
+
+  newObj^.shape.Width := spMapPoint.Width;
+  newObj^.shape.Height := spMapPoint.Height;
+
+  newObj^.shape.Left := xPos - newObj^.shape.width shr 1;
+  newObj^.shape.Top := yPos - newObj^.shape.height shr 1;
+
+
+  newObj^.shape.Shape := stCircle;
+
+  newObj^.shape.Cursor := crHandPoint;
+
+  if isShop then
+  begin
+    newObj^.key := getShopKey or mask;
+    newObj^.shape.Brush.Color := shopColor;
+  end
+  else
+  begin
+    newObj^.key := getWarehouseKey;
+    newObj^.shape.Brush.Color := warehouseColor;
+  end;
+
+  newObj^.shape.Tag := newObj^.key;
+
+  newObj^.shape.onMouseUp := pnSelectObjectShow;
+
+  newObj^.shape.Visible := true;
+  newObj^.shape.BringToFront;
+end;
 
 procedure TfrMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
+  shopKey := 1;
+  warehouseKey := 1;
+  InitTree(shops);
+  InitTree(wareHouses);
 end;
 
 
@@ -220,60 +331,21 @@ procedure TfrMainForm.createShop(Sender: TObject);
 var
   newObj: PLocation;
 begin
-
+  createNewObj(newObj, true);
+  InsertTreap(shops, newObj);
 end;
 
 procedure TfrMainForm.createWarehouse(Sender: TObject);
 var
   newObj: PLocation;
 begin
-
+  createNewObj(newObj, false);
+  InsertTreap(warehouses, newObj);
 end;
 
-function TfrMainForm.validateAll(Sender: TObject): boolean;
-begin
-  Result := validateLength(Sender);
-  Result := validateLetters(Sender) and Result;
-end;
 
-function TfrMainForm.validateLetters(Sender: TObject): boolean;
-var
-  i:integer;
-begin
-  Result := true;
-  for i := Low((Sender as TEdit).Text) to High((Sender as TEdit).Text) do
-  begin
-    if (((Sender as TEdit).Text[i] <> ' ')
-       and
-         (
-         (
-          (lowerCase((Sender as TEdit).Text[i]) > 'z')
-          or (lowerCase((Sender as TEdit).Text[i]) < 'a')
-         )
-         and
-         (
-          (lowerCase((Sender as TEdit).Text[i]) > 'я')
-          or (lowerCase((Sender as TEdit).Text[i]) < 'а'))
-         )
-       ) then
-    begin
-      (Sender as TEdit).color := clRed;
-      Result := false;
-    end;
-  end;
-end;
 
-function TfrMainForm.validateLength(Sender: TObject): boolean;
-begin
-  Result := true;
-  (Sender as TEdit).Text := trimLeft((Sender as TEdit).Text);
-  (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
-  if Length((Sender as TEdit).Text) = 0 then
-  begin
-    (Sender as TEdit).color := clRed;
-    Result := false;
-  end;
-end;
+
 
 procedure TfrMainForm.OnClickValidateLetters(Sender: TObject);
 begin
@@ -314,9 +386,22 @@ begin
   Result := validateLength(edCreateObjCapacity) and Result;
 end;
 
-procedure TfrMainForm.callPnCreateObj(Sender: TObject);
+function TfrMainForm.validateEditObj: boolean;
 begin
-  pnCreateSelect.visible := false;
+  Result := validateLength(edEditObjName);
+
+  Result := validateLength(edEditObjStreet) and Result;
+
+  Result := validateLetters(edEditObjStreet) and Result;
+
+  Result := validateLength(edEditObjHouse) and Result;
+
+  Result := validateLength(edEditObjCapacity) and Result;
+end;
+
+procedure TfrMainForm.btnCreateSelectClick(Sender: TObject);
+begin
+  hideAllPanels;
 
   edCreateObjName.color := clWindow;
   edCreateObjStreet.color := clWindow;
@@ -337,6 +422,49 @@ begin
   pnCreateObj.visible := true;
 end;
 
+
+procedure TfrMainForm.btnEditObjConfirmClick(Sender: TObject);
+var
+  curNode: PTreapNode;
+begin
+  if (pnEditObj.tag and mask) <> 0 then
+  begin
+    //shop
+    curNode := FindTreap(shops, pnSelectObject.tag);
+  end
+  else
+  begin
+    //warehouse
+    curNode := FindTreap(warehouses, pnSelectObject.tag);
+  end;
+
+  if validateEditObj and getConfirmation then
+  begin
+    edEditObjName.Text := trim(edEditObjName.Text);
+    edEditObjStreet.Text := trim(edEditObjStreet.Text);
+
+    curNode^.Data^.name := shortString(edEditObjName.Text);
+    curNode^.Data^.street := shortString(edEditObjStreet.Text);
+    curNode^.Data^.house := strToInt(edEditObjHouse.Text);
+    curNode^.Data^.building := -1;
+    if Length(edEditObjBuilding.Text) > 0 then
+      curNode^.Data^.building := strToInt(edEditObjBuilding.Text);
+    curNode^.Data^.capacity := strToInt(edEditObjCapacity.Text);
+
+    edEditObjName.Text := '';
+    edEditObjStreet.Text := '';
+    edEditObjHouse.Text := '';
+    edEditObjBuilding.Text := '';
+    edEditObjCapacity.Text := '';
+    hideAllPanels;
+  end
+  else
+  begin
+
+
+  end;
+end;
+
 procedure TfrMainForm.btnCreateObjConfirmClick(Sender: TObject);
 begin
   if validateCreateObj then
@@ -344,12 +472,12 @@ begin
     edCreateObjName.Text := trim(edCreateObjName.Text);
     edCreateObjStreet.Text := trim(edCreateObjStreet.Text);
 
-    if (Sender as TButton).tag = 1 then
+    if pnCreateObj.tag = 1 then
     begin
       //create shop
       createShop(Sender);
     end
-    else if (Sender as TButton).tag = 2 then
+    else if pnCreateObj.tag = 2 then
     begin
       //create warehouse
       createWarehouse(Sender);
@@ -358,12 +486,8 @@ begin
     begin
       //error
     end;
-    edCreateObjName.Text := '';
-    edCreateObjStreet.Text := '';
-    edCreateObjHouse.Text := '';
-    edCreateObjBuilding.Text := '';
-    edCreateObjCapacity.Text := '';
-    pnCreateObj.visible := false;
+    resetPnCreateObj;
+    hideAllPanels;
     spMapPoint.visible := false;
   end
   else
@@ -374,9 +498,10 @@ end;
 
 procedure TfrMainForm.btnCreateSelectCancelClick(Sender: TObject);
 begin
-  pnCreateSelect.visible := false;
+  hideAllPanels;
   spMapPoint.visible := false;
 end;
+
 
 procedure TfrMainForm.btnCreateObjCancelClick(Sender: TObject);
 begin
@@ -385,7 +510,7 @@ begin
   edCreateObjHouse.Text := '';
   edCreateObjBuilding.Text := '';
   edCreateObjCapacity.Text := '';
-  pnCreateObj.visible := false;
+  hideAllPanels;
   spMapPoint.visible := false;
 end;
 
@@ -393,23 +518,13 @@ end;
 procedure TfrMainForm.imgMapMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-
-  pnCreateObj.Visible := false;
+  hideAllPanels;
+  resetPnCreateObj;
+  resetPnEditObj;
 
   xPos := X;
   yPos := Y;
-
-  //check y pos
-  pnCreateSelect.top := Y;
-  if Y >= pnCreateSelect.height then
-    pnCreateSelect.top := pnCreateSelect.top - pnCreateSelect.height;
-
-  //check x pos
-  pnCreateSelect.left := X;
-  if X + pnCreateSelect.width > imgMap.width then
-    pnCreateSelect.left := pnCreateSelect.left - pnCreateSelect.width;
-
-  pnCreateSelect.visible := true;
+  showPanel(pnCreateSelect, xPos, yPos);
 
   //print green point
   spMapPoint.top := Y - spMapPoint.height shr 1;

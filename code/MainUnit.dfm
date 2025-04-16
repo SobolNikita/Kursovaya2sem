@@ -16194,7 +16194,7 @@ object frMainForm: TfrMainForm
         Align = alTop
         Caption = #1057#1086#1079#1076#1072#1090#1100' '#1084#1072#1075#1072#1079#1080#1085
         TabOrder = 0
-        OnClick = callPnCreateObj
+        OnClick = btnCreateSelectClick
       end
       object btnCreateSelectWarehouse: TButton
         Tag = 2
@@ -16210,7 +16210,7 @@ object frMainForm: TfrMainForm
         Align = alTop
         Caption = #1057#1086#1079#1076#1072#1090#1100' '#1089#1082#1083#1072#1076
         TabOrder = 1
-        OnClick = callPnCreateObj
+        OnClick = btnCreateSelectClick
       end
       object btnCreateSelectCancel: TButton
         AlignWithMargins = True
@@ -16229,8 +16229,8 @@ object frMainForm: TfrMainForm
       end
     end
     object pnCreateObj: TPanel
-      Left = 616
-      Top = 201
+      Left = 403
+      Top = 173
       Width = 258
       Height = 206
       AutoSize = True
@@ -16343,6 +16343,182 @@ object frMainForm: TfrMainForm
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
       end
       object edCreateObjCapacity: TEdit
+        Left = 124
+        Top = 127
+        Width = 121
+        Height = 23
+        NumbersOnly = True
+        TabOrder = 6
+        OnChange = OnClickValidateLength
+      end
+    end
+    object pnSelectObject: TPanel
+      Left = 667
+      Top = 301
+      Width = 173
+      Height = 77
+      AutoSize = True
+      ParentBackground = False
+      TabOrder = 2
+      Visible = False
+      object btnSelectObjEdit: TButton
+        AlignWithMargins = True
+        Left = 6
+        Top = 6
+        Width = 75
+        Height = 25
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+        TabOrder = 0
+        OnClick = btnSelectObjEditClick
+      end
+      object btnSelectObjDelete: TButton
+        AlignWithMargins = True
+        Left = 92
+        Top = 6
+        Width = 75
+        Height = 25
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Caption = #1059#1076#1072#1083#1080#1090#1100
+        TabOrder = 1
+        OnClick = btnSelectObjDeleteClick
+      end
+      object btnSelectObjCancel: TButton
+        AlignWithMargins = True
+        Left = 6
+        Top = 46
+        Width = 160
+        Height = 25
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Caption = #1054#1090#1084#1077#1085#1072
+        TabOrder = 2
+        OnClick = btnSelectObjCancelClick
+      end
+    end
+    object pnEditObj: TPanel
+      Left = 846
+      Top = 173
+      Width = 258
+      Height = 206
+      AutoSize = True
+      Ctl3D = True
+      Padding.Left = 10
+      Padding.Top = 10
+      Padding.Right = 10
+      Padding.Bottom = 10
+      ParentBackground = False
+      ParentCtl3D = False
+      TabOrder = 3
+      Visible = False
+      object lbEditObjName: TLabel
+        Left = 11
+        Top = 14
+        Width = 55
+        Height = 15
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+      end
+      object lbEditObjStreet: TLabel
+        Left = 13
+        Top = 43
+        Width = 37
+        Height = 15
+        Caption = #1059#1083#1080#1094#1072':'
+      end
+      object lbEditObjHouse: TLabel
+        Left = 13
+        Top = 72
+        Width = 27
+        Height = 15
+        Caption = #1044#1086#1084':'
+      end
+      object lbEditObjBuilding: TLabel
+        Left = 13
+        Top = 101
+        Width = 43
+        Height = 15
+        Caption = #1050#1086#1088#1087#1091#1089':'
+      end
+      object lbEditObjCapacity: TLabel
+        Left = 13
+        Top = 130
+        Width = 105
+        Height = 15
+        Caption = #1042#1084#1077#1089#1090#1080#1084#1086#1089#1090#1100' ('#1091'.'#1077'.):'
+      end
+      object edEditObjName: TEdit
+        Left = 125
+        Top = 11
+        Width = 121
+        Height = 23
+        ParentShowHint = False
+        ShowHint = False
+        TabOrder = 0
+        OnChange = OnClickValidateLength
+      end
+      object edEditObjStreet: TEdit
+        Left = 125
+        Top = 40
+        Width = 121
+        Height = 23
+        TabOrder = 1
+        OnChange = OnClickvalidateAll
+      end
+      object edEditObjHouse: TEdit
+        Left = 125
+        Top = 69
+        Width = 121
+        Height = 23
+        NumbersOnly = True
+        TabOrder = 2
+        OnChange = OnClickValidateLength
+      end
+      object btnEditObjConfirm: TButton
+        Left = 133
+        Top = 170
+        Width = 114
+        Height = 25
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+        TabOrder = 3
+        OnClick = btnEditObjConfirmClick
+      end
+      object btnEditObjCancel: TButton
+        Left = 13
+        Top = 170
+        Width = 114
+        Height = 25
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Caption = #1054#1090#1084#1077#1085#1072
+        TabOrder = 4
+        OnClick = btnCreateObjCancelClick
+      end
+      object edEditObjBuilding: TEdit
+        Left = 125
+        Top = 98
+        Width = 121
+        Height = 23
+        NumbersOnly = True
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 5
+        TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+      end
+      object edEditObjCapacity: TEdit
         Left = 124
         Top = 127
         Width = 121

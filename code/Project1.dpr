@@ -2,7 +2,8 @@ program Project1;
 
 uses
   Vcl.Forms,
-  MainUnit in 'MainUnit.pas' {frMainForm};
+  MainUnit in 'MainUnit.pas' {frMainForm},
+  CartesianTree in 'CartesianTree.pas';
 
 {$R *.res}
 

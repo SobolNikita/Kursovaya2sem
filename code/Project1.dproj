@@ -127,6 +127,7 @@
             <Form>frMainForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="CartesianTree.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
