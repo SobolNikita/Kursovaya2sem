@@ -6,19 +6,17 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Imaging.jpeg, System.UITypes,
-  CartesianTree, Validation, GetKeys;
+  CartesianTree, CartesianTreeByName, Validation, GetKeys, Hash, Messages;
 
 type
   TShipment = record
-    SourceID: Integer;       // ID склада
-    DestinationID: Integer;  // ID магазина
+    SourceID: PLocation;       // Отправитель (склад)
+    DestinationID: PLocation;  // Получатель (магазин)
     ProductID: integer;
     Quantity: Integer;
     DepartureTime: TDateTime;
-
   end;
   PShipment = ^TShipment;
-
 
   TfrMainForm = class(TForm)
     pnNav: TPanel;
@@ -64,6 +62,21 @@ type
     btnEditObjCancel: TButton;
     edEditObjBuilding: TEdit;
     edEditObjCapacity: TEdit;
+    pnObjectInfo: TPanel;
+    lbObjInfoName: TLabel;
+    lbObjInfoStreet: TLabel;
+    lbObjInfoHouse: TLabel;
+    lbObjInfoBuilding: TLabel;
+    lbObjInfoCapacity: TLabel;
+    lbObjInfoNameVal: TLabel;
+    lbObjInfoStreetVal: TLabel;
+    lbObjInfoHouseVal: TLabel;
+    lbObjInfoBuildingVal: TLabel;
+    lbObjInfoCapacityVal: TLabel;
+    lbObjInfoTitle: TLabel;
+    lbObjInfoUsedCapacity: TLabel;
+    lbObjInfoUsedCapacityVal: TLabel;
+    btnAddShipment: TButton;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -88,28 +101,27 @@ type
 
     procedure FormCreate(Sender: TObject);
 
-    procedure pnSelectObjectShow(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-
     procedure hideAllPanels;
-
+    procedure showPanel(const panel: TPanel; const x, y: integer);
     procedure resetPnCreateObj;
     procedure resetPnEditObj;
 
-    procedure showPanel(const panel: TPanel; const x, y: integer);
+    procedure pnSelectObjectShow(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure pnObjectInfoShow(Sender: TObject);
+    procedure pnObjectInfoHide(Sender: TObject);
+
 
     procedure btnSelectObjDeleteClick(Sender: TObject);
     procedure btnSelectObjCancelClick(Sender: TObject);
     procedure btnSelectObjEditClick(Sender: TObject);
     procedure btnEditObjConfirmClick(Sender: TObject);
 
-    function getConfirmation: boolean;
-
   private
     { Private declarations }
     xPos, yPos: integer;
     shops, warehouses: PTreapNode;
-
+    shopsNames, warehousesNames: PTreapNameNode;
     const
       shopColor = clHighlight;
       warehouseColor = clMaroon;
@@ -125,6 +137,19 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TfrMainForm.FormCreate(Sender: TObject);
+begin
+  Randomize;
+  shopKey := 1;
+  warehouseKey := 1;
+  InitTree(shops);
+  InitTree(wareHouses);
+  InitTreeName(shopsNames);
+  InitTreeName(warehousesNames);
+  InitHash(47, 40009);
+end;
+
 
 procedure TfrMainForm.resetPnCreateObj;
 begin
@@ -144,34 +169,6 @@ begin
   edEditObjCapacity.Text := '';
 end;
 
-function TfrMainForm.getConfirmation: boolean;
-var
-  Dlg: TForm;
-  i: integer;
-begin
-    Dlg := CreateMessageDialog('Вы подтверждаете действие?',
-                             mtConfirmation, [mbYes, mbNo]);
-  try
-    Dlg.Caption := 'Подтверждение действия';
-    for i := 0 to Dlg.ComponentCount - 1 do
-    begin
-      if Dlg.Components[i] is TButton then
-      begin
-        with TButton(Dlg.Components[i]) do
-        begin
-          if ModalResult = mrYes then
-            Caption := 'Да'
-          else if ModalResult = mrNo then
-            Caption := 'Нет';
-        end;
-      end;
-    end;
-    Result := Dlg.ShowModal = mrYes;
-  finally
-    Dlg.Free;
-  end;
-end;
-
 procedure TfrMainForm.showPanel(const panel: TPanel; const x, y: integer);
 begin
   //check y pos
@@ -186,6 +183,7 @@ begin
 
   panel.visible := true;
 end;
+
 
 procedure TfrMainForm.hideAllPanels;
 begin
@@ -245,6 +243,7 @@ begin
       curNode := FindTreap(shops, pnSelectObject.tag);
       FreeAndNil(curNode^.Data^.shape);
       EraseTreap(shops, pnSelectObject.tag);
+      EraseTreapName(shopsNames, getHash(string(curNode^.Data^.name)));
     end
     else
     begin
@@ -252,15 +251,19 @@ begin
       curNode := FindTreap(warehouses, pnSelectObject.tag);
       FreeAndNil(curNode^.Data^.shape);
       EraseTreap(warehouses, pnSelectObject.tag);
+      EraseTreapName(warehousesNames, getHash(string(curNode^.Data^.name)));
     end;
   end;
 end;
+
+
 
 procedure TfrMainForm.pnSelectObjectShow(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
 begin
   hideAllPanels;
   spMapPoint.Visible := false;
+  pnObjectInfo.Visible := false;
 
   X := (Sender as TShape).left + ((Sender as TShape).width shr 1);
   Y := (Sender as TShape).top + ((Sender as TShape).height shr 1);
@@ -269,6 +272,43 @@ begin
   pnSelectObject.tag := (Sender as TShape).tag;
 end;
 
+
+procedure TfrMainForm.pnObjectInfoShow(Sender: TObject);
+var
+  curNode: PTreapNode;
+begin
+  if ((Sender as TShape).tag and mask) <> 0 then
+  begin
+    //shop
+    curNode := FindTreap(shops, (Sender as TShape).tag);
+    lbObjInfoTitle.Caption := 'Магазин';
+  end
+  else
+  begin
+    //warehouse
+    curNode := FindTreap(warehouses, (Sender as TShape).tag);
+    lbObjInfoTitle.Caption := 'Склад'
+  end;
+
+  lbObjInfoNameVal.Caption := string(curNode^.Data^.name);
+  lbObjInfoStreetVal.Caption := string(curNode^.Data^.street);
+  lbObjInfoHouseVal.Caption := intToStr(curNode^.Data^.House);
+  if curNode^.Data^.Building <> -1 then
+    lbObjInfoBuildingVal.Caption := intToStr(curNode^.Data^.Building)
+  else
+    lbObjInfoBuildingVal.Caption := 'Отсутствует';
+  lbObjInfoCapacityVal.Caption := intToStr(curNode^.Data^.Capacity);
+  lbObjInfoUsedCapacityVal.Caption := intToStr(curNode^.Data^.UsedCapacity);
+  showPanel(pnObjectInfo,
+            (Sender as TShape).left + ((Sender as TShape).width shr 1),
+            (Sender as TShape).top + ((Sender as TShape).height shr 1)
+           );
+end;
+
+procedure TfrMainForm.pnObjectInfoHide(Sender: TObject);
+begin
+  pnObjectInfo.Visible := false;
+end;
 
 procedure TfrMainForm.createNewObj(var newObj: PLocation; const isShop: boolean);
 begin
@@ -280,10 +320,12 @@ begin
   if Length(edCreateObjBuilding.Text) > 0 then
     newObj^.building := strToInt(edCreateObjBuilding.Text);
   newObj^.capacity := strToInt(edCreateObjCapacity.Text);
+  newObj^.usedCapacity := 0;
 
   newObj^.X := xPos;
   newObj^.Y := yPos;
 
+  //shape
   newObj^.shape := TShape.Create(self);
   newObj^.shape.Parent := spMapPoint.Parent;
 
@@ -312,18 +354,13 @@ begin
   newObj^.shape.Tag := newObj^.key;
 
   newObj^.shape.onMouseUp := pnSelectObjectShow;
+  newObj^.shape.OnMouseEnter := pnObjectInfoShow;
+  newObj^.shape.OnMouseLeave := pnObjectInfoHide;
 
   newObj^.shape.Visible := true;
   newObj^.shape.BringToFront;
-end;
+  //endshape
 
-procedure TfrMainForm.FormCreate(Sender: TObject);
-begin
-  Randomize;
-  shopKey := 1;
-  warehouseKey := 1;
-  InitTree(shops);
-  InitTree(wareHouses);
 end;
 
 
@@ -333,6 +370,7 @@ var
 begin
   createNewObj(newObj, true);
   InsertTreap(shops, newObj);
+  InsertTreapName(shopsNames, string(newObj^.name));
 end;
 
 procedure TfrMainForm.createWarehouse(Sender: TObject);
@@ -341,6 +379,7 @@ var
 begin
   createNewObj(newObj, false);
   InsertTreap(warehouses, newObj);
+  InsertTreapName(warehousesNames, string(newObj^.name));
 end;
 
 
@@ -469,26 +508,44 @@ procedure TfrMainForm.btnCreateObjConfirmClick(Sender: TObject);
 begin
   if validateCreateObj then
   begin
-    edCreateObjName.Text := trim(edCreateObjName.Text);
-    edCreateObjStreet.Text := trim(edCreateObjStreet.Text);
-
-    if pnCreateObj.tag = 1 then
+    if (
+        (pnCreateObj.tag = 1) and (FindTreapName(shopsNames, getHash(edCreateObjName.Text)) <> nil)
+        or
+        (pnCreateObj.tag = 2) and (FindTreapName(warehousesNames, getHash(edCreateObjName.Text)) <> nil)
+    ) then
     begin
-      //create shop
-      createShop(Sender);
-    end
-    else if pnCreateObj.tag = 2 then
-    begin
-      //create warehouse
-      createWarehouse(Sender);
+      if pnCreateObj.tag = 1 then
+      begin
+        showError('Магазин с таким именем уже существует');
+      end
+      else
+      begin
+        showError('Склад с таким именем уже существует');
+      end;
     end
     else
     begin
-      //error
+      edCreateObjName.Text := trim(edCreateObjName.Text);
+      edCreateObjStreet.Text := trim(edCreateObjStreet.Text);
+
+      if pnCreateObj.tag = 1 then
+      begin
+        //create shop
+        createShop(Sender);
+      end
+      else if pnCreateObj.tag = 2 then
+      begin
+        //create warehouse
+        createWarehouse(Sender);
+      end
+      else
+      begin
+        //error
+      end;
+      resetPnCreateObj;
+      hideAllPanels;
+      spMapPoint.visible := false;
     end;
-    resetPnCreateObj;
-    hideAllPanels;
-    spMapPoint.visible := false;
   end
   else
   begin
@@ -524,6 +581,7 @@ begin
 
   xPos := X;
   yPos := Y;
+  pnCreateSelect.BringToFront;
   showPanel(pnCreateSelect, xPos, yPos);
 
   //print green point

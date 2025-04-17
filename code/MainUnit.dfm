@@ -140,6 +140,9 @@ object frMainForm: TfrMainForm
     TabOrder = 1
     ExplicitWidth = 1270
     ExplicitHeight = 599
+    DesignSize = (
+      1280
+      631)
     object imgMap: TImage
       Left = 1
       Top = 1
@@ -16158,13 +16161,13 @@ object frMainForm: TfrMainForm
       Proportional = True
       Stretch = True
       OnMouseUp = imgMapMouseUp
-      ExplicitLeft = 2
-      ExplicitTop = -1
+      ExplicitLeft = 65
+      ExplicitTop = 41
     end
     object spMapPoint: TShape
       AlignWithMargins = True
-      Left = 240
-      Top = 364
+      Left = 72
+      Top = 125
       Width = 14
       Height = 14
       Brush.Color = clLime
@@ -16172,8 +16175,8 @@ object frMainForm: TfrMainForm
       Visible = False
     end
     object pnCreateSelect: TPanel
-      Left = 252
-      Top = 252
+      Left = 80
+      Top = 6
       Width = 145
       Height = 127
       AutoSize = True
@@ -16229,8 +16232,8 @@ object frMainForm: TfrMainForm
       end
     end
     object pnCreateObj: TPanel
-      Left = 403
-      Top = 173
+      Left = 410
+      Top = 6
       Width = 258
       Height = 206
       AutoSize = True
@@ -16353,8 +16356,8 @@ object frMainForm: TfrMainForm
       end
     end
     object pnSelectObject: TPanel
-      Left = 667
-      Top = 301
+      Left = 231
+      Top = 6
       Width = 173
       Height = 77
       AutoSize = True
@@ -16405,8 +16408,8 @@ object frMainForm: TfrMainForm
       end
     end
     object pnEditObj: TPanel
-      Left = 846
-      Top = 173
+      Left = 674
+      Top = 6
       Width = 258
       Height = 206
       AutoSize = True
@@ -16527,6 +16530,178 @@ object frMainForm: TfrMainForm
         TabOrder = 6
         OnChange = OnClickValidateLength
       end
+    end
+    object pnObjectInfo: TPanel
+      Left = 938
+      Top = 6
+      Width = 213
+      Height = 217
+      AutoSize = True
+      Ctl3D = True
+      Padding.Left = 10
+      Padding.Top = 5
+      Padding.Right = 10
+      Padding.Bottom = 10
+      ParentBackground = False
+      ParentCtl3D = False
+      TabOrder = 4
+      Visible = False
+      object lbObjInfoName: TLabel
+        Left = 11
+        Top = 44
+        Width = 55
+        Height = 15
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+      end
+      object lbObjInfoStreet: TLabel
+        Left = 13
+        Top = 75
+        Width = 37
+        Height = 15
+        Caption = #1059#1083#1080#1094#1072':'
+      end
+      object lbObjInfoHouse: TLabel
+        Left = 13
+        Top = 104
+        Width = 27
+        Height = 15
+        Caption = #1044#1086#1084':'
+      end
+      object lbObjInfoBuilding: TLabel
+        Left = 13
+        Top = 133
+        Width = 43
+        Height = 15
+        Caption = #1050#1086#1088#1087#1091#1089':'
+      end
+      object lbObjInfoCapacity: TLabel
+        Left = 13
+        Top = 162
+        Width = 105
+        Height = 15
+        Caption = #1042#1084#1077#1089#1090#1080#1084#1086#1089#1090#1100' ('#1091'.'#1077'.):'
+      end
+      object lbObjInfoNameVal: TLabel
+        Left = 125
+        Top = 46
+        Width = 56
+        Height = 15
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbObjInfoStreetVal: TLabel
+        Left = 125
+        Top = 75
+        Width = 35
+        Height = 15
+        Caption = #1059#1083#1080#1094#1072
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbObjInfoHouseVal: TLabel
+        Left = 125
+        Top = 104
+        Width = 25
+        Height = 15
+        Caption = #1044#1086#1084
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbObjInfoBuildingVal: TLabel
+        Left = 125
+        Top = 133
+        Width = 41
+        Height = 15
+        Caption = #1050#1086#1088#1087#1091#1089
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbObjInfoCapacityVal: TLabel
+        Left = 125
+        Top = 162
+        Width = 77
+        Height = 15
+        Caption = #1042#1084#1077#1089#1090#1080#1084#1086#1089#1090#1100
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbObjInfoTitle: TLabel
+        AlignWithMargins = True
+        Left = 11
+        Top = 6
+        Width = 191
+        Height = 30
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1058#1080#1087' '#1086#1073#1098#1077#1082#1090#1072
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = 30
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 127
+      end
+      object lbObjInfoUsedCapacity: TLabel
+        Left = 13
+        Top = 191
+        Width = 67
+        Height = 15
+        Caption = #1047#1072#1085#1103#1090#1086'('#1091'.'#1077'.):'
+      end
+      object lbObjInfoUsedCapacityVal: TLabel
+        Left = 125
+        Top = 191
+        Width = 39
+        Height = 15
+        Caption = #1047#1072#1085#1103#1090#1086
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+    end
+    object btnAddShipment: TButton
+      Left = 1121
+      Top = 569
+      Width = 149
+      Height = 49
+      Anchors = [akRight, akBottom]
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1074#1103#1079#1100
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -17
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 5
     end
   end
 end

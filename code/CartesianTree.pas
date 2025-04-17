@@ -2,26 +2,18 @@ unit CartesianTree;
 
 interface
 
-  uses Vcl.ExtCtrls;
+  uses Vcl.ExtCtrls, Vcl.StdCtrls;
 
   type
   TLocation = record
     name, street: string[255];
-    house, building, capacity: integer;
+    house, building, capacity, usedCapacity: integer;
     Key, X, Y: Integer;
     shape: TShape;
+    capt: TLabel;
   end;
   PLocation = ^TLocation;
 
-  TShipment = record
-    SourceID: Integer;       // ID склада
-    DestinationID: Integer;  // ID магазина
-    ProductID: integer;
-    Quantity: Integer;
-    DepartureTime: TDateTime;
-
-  end;
-  PShipment = ^TShipment;
 
   PTreapNode = ^TTreapNode;
   TTreapNode = record

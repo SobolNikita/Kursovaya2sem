@@ -128,6 +128,11 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="CartesianTree.pas"/>
+        <DCCReference Include="Validation.pas"/>
+        <DCCReference Include="GetKeys.pas"/>
+        <DCCReference Include="CartesianTreeByName.pas"/>
+        <DCCReference Include="Hash.pas"/>
+        <DCCReference Include="Messages.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
