@@ -133,6 +133,7 @@
         <DCCReference Include="CartesianTreeByName.pas"/>
         <DCCReference Include="Hash.pas"/>
         <DCCReference Include="Messages.pas"/>
+        <DCCReference Include="Filter.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -10,7 +10,6 @@ interface
     house, building, capacity, usedCapacity: integer;
     Key, X, Y: Integer;
     shape: TShape;
-    capt: TLabel;
   end;
   PLocation = ^TLocation;
 

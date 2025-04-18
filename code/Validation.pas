@@ -6,6 +6,8 @@ interface
   function validateLength(Sender: TObject): boolean;
   function validateLetters(Sender: TObject): boolean;
   function validateAll(Sender: TObject): boolean;
+  function validateFromTo(const firstField, secondField: TObject): boolean;
+
   var a: integer = 5;
 implementation
 
@@ -52,6 +54,15 @@ begin
     (Sender as TEdit).color := clRed;
     Result := false;
   end;
+end;
+
+function validateFromTo(const firstField, secondField: TObject): boolean;
+begin
+  Result := true;
+  if (((Length((firstField as TEdit).Text) > 0) and (Length((secondField as TEdit).Text) > 0))
+       and (strToInt((firstField as TEdit).text) > strToInt((secondField as TEdit).text)))
+  then
+    Result := false;
 end;
 
 end.

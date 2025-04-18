@@ -5,8 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.Imaging.jpeg, System.UITypes,
-  CartesianTree, CartesianTreeByName, Validation, GetKeys, Hash, Messages;
+  Vcl.Imaging.jpeg, System.UITypes, Vcl.Menus, Vcl.NumberBox,
+  CartesianTree, CartesianTreeByName, Validation, GetKeys, Hash, Messages, Filter;
 
 type
   TShipment = record
@@ -19,12 +19,8 @@ type
   PShipment = ^TShipment;
 
   TfrMainForm = class(TForm)
-    pnNav: TPanel;
-    btnNavMap: TButton;
-    btnNavBalance: TButton;
-    btnNavOrders: TButton;
-    bntNavDelivery: TButton;
-    btnNavAnalytics: TButton;
+    pnFilter: TPanel;
+    btnFilter: TButton;
     pnMapWrap: TPanel;
     imgMap: TImage;
     pnCreateSelect: TPanel;
@@ -76,7 +72,48 @@ type
     lbObjInfoTitle: TLabel;
     lbObjInfoUsedCapacity: TLabel;
     lbObjInfoUsedCapacityVal: TLabel;
-    btnAddShipment: TButton;
+    MainMenu1: TMainMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
+    pnHints: TPanel;
+    lbHints: TLabel;
+    pnFilterParams: TPanel;
+    btnFilterDefault: TButton;
+    btnFilterCancel: TButton;
+    pnFilterButtons: TPanel;
+    btnFilterConfirm: TButton;
+    lbFilterStreet: TLabel;
+    lbFilterHouse: TLabel;
+    lbFilterBuilding: TLabel;
+    lbFilterCapacityFrom: TLabel;
+    lbFilterCapacityTo: TLabel;
+    lbFilterType: TLabel;
+    cbFilterTypeWarehouse: TCheckBox;
+    pnFilterParamsType: TPanel;
+    pnFilterParamsStreet: TPanel;
+    edFilterStreetVal: TEdit;
+    pnFilterParamsHouse: TPanel;
+    edFilterHouseVal: TEdit;
+    pnFilterParamsBuilding: TPanel;
+    edFilterBuildingVal: TEdit;
+    pnFilterParamsCapacity: TPanel;
+    edFilterCapacityFromVal: TEdit;
+    edFilterCapacityToVal: TEdit;
+    pnFilterParamsUsedCapacity: TPanel;
+    lbFilterUsedCapacityFrom: TLabel;
+    lbFilterUsedCapacityTo: TLabel;
+    edFilterUsedCapacityFromVal: TEdit;
+    edFilterUsedCapacityToVal: TEdit;
+    cbFilterTypeShop: TCheckBox;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -98,6 +135,7 @@ type
 
     function validateCreateObj: boolean;
     function validateEditObj: boolean;
+    function validateNumberFromText(const curText: string): integer;
 
     procedure FormCreate(Sender: TObject);
 
@@ -111,17 +149,33 @@ type
     procedure pnObjectInfoShow(Sender: TObject);
     procedure pnObjectInfoHide(Sender: TObject);
 
+    procedure setFilterPanel;
+
+    function cntFilteredItems: integer;
 
     procedure btnSelectObjDeleteClick(Sender: TObject);
     procedure btnSelectObjCancelClick(Sender: TObject);
     procedure btnSelectObjEditClick(Sender: TObject);
     procedure btnEditObjConfirmClick(Sender: TObject);
+    procedure btnFilterClick(Sender: TObject);
+    procedure btnFilterCancelClick(Sender: TObject);
+    procedure btnFilterDefaultClick(Sender: TObject);
+    procedure btnFilterConfirmClick(Sender: TObject);
+    procedure edFilterCapacityToValExit(Sender: TObject);
+    procedure edFilterCapacityToValChange(Sender: TObject);
+    procedure edFilterUsedCapacityToValChange(Sender: TObject);
+    procedure edFilterUsedCapacityToValExit(Sender: TObject);
+    procedure edFilterCapacityFromValChange(Sender: TObject);
+    procedure edFilterUsedCapacityFromValChange(Sender: TObject);
+    procedure edFilterCapacityFromValExit(Sender: TObject);
+    procedure edFilterUsedCapacityFromValExit(Sender: TObject);
 
   private
     { Private declarations }
     xPos, yPos: integer;
     shops, warehouses: PTreapNode;
     shopsNames, warehousesNames: PTreapNameNode;
+    filter: TFilter;
     const
       shopColor = clHighlight;
       warehouseColor = clMaroon;
@@ -143,6 +197,7 @@ begin
   Randomize;
   shopKey := 1;
   warehouseKey := 1;
+  InitFilter(filter);
   InitTree(shops);
   InitTree(wareHouses);
   InitTreeName(shopsNames);
@@ -191,6 +246,7 @@ begin
   pnCreateSelect.Visible := false;
   pnSelectObject.Visible := false;
   pnEditObj.Visible := false;
+  pnFilterParams.Visible := false;
 end;
 
 procedure TfrMainForm.btnSelectObjCancelClick(Sender: TObject);
@@ -229,6 +285,7 @@ begin
     edEditObjBuilding.Text := intToStr(curNode^.Data^.building);
   edEditObjCapacity.Text := intToStr(curNode^.Data^.capacity);
 end;
+
 
 procedure TfrMainForm.btnSelectObjDeleteClick(Sender: TObject);
 var
@@ -304,6 +361,8 @@ begin
             (Sender as TShape).top + ((Sender as TShape).height shr 1)
            );
 end;
+
+
 
 procedure TfrMainForm.pnObjectInfoHide(Sender: TObject);
 begin
@@ -384,7 +443,53 @@ end;
 
 
 
+procedure TfrMainForm.edFilterCapacityFromValChange(Sender: TObject);
+begin
+  if validateFromTo(edFilterCapacityFromVal, edFilterCapacityToVal) then
+    edFilterCapacityToVal.color := clWindow;
+end;
 
+procedure TfrMainForm.edFilterCapacityFromValExit(Sender: TObject);
+begin
+  if not validateFromTo(edFilterCapacityFromVal, edFilterCapacityToVal) then
+    edFilterCapacityToVal.color := clRed;
+end;
+
+procedure TfrMainForm.edFilterCapacityToValChange(Sender: TObject);
+begin
+  if validateFromTo(edFilterCapacityFromVal, edFilterCapacityToVal) then
+    edFilterCapacityToVal.color := clWindow;
+end;
+
+procedure TfrMainForm.edFilterCapacityToValExit(Sender: TObject);
+begin
+  if not validateFromTo(edFilterCapacityFromVal, edFilterCapacityToVal) then
+    edFilterCapacityToVal.color := clRed;
+end;
+
+procedure TfrMainForm.edFilterUsedCapacityFromValChange(Sender: TObject);
+begin
+  if validateFromTo(edFilterUsedCapacityFromVal, edFilterUsedCapacityToVal) then
+    edFilterUsedCapacityToVal.color := clWindow;
+end;
+
+procedure TfrMainForm.edFilterUsedCapacityFromValExit(Sender: TObject);
+begin
+  if not validateFromTo(edFilterUsedCapacityFromVal, edFilterUsedCapacityToVal) then
+    edFilterUsedCapacityToVal.color := clRed;
+end;
+
+procedure TfrMainForm.edFilterUsedCapacityToValChange(Sender: TObject);
+begin
+  if validateFromTo(edFilterUsedCapacityFromVal, edFilterUsedCapacityToVal) then
+    edFilterUsedCapacityToVal.color := clWindow;
+end;
+
+procedure TfrMainForm.edFilterUsedCapacityToValExit(Sender: TObject);
+begin
+  if not validateFromTo(edFilterUsedCapacityFromVal, edFilterUsedCapacityToVal) then
+    edFilterUsedCapacityToVal.color := clRed;
+end;
 
 procedure TfrMainForm.OnClickValidateLetters(Sender: TObject);
 begin
@@ -392,6 +497,14 @@ begin
   begin
     (Sender as TEdit).color := clWindow;
   end;
+end;
+
+function TfrMainForm.validateNumberFromText(const curText: string): integer;
+begin
+  if Length(curText) > 0 then
+    Result := strToInt(curText)
+  else
+    Result := -1;
 end;
 
 procedure TfrMainForm.OnClickValidateLength(Sender: TObject);
@@ -441,6 +554,8 @@ end;
 procedure TfrMainForm.btnCreateSelectClick(Sender: TObject);
 begin
   hideAllPanels;
+
+  pnCreateObj.BringToFront;
 
   edCreateObjName.color := clWindow;
   edCreateObjStreet.color := clWindow;
@@ -502,6 +617,124 @@ begin
 
 
   end;
+end;
+
+procedure TfrMainForm.setFilterPanel;
+begin
+  edFilterStreetVal.Text := '';
+  edFilterHouseVal.Text := '';
+  edFilterBuildingVal.Text := '';
+  edFilterCapacityFromVal.Text := '';
+  edFilterCapacityToVal.Text := '';
+  edFilterUsedCapacityFromVal.Text := '';
+  edFilterUsedCapacityToVal.Text := '';
+
+  cbFilterTypeShop.Checked := true;
+  cbFilterTypeWarehouse.Checked := true;
+end;
+
+procedure TfrMainForm.btnFilterCancelClick(Sender: TObject);
+begin
+  pnFilterParams.Visible := false;
+end;
+
+procedure TfrMainForm.btnFilterClick(Sender: TObject);
+begin
+  hideAllPanels;
+  spMapPoint.Visible := false;
+
+  cbFilterTypeShop.Checked := false;
+  cbFilterTypeWarehouse.Checked := false;
+  edFilterStreetVal.Text := '';
+  edFilterHouseVal.Text := '';
+  edFilterBuildingVal.Text := '';
+  edFilterCapacityFromVal.Text := '';
+  edFilterCapacityToVal.Text := '';
+  edFilterUsedCapacityFromVal.Text := '';
+  edFilterUsedCapacityToVal.Text := '';
+
+  if (filter.buildingType and 2) <> 0 then
+    cbFilterTypeShop.Checked := true;
+  if (filter.buildingType and 1) <> 0 then
+    cbFilterTypeWarehouse.Checked := true;
+  if Length(filter.street) > 0 then
+    edFilterStreetVal.Text := string(filter.street);
+  if filter.house <> -1 then
+    edFilterHouseVal.Text := intToStr(filter.house);
+  if filter.building <> -1 then
+    edFilterBuildingVal.Text := intToStr(filter.building);
+  if filter.capacityFrom <> -1 then
+    edFilterCapacityFromVal.Text := intToStr(filter.capacityFrom);
+  if filter.capacityTo <> -1 then
+    edFilterCapacityToVal.Text := intToStr(filter.capacityTo);
+  if filter.usedCapacityFrom <> -1 then
+    edFilterUsedCapacityFromVal.Text := intToStr(filter.usedCapacityFrom);
+  if filter.usedCapacityTo <> -1 then
+    edFilterUsedCapacityToVal.Text := intToStr(filter.usedCapacityTo);
+  pnFilterParams.Visible := true;
+end;
+
+function TfrMainForm.cntFilteredItems: integer;
+begin
+  Result := 0;
+  if not cbFilterTypeShop.Checked then
+    Inc(Result);
+  if not cbFilterTypeWarehouse.Checked then
+    Inc(Result);
+  if Length(edFilterStreetVal.Text) > 0 then
+    Inc(Result);
+  if Length(edFilterHouseVal.Text) > 0 then
+    Inc(Result);
+  if Length(edFilterBuildingVal.Text) > 0 then
+    Inc(Result);
+  if Length(edFilterCapacityFromVal.Text) > 0 then
+    Inc(Result);
+  if Length(edFilterCapacityToVal.Text) > 0 then
+    Inc(Result);
+  if Length(edFilterUsedCapacityFromVal.Text) > 0 then
+    Inc(Result);
+  if Length(edFilterUsedCapacityToVal.Text) > 0 then
+    Inc(Result);
+end;
+
+procedure TfrMainForm.btnFilterConfirmClick(Sender: TObject);
+var
+  cntFilter: integer;
+  objType: integer;
+begin
+  if (validateLetters(edFilterStreetVal))
+     and ((validateFromTo(edFilterCapacityFromVal, edFilterCapacityToVal))
+     and (validateFromTo(edFilterUsedCapacityFromVal, edFilterUsedCapacityToVal)))
+  then
+  begin
+    cntFilter := cntFilteredItems;
+    objType := 0;
+    if cbFilterTypeShop.checked then
+      objType := objType or 2;
+    if cbFilterTypeWarehouse.checked then
+      objType := objType or 1;
+
+    //передать -1 в числовое поле, если пусто
+    createFilter(filter, objType,
+                 edFilterStreetVal.text,
+                 validateNumberFromText(edFilterHouseVal.Text),
+                 validateNumberFromText(edFilterBuildingVal.Text),
+                 validateNumberFromText(edFilterCapacityFromVal.Text),
+                 validateNumberFromText(edFilterCapacityToVal.Text),
+                 validateNumberFromText(edFilterUsedCapacityFromVal.Text),
+                 validateNumberFromText(edFilterUsedCapacityToVal.Text)
+                 );
+    if cntFilter <> 0 then
+      btnFilter.Caption := 'Фильтр (' + intToStr(cntFilter) + ')'
+    else
+      btnFilter.Caption := 'Фильтр';
+    hideAllPanels;
+  end;
+end;
+
+procedure TfrMainForm.btnFilterDefaultClick(Sender: TObject);
+begin
+  setFilterPanel;
 end;
 
 procedure TfrMainForm.btnCreateObjConfirmClick(Sender: TObject);
@@ -570,6 +803,7 @@ begin
   hideAllPanels;
   spMapPoint.visible := false;
 end;
+
 
 
 procedure TfrMainForm.imgMapMouseUp(Sender: TObject; Button: TMouseButton;

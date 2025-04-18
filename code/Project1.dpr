@@ -8,7 +8,8 @@ uses
   GetKeys in 'GetKeys.pas',
   CartesianTreeByName in 'CartesianTreeByName.pas',
   Hash in 'Hash.pas',
-  Messages in 'Messages.pas';
+  Messages in 'Messages.pas',
+  Filter in 'Filter.pas';
 
 {$R *.res}
 
