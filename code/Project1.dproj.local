@@ -1,26 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.773,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.058,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.668,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.923,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.652,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.726,D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\Filter.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.479,D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\Panels.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.548,D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\CartesianTree.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.788,D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\Validation.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.589,D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\GetKeys.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.786,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.192,=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.994,C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\MainUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.994,C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\bsuir\sem2\oaip\kursovaya\code\MainUnit.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.499,C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\bsuir\sem2\oaip\kursovaya\code\Project1.dproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.291,D:\bsuir\sem2\oaip\kursovaya\code\CartesianTreeByName.pas=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.816,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.652,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.923,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.668,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.058,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.303,D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\Messages.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.540,D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\Hash.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.892,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.540,D:\bsuir\sem2\oaip\kursovaya\code\Hash.pas=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.303,D:\bsuir\sem2\oaip\kursovaya\code\Messages.pas=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.816,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.291,D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas=D:\bsuir\sem2\oaip\kursovaya\code\CartesianTreeByName.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.773,=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.589,D:\bsuir\sem2\oaip\kursovaya\code\GetKeys.pas=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.994,D:\bsuir\sem2\oaip\kursovaya\code\MainUnit.pas=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.499,D:\bsuir\sem2\oaip\kursovaya\code\Project1.dproj=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.788,D:\bsuir\sem2\oaip\kursovaya\code\Validation.pas=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.994,D:\bsuir\sem2\oaip\kursovaya\code\MainUnit.dfm=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.548,D:\bsuir\sem2\oaip\kursovaya\code\CartesianTree.pas=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.921,=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.192,=C:\Users\RedmiBook\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.479,D:\bsuir\sem2\oaip\kursovaya\code\Panels.pas=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.726,D:\bsuir\sem2\oaip\kursovaya\code\Filter.pas=D:\bsuir\sem2\oaip\kursovaya\code\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>

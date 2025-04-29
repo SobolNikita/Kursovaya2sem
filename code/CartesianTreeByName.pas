@@ -7,6 +7,7 @@ interface
   type
   TName = record
     name: string[255];
+    ID: integer;
     Key: integer;
   end;
   PName = ^TName;
@@ -22,7 +23,7 @@ interface
   function GenerateUniquePriorityName(var Root: PTreapNameNode): Integer;
   procedure SplitTreapName(var t: PTreapNameNode; const key: Integer; var L, R: PTreapNameNode);
   function MergeTreapName(var L, R: PTreapNameNode): PTreapNameNode;
-  procedure InsertTreapName(var Root: PTreapNameNode; const name: string);
+  procedure InsertTreapName(var Root: PTreapNameNode; const name: string; const ID: integer);
   procedure EraseTreapName(var Root: PTreapNameNode; const Key: Integer);
   procedure ClearTreapName(var Root: PTreapNameNode);
   procedure InitTreeName(var root: PTreapNameNode);
@@ -120,7 +121,7 @@ begin
   end;
 end;
 
-procedure InsertTreapName(var Root: PTreapNameNode; const name: string);
+procedure InsertTreapName(var Root: PTreapNameNode; const name: string; const ID: integer);
 var
   NewNode, L, R: PTreapNameNode;
 begin
@@ -128,6 +129,7 @@ begin
   New(NewNode^.Data);
   NewNode^.Data^.name := shortString(name);
   NewNode^.Data^.Key := getHash(name);
+  NewNode^.Data^.ID := ID;
   NewNode^.Left := nil;
   NewNode^.Right := nil;
   NewNode^.Priority := GenerateUniquePriorityName(Root);
