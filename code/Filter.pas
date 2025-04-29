@@ -30,8 +30,6 @@ procedure createFilter(var resObj: TFilter; const objType: integer; const objStr
                          usedCapacityFrom, usedCapacityTo: integer);
 //objType = 0 (00b): none, 1(01b): shop, 2(10b): warehouse, 3(11b): both
 begin
-k
-  //Значения -1, если пусто
   resObj.buildingType := objType;
   resObj.street := shortString(objStreet);
   resObj.house := house;

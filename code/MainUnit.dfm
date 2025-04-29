@@ -29624,8 +29624,8 @@ object frMainForm: TfrMainForm
     object pnObjectInfo: TPanel
       Left = 938
       Top = 6
-      Width = 213
-      Height = 217
+      Width = 224
+      Height = 246
       AutoSize = True
       Ctl3D = True
       Padding.Left = 10
@@ -29637,42 +29637,42 @@ object frMainForm: TfrMainForm
       TabOrder = 4
       Visible = False
       object lbObjInfoName: TLabel
-        Left = 11
-        Top = 44
+        Left = 24
+        Top = 46
         Width = 55
         Height = 15
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
       end
       object lbObjInfoStreet: TLabel
-        Left = 13
+        Left = 24
         Top = 75
         Width = 37
         Height = 15
         Caption = #1059#1083#1080#1094#1072':'
       end
       object lbObjInfoHouse: TLabel
-        Left = 13
+        Left = 24
         Top = 104
         Width = 27
         Height = 15
         Caption = #1044#1086#1084':'
       end
       object lbObjInfoBuilding: TLabel
-        Left = 13
+        Left = 24
         Top = 133
         Width = 43
         Height = 15
         Caption = #1050#1086#1088#1087#1091#1089':'
       end
       object lbObjInfoCapacity: TLabel
-        Left = 13
+        Left = 24
         Top = 162
         Width = 105
         Height = 15
         Caption = #1042#1084#1077#1089#1090#1080#1084#1086#1089#1090#1100' ('#1091'.'#1077'.):'
       end
       object lbObjInfoNameVal: TLabel
-        Left = 125
+        Left = 136
         Top = 46
         Width = 56
         Height = 15
@@ -29685,7 +29685,7 @@ object frMainForm: TfrMainForm
         ParentFont = False
       end
       object lbObjInfoStreetVal: TLabel
-        Left = 125
+        Left = 136
         Top = 75
         Width = 35
         Height = 15
@@ -29698,7 +29698,7 @@ object frMainForm: TfrMainForm
         ParentFont = False
       end
       object lbObjInfoHouseVal: TLabel
-        Left = 125
+        Left = 136
         Top = 104
         Width = 25
         Height = 15
@@ -29711,7 +29711,7 @@ object frMainForm: TfrMainForm
         ParentFont = False
       end
       object lbObjInfoBuildingVal: TLabel
-        Left = 125
+        Left = 136
         Top = 133
         Width = 41
         Height = 15
@@ -29724,7 +29724,7 @@ object frMainForm: TfrMainForm
         ParentFont = False
       end
       object lbObjInfoCapacityVal: TLabel
-        Left = 125
+        Left = 136
         Top = 162
         Width = 77
         Height = 15
@@ -29740,7 +29740,7 @@ object frMainForm: TfrMainForm
         AlignWithMargins = True
         Left = 11
         Top = 6
-        Width = 191
+        Width = 202
         Height = 30
         Margins.Left = 0
         Margins.Top = 0
@@ -29755,21 +29755,42 @@ object frMainForm: TfrMainForm
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 127
+        ExplicitLeft = 22
+        ExplicitWidth = 191
       end
       object lbObjInfoUsedCapacity: TLabel
-        Left = 13
+        Left = 24
         Top = 191
         Width = 70
         Height = 15
         Caption = #1047#1072#1085#1103#1090#1086' ('#1091'.'#1077'.):'
       end
       object lbObjInfoUsedCapacityVal: TLabel
-        Left = 125
+        Left = 136
         Top = 191
         Width = 39
         Height = 15
         Caption = #1047#1072#1085#1103#1090#1086
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbObjInfoId: TLabel
+        Left = 24
+        Top = 220
+        Width = 14
+        Height = 15
+        Caption = 'ID:'
+      end
+      object lbObjInfoIdVal: TLabel
+        Left = 136
+        Top = 220
+        Width = 10
+        Height = 15
+        Caption = 'id'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -29807,7 +29828,6 @@ object frMainForm: TfrMainForm
         ParentFont = False
         TabOrder = 0
         OnClick = btnFilterClick
-        ExplicitTop = 9
       end
     end
     object pnFilterParams: TPanel
@@ -29868,7 +29888,6 @@ object frMainForm: TfrMainForm
           Caption = #1057#1073#1088#1086#1089#1080#1090#1100
           TabOrder = 1
           OnClick = btnFilterDefaultClick
-          ExplicitLeft = 90
         end
         object btnFilterConfirm: TButton
           Left = 258
@@ -29902,6 +29921,7 @@ object frMainForm: TfrMainForm
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1058#1080#1087':'
+          ExplicitHeight = 15
         end
         object cbFilterTypeShop: TCheckBox
           AlignWithMargins = True
@@ -29918,7 +29938,6 @@ object frMainForm: TfrMainForm
           Checked = True
           State = cbChecked
           TabOrder = 0
-          ExplicitLeft = 221
         end
         object cbFilterTypeWarehouse: TCheckBox
           AlignWithMargins = True
@@ -29957,6 +29976,7 @@ object frMainForm: TfrMainForm
           Height = 22
           Align = alLeft
           Caption = #1059#1083#1080#1094#1072':'
+          ExplicitHeight = 15
         end
         object edFilterStreetVal: TEdit
           Left = 180
@@ -29967,6 +29987,7 @@ object frMainForm: TfrMainForm
           TabOrder = 0
           TextHint = #1051#1102#1073#1072#1103
           OnChange = OnClickValidateLetters
+          ExplicitHeight = 23
         end
       end
       object pnFilterParamsHouse: TPanel
@@ -29989,6 +30010,7 @@ object frMainForm: TfrMainForm
           Height = 22
           Align = alLeft
           Caption = #1044#1086#1084':'
+          ExplicitHeight = 15
         end
         object edFilterHouseVal: TEdit
           Left = 180
@@ -29999,6 +30021,7 @@ object frMainForm: TfrMainForm
           NumbersOnly = True
           TabOrder = 0
           TextHint = #1051#1102#1073#1086#1081
+          ExplicitHeight = 23
         end
       end
       object pnFilterParamsBuilding: TPanel
@@ -30025,6 +30048,7 @@ object frMainForm: TfrMainForm
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1050#1086#1088#1087#1091#1089' (0, '#1077#1089#1083#1080' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090'):'
+          ExplicitHeight = 15
         end
         object edFilterBuildingVal: TEdit
           Left = 180
@@ -30035,6 +30059,7 @@ object frMainForm: TfrMainForm
           NumbersOnly = True
           TabOrder = 0
           TextHint = #1051#1102#1073#1086#1081
+          ExplicitHeight = 23
         end
       end
       object pnFilterParamsCapacity: TPanel
@@ -30062,7 +30087,7 @@ object frMainForm: TfrMainForm
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1042#1084#1077#1089#1090#1080#1084#1086#1089#1090#1100' '#1086#1090' '
-          ExplicitLeft = 90
+          ExplicitHeight = 15
         end
         object lbFilterCapacityTo: TLabel
           AlignWithMargins = True
@@ -30076,7 +30101,7 @@ object frMainForm: TfrMainForm
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1076#1086
-          ExplicitLeft = 268
+          ExplicitHeight = 15
         end
         object edFilterCapacityFromVal: TEdit
           AlignWithMargins = True
@@ -30094,7 +30119,7 @@ object frMainForm: TfrMainForm
           TextHint = #1052#1080#1085#1080#1084#1091#1084
           OnChange = edFilterCapacityFromValChange
           OnExit = edFilterCapacityFromValExit
-          ExplicitLeft = 191
+          ExplicitHeight = 23
         end
         object edFilterCapacityToVal: TEdit
           AlignWithMargins = True
@@ -30112,7 +30137,7 @@ object frMainForm: TfrMainForm
           TextHint = #1052#1072#1082#1089#1080#1084#1091#1084
           OnChange = edFilterCapacityToValChange
           OnExit = edFilterCapacityToValExit
-          ExplicitLeft = 291
+          ExplicitHeight = 23
         end
       end
       object pnFilterParamsUsedCapacity: TPanel
@@ -30155,7 +30180,7 @@ object frMainForm: TfrMainForm
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1076#1086
-          ExplicitLeft = 268
+          ExplicitHeight = 15
         end
         object edFilterUsedCapacityFromVal: TEdit
           AlignWithMargins = True
@@ -30173,7 +30198,7 @@ object frMainForm: TfrMainForm
           TextHint = #1052#1080#1085#1080#1084#1091#1084
           OnChange = edFilterUsedCapacityFromValChange
           OnExit = edFilterUsedCapacityFromValExit
-          ExplicitLeft = 191
+          ExplicitHeight = 23
         end
         object edFilterUsedCapacityToVal: TEdit
           AlignWithMargins = True
@@ -30191,8 +30216,539 @@ object frMainForm: TfrMainForm
           TextHint = #1052#1072#1082#1089#1080#1084#1091#1084
           OnChange = edFilterUsedCapacityToValChange
           OnExit = edFilterUsedCapacityToValExit
-          ExplicitLeft = 291
+          ExplicitHeight = 23
         end
+      end
+    end
+    object pnCreateShipment: TPanel
+      Left = 72
+      Top = 205
+      Width = 335
+      Height = 391
+      Padding.Left = 10
+      Padding.Top = 10
+      Padding.Right = 10
+      Padding.Bottom = 10
+      ParentBackground = False
+      TabOrder = 7
+      Visible = False
+      DesignSize = (
+        335
+        391)
+      object lbCreateShipment: TLabel
+        Left = 11
+        Top = 11
+        Width = 313
+        Height = 30
+        Align = alTop
+        Alignment = taCenter
+        AutoSize = False
+        Caption = #1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = 30
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = -29
+        ExplicitTop = 78
+        ExplicitWidth = 301
+      end
+      object lbCreateShipmentName: TLabel
+        Left = 24
+        Top = 57
+        Width = 106
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lbCreateShipmentSenderName: TLabel
+        Left = 24
+        Top = 115
+        Width = 137
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100' ('#1053#1072#1079#1074#1072#1085#1080#1077'):'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        ExplicitTop = 72
+      end
+      object lbCreateShipmentDestName: TLabel
+        Left = 24
+        Top = 202
+        Width = 132
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' ('#1053#1072#1079#1074#1072#1085#1080#1077'):'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        ExplicitTop = 159
+      end
+      object lbCreateShipmentItemName: TLabel
+        Left = 24
+        Top = 260
+        Width = 95
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lbCreateShipmentCnt: TLabel
+        Left = 24
+        Top = 318
+        Width = 68
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        ExplicitTop = 275
+      end
+      object lbCreateShipmentSenderID: TLabel
+        Left = 24
+        Top = 144
+        Width = 96
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100' (ID):'
+        ExplicitTop = 101
+      end
+      object lbCreateShipmentDestID: TLabel
+        Left = 24
+        Top = 231
+        Width = 91
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' (ID):'
+        ExplicitTop = 188
+      end
+      object lbCreateShipmentItemID: TLabel
+        Left = 24
+        Top = 289
+        Width = 89
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1040#1088#1090#1080#1082#1091#1083' '#1090#1086#1074#1072#1088#1072':'
+        ExplicitTop = 246
+      end
+      object lbCreateShipmentSenderType: TLabel
+        Left = 24
+        Top = 86
+        Width = 96
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1058#1080#1087' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103':'
+        ExplicitTop = 43
+      end
+      object lbCreateShipmentDestType: TLabel
+        Left = 24
+        Top = 173
+        Width = 91
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1058#1080#1087' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
+        ExplicitTop = 130
+      end
+      object edCreateShipmentName: TEdit
+        Left = 171
+        Top = 54
+        Width = 141
+        Height = 23
+        Anchors = [akLeft, akBottom]
+        TabOrder = 0
+        TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+        ExplicitTop = 11
+      end
+      object edCreateShipmentSenderName: TEdit
+        Left = 171
+        Top = 112
+        Width = 141
+        Height = 23
+        Anchors = [akLeft, akBottom]
+        TabOrder = 1
+        OnChange = edCreateShipmentSenderNameChange
+        ExplicitTop = 69
+      end
+      object edCreateShipmentSenderID: TEdit
+        Left = 171
+        Top = 141
+        Width = 141
+        Height = 23
+        Anchors = [akLeft, akBottom]
+        NumbersOnly = True
+        TabOrder = 2
+        OnExit = edCreateShipmentSenderIDExit
+        ExplicitTop = 98
+      end
+      object edCreateShipmentDestName: TEdit
+        Left = 171
+        Top = 199
+        Width = 141
+        Height = 23
+        Anchors = [akLeft, akBottom]
+        TabOrder = 3
+        OnChange = edCreateShipmentDestNameChange
+        ExplicitTop = 156
+      end
+      object edCreateShipmentDestID: TEdit
+        Left = 171
+        Top = 228
+        Width = 141
+        Height = 23
+        Anchors = [akLeft, akBottom]
+        NumbersOnly = True
+        TabOrder = 4
+        OnExit = edCreateShipmentDestIDExit
+        ExplicitTop = 185
+      end
+      object edCreateShipmentItemName: TEdit
+        Left = 171
+        Top = 257
+        Width = 141
+        Height = 23
+        Anchors = [akLeft, akBottom]
+        TabOrder = 5
+        ExplicitTop = 214
+      end
+      object edCreateShipmentItemID: TEdit
+        Left = 171
+        Top = 286
+        Width = 141
+        Height = 23
+        Anchors = [akLeft, akBottom]
+        NumbersOnly = True
+        TabOrder = 6
+        ExplicitTop = 243
+      end
+      object edCreateShipmentCnt: TEdit
+        Left = 171
+        Top = 315
+        Width = 141
+        Height = 23
+        Anchors = [akLeft, akBottom]
+        NumbersOnly = True
+        TabOrder = 7
+        ExplicitTop = 272
+      end
+      object btnCreateShipmentCancel: TButton
+        Left = 24
+        Top = 355
+        Width = 140
+        Height = 25
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Anchors = [akLeft, akBottom]
+        Caption = #1054#1090#1084#1077#1085#1072
+        TabOrder = 8
+        OnClick = btnCreateShipmentCancelClick
+        ExplicitTop = 312
+      end
+      object btnCreateShipmentConfirm: TButton
+        Left = 172
+        Top = 355
+        Width = 140
+        Height = 25
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Anchors = [akLeft, akBottom]
+        Caption = #1057#1086#1079#1076#1072#1090#1100
+        TabOrder = 9
+        OnClick = btnCreateObjConfirmClick
+        ExplicitTop = 312
+      end
+      object pnCreateShipmentSenderType: TPanel
+        Left = 171
+        Top = 81
+        Width = 135
+        Height = 23
+        Anchors = [akLeft, akBottom]
+        AutoSize = True
+        BevelOuter = bvNone
+        Ctl3D = False
+        Padding.Left = 3
+        Padding.Top = 3
+        Padding.Right = 3
+        Padding.Bottom = 3
+        ParentBackground = False
+        ParentColor = True
+        ParentCtl3D = False
+        TabOrder = 10
+        ExplicitTop = 38
+        DesignSize = (
+          135
+          23)
+        object rbCreateShipmentSenderShop: TRadioButton
+          Left = 3
+          Top = 3
+          Width = 81
+          Height = 17
+          Anchors = [akLeft, akBottom]
+          Caption = #1052#1072#1075#1072#1079#1080#1085
+          TabOrder = 0
+          OnClick = rbCreateShipmentSenderShopClick
+        end
+        object rbCreateShipmentSenderWarehouse: TRadioButton
+          Left = 77
+          Top = 3
+          Width = 55
+          Height = 17
+          Anchors = [akLeft, akBottom]
+          Caption = #1057#1082#1083#1072#1076
+          TabOrder = 1
+          OnClick = rbCreateShipmentSenderWarehouseClick
+        end
+      end
+      object pnCreateShipmentDestType: TPanel
+        Left = 171
+        Top = 168
+        Width = 135
+        Height = 25
+        Anchors = [akLeft, akBottom]
+        AutoSize = True
+        BevelOuter = bvNone
+        Ctl3D = False
+        Padding.Left = 3
+        Padding.Top = 3
+        Padding.Right = 3
+        Padding.Bottom = 3
+        ParentBackground = False
+        ParentColor = True
+        ParentCtl3D = False
+        TabOrder = 11
+        ExplicitTop = 125
+        DesignSize = (
+          135
+          25)
+        object rbCreateShipmentDestShop: TRadioButton
+          Left = 3
+          Top = 5
+          Width = 81
+          Height = 17
+          Anchors = [akLeft, akBottom]
+          Caption = #1052#1072#1075#1072#1079#1080#1085
+          TabOrder = 0
+          OnClick = rbCreateShipmentDestShopClick
+          ExplicitTop = 3
+        end
+        object rbCreateShipmentDestWarehouse: TRadioButton
+          Left = 77
+          Top = 3
+          Width = 55
+          Height = 17
+          Anchors = [akLeft, akBottom]
+          Caption = #1057#1082#1083#1072#1076
+          TabOrder = 1
+          OnClick = rbCreateShipmentDestWarehouseClick
+        end
+      end
+    end
+    object pnAddItem: TPanel
+      Left = 898
+      Top = 265
+      Width = 327
+      Height = 331
+      Padding.Left = 10
+      Padding.Top = 10
+      Padding.Right = 10
+      Padding.Bottom = 10
+      TabOrder = 8
+      Visible = False
+      object Label1: TLabel
+        Left = 11
+        Top = 11
+        Width = 305
+        Height = 30
+        Align = alTop
+        Alignment = taCenter
+        AutoSize = False
+        Caption = #1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = 30
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = 2
+        ExplicitTop = 9
+        ExplicitWidth = 301
+      end
+      object Label2: TLabel
+        Left = 16
+        Top = 64
+        Width = 91
+        Height = 15
+        Caption = #1058#1080#1087' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
+      end
+      object Label3: TLabel
+        Left = 16
+        Top = 163
+        Width = 95
+        Height = 15
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072':'
+      end
+      object Label4: TLabel
+        Left = 8
+        Top = 99
+        Width = 132
+        Height = 15
+        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' ('#1053#1072#1079#1074#1072#1085#1080#1077'):'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+      end
+      object Label5: TLabel
+        Left = 16
+        Top = 131
+        Width = 91
+        Height = 15
+        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' (ID):'
+      end
+      object Label6: TLabel
+        Left = 8
+        Top = 200
+        Width = 162
+        Height = 15
+        Caption = #1054#1073#1098#1077#1084' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' ('#1091'.'#1077'.):'
+      end
+      object Label7: TLabel
+        Left = 8
+        Top = 248
+        Width = 151
+        Height = 15
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1077#1076#1080#1085#1080#1094' '#1090#1086#1074#1072#1088#1072':'
+      end
+      object Panel2: TPanel
+        Left = 184
+        Top = 65
+        Width = 135
+        Height = 23
+        AutoSize = True
+        BevelOuter = bvNone
+        Ctl3D = False
+        Padding.Left = 3
+        Padding.Top = 3
+        Padding.Right = 3
+        Padding.Bottom = 3
+        ParentBackground = False
+        ParentColor = True
+        ParentCtl3D = False
+        TabOrder = 0
+        DesignSize = (
+          135
+          23)
+        object RadioButton1: TRadioButton
+          Left = 3
+          Top = 3
+          Width = 81
+          Height = 17
+          Anchors = [akLeft, akBottom]
+          Caption = #1052#1072#1075#1072#1079#1080#1085
+          TabOrder = 0
+          OnClick = rbCreateShipmentSenderShopClick
+        end
+        object RadioButton2: TRadioButton
+          Left = 77
+          Top = 3
+          Width = 55
+          Height = 17
+          Anchors = [akLeft, akBottom]
+          Caption = #1057#1082#1083#1072#1076
+          TabOrder = 1
+          OnClick = rbCreateShipmentSenderWarehouseClick
+        end
+      end
+      object Edit1: TEdit
+        Left = 184
+        Top = 155
+        Width = 121
+        Height = 23
+        TabOrder = 1
+      end
+      object Edit2: TEdit
+        Left = 183
+        Top = 94
+        Width = 141
+        Height = 23
+        TabOrder = 2
+        OnChange = edCreateShipmentSenderNameChange
+      end
+      object Edit3: TEdit
+        Left = 183
+        Top = 123
+        Width = 141
+        Height = 23
+        TabOrder = 3
+        OnChange = edCreateShipmentSenderNameChange
+      end
+      object Edit4: TEdit
+        Left = 189
+        Top = 200
+        Width = 121
+        Height = 23
+        TabOrder = 4
+      end
+      object Edit5: TEdit
+        Left = 192
+        Top = 248
+        Width = 121
+        Height = 23
+        TabOrder = 5
+      end
+      object Button1: TButton
+        Left = 16
+        Top = 290
+        Width = 140
+        Height = 25
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Caption = #1054#1090#1084#1077#1085#1072
+        TabOrder = 6
+        OnClick = btnCreateShipmentCancelClick
+      end
+      object Button2: TButton
+        Left = 168
+        Top = 290
+        Width = 140
+        Height = 25
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+        TabOrder = 7
+        OnClick = btnCreateShipmentCancelClick
       end
     end
   end
@@ -30258,6 +30814,13 @@ object frMainForm: TfrMainForm
       Caption = #1054#1090#1075#1088#1091#1079#1082#1080
       object N11: TMenuItem
         Caption = #1057#1086#1079#1076#1072#1090#1100
+        OnClick = N11Click
+      end
+    end
+    object N12: TMenuItem
+      Caption = #1058#1086#1074#1072#1088#1099
+      object N13: TMenuItem
+        Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       end
     end
   end

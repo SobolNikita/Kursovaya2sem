@@ -7,8 +7,6 @@ interface
   function validateLetters(Sender: TObject): boolean;
   function validateAll(Sender: TObject): boolean;
   function validateFromTo(const firstField, secondField: TObject): boolean;
-
-  var a: integer = 5;
 implementation
 
 function validateAll(Sender: TObject): boolean;
@@ -26,7 +24,7 @@ begin
   begin
     if (((Sender as TEdit).Text[i] <> ' ')
        and
-         (
+         ((
          (
           (lowerCase((Sender as TEdit).Text[i]) > 'z')
           or (lowerCase((Sender as TEdit).Text[i]) < 'a')
@@ -35,6 +33,11 @@ begin
          (
           (lowerCase((Sender as TEdit).Text[i]) > 'ÿ')
           or (lowerCase((Sender as TEdit).Text[i]) < 'à'))
+         ))
+         and
+         (
+          ((Sender as TEdit).Text[i] > '9')
+          or ((Sender as TEdit).Text[i] < '0')
          )
        ) then
     begin
