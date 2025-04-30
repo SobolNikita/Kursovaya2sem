@@ -147,23 +147,23 @@ type
     pnCreateShipmentSenderType: TPanel;
     pnCreateShipmentDestType: TPanel;
     pnAddItem: TPanel;
-    Label1: TLabel;
-    Panel2: TPanel;
-    RadioButton1: TRadioButton;
-    RadioButton2: TRadioButton;
-    Label2: TLabel;
-    Label3: TLabel;
-    Edit1: TEdit;
-    Label4: TLabel;
-    Edit2: TEdit;
-    Label5: TLabel;
-    Edit3: TEdit;
-    Label6: TLabel;
-    Label7: TLabel;
-    Edit4: TEdit;
-    Edit5: TEdit;
-    Button1: TButton;
-    Button2: TButton;
+    lbAddItem: TLabel;
+    pnAddItemType: TPanel;
+    rbAddItemTypeShop: TRadioButton;
+    rbAddItemTypeWarehouse: TRadioButton;
+    lbAddItemType: TLabel;
+    lbAddItemName: TLabel;
+    edAddItemName: TEdit;
+    lbAddItemDestName: TLabel;
+    edAddItemDestName: TEdit;
+    lbAddItemDestID: TLabel;
+    edAddItemDestID: TEdit;
+    lbAddItemVol: TLabel;
+    lbAddItemCnt: TLabel;
+    edAddItemVol: TEdit;
+    edAddItemCnt: TEdit;
+    btnAddItemCancel: TButton;
+    btnAddItemConfirm: TButton;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -171,10 +171,12 @@ type
     procedure imgMapMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
 
-    procedure updateSenderID;
-    procedure updateSenderName;
-    procedure updateDestID;
-    procedure updateDestName;
+    procedure updateID(const editID: TEdit;
+                             const isShopRadio: TRadioButton;
+                             const editName: TEdit);
+    procedure updateName(const editID: TEdit;
+                                     const isShopRadio: TRadioButton;
+                                     const editName: TEdit);
 
     procedure btnCreateSelectCancelClick(Sender: TObject);
     procedure btnCreateObjCancelClick(Sender: TObject);
@@ -226,15 +228,19 @@ type
     procedure edFilterUsedCapacityFromValExit(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure btnCreateShipmentCancelClick(Sender: TObject);
-    procedure edCreateShipmentSenderNameChange(Sender: TObject);
     procedure edCreateShipmentSenderIDExit(Sender: TObject);
     procedure rbCreateShipmentSenderWarehouseClick(Sender: TObject);
     procedure rbCreateShipmentSenderShopClick(Sender: TObject);
-    procedure edCreateShipmentDestNameChange(Sender: TObject);
     procedure edCreateShipmentDestIDExit(Sender: TObject);
     procedure rbCreateShipmentDestWarehouseClick(Sender: TObject);
     procedure rbCreateShipmentDestShopClick(Sender: TObject);
-
+    procedure N13Click(Sender: TObject);
+    procedure edCreateShipmentSenderNameExit(Sender: TObject);
+    procedure edCreateShipmentDestNameExit(Sender: TObject);
+    procedure edAddItemDestNameExit(Sender: TObject);
+    procedure edAddItemDestIDExit(Sender: TObject);
+    procedure rbAddItemTypeShopClick(Sender: TObject);
+    procedure rbAddItemTypeWarehouseClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -271,88 +277,123 @@ begin
   InitHash(47, 40009);
 end;
 
-procedure TfrMainForm.updateSenderID;
+procedure TfrMainForm.updateID(const editID: TEdit;
+                                     const isShopRadio: TRadioButton;
+                                     const editName: TEdit);
 var
   node: PTreapNameNode;
 begin
-  edCreateShipmentSenderID.text := '';
-  if rbCreateShipmentSenderShop.Checked then
+  //editName.text := '';
+
+  if isShopRadio.Checked then
   begin
-    node := FindTreapName(shopsNames, gethash(edCreateShipmentSenderName.text));
+    node := FindTreapName(shopsNames, gethash(editName.text));
     if node <> nil then
-      edCreateShipmentSenderID.text := intToStr(node^.Data^.ID xor mask)
+      editID.text := intToStr(node^.Data^.ID xor mask)
+    else
+      editID.text := '';
   end
   else
   begin
-    node := FindTreapName(warehousesNames, gethash(edCreateShipmentSenderName.text));
+    node := FindTreapName(warehousesNames, gethash(editName.text));
     if node <> nil then
-      edCreateShipmentSenderID.text := intToStr(node^.Data^.ID)
+      editID.text := intToStr(node^.Data^.ID)
+    else
+      editID.text := '';
   end;
 end;
 
-procedure TfrMainForm.updateSenderName;
+procedure TfrMainForm.updateName(const editID: TEdit;
+                                     const isShopRadio: TRadioButton;
+                                     const editName: TEdit);
 var
   node: PTreapNode;
 begin
-  edCreateShipmentSenderName.text := '';
-  if rbCreateShipmentSenderShop.Checked then
-    node := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text))
-  else
-    node := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
-  if node <> nil then
-      edCreateShipmentSenderName.text := string(node^.Data^.name);
-end;
-
-procedure TfrMainForm.updateDestID;
-var
-  node: PTreapNameNode;
-begin
-  edCreateShipmentDestID.text := '';
-  if rbCreateShipmentDestShop.Checked then
+  //editID.text := '';
+  if Length(editID.Text) > 0 then
   begin
-    node := FindTreapName(shopsNames, gethash(edCreateShipmentDestName.text));
+    if isShopRadio.Checked then
+      node := FindTreap(shops, strToInt(editID.Text) xor mask)
+    else
+      node := FindTreap(warehouses, strToInt(editID.Text));
     if node <> nil then
-      edCreateShipmentDestID.text := intToStr(node^.Data^.ID xor mask)
-  end
-  else
-  begin
-    node := FindTreapName(warehousesNames, gethash(edCreateShipmentDestName.text));
-    if node <> nil then
-      edCreateShipmentDestID.text := intToStr(node^.Data^.ID)
+        editName.text := string(node^.Data^.name)
+    else
+        editName.text := '';
   end;
 end;
 
-procedure TfrMainForm.updateDestName;
-var
-  node: PTreapNode;
+
+procedure TfrMainForm.rbAddItemTypeShopClick(Sender: TObject);
 begin
-  edCreateShipmentDestName.text := '';
-  if rbCreateShipmentDestShop.Checked then
-    node := FindTreap(shops, strToInt(edCreateShipmentDestID.Text))
+  if Length(edAddItemDestName.Text) > 0 then
+    updateID(edAddItemDestID,
+             rbAddItemTypeShop,
+             edAddItemDestName)
   else
-    node := FindTreap(warehouses, strToInt(edCreateShipmentDestID.Text));
-  if node <> nil then
-      edCreateShipmentDestName.text := string(node^.Data^.name);
+    updateName(edAddItemDestID,
+             rbAddItemTypeShop,
+             edAddItemDestName)
+end;
+
+procedure TfrMainForm.rbAddItemTypeWarehouseClick(Sender: TObject);
+begin
+  if Length(edAddItemDestName.Text) > 0 then
+    updateID(edAddItemDestID,
+             rbAddItemTypeShop,
+             edAddItemDestName)
+  else
+    updateName(edAddItemDestID,
+             rbAddItemTypeShop,
+             edAddItemDestName)
 end;
 
 procedure TfrMainForm.rbCreateShipmentDestShopClick(Sender: TObject);
 begin
-  updateDestID;
+  if Length(edCreateShipmentDestName.Text) > 0 then
+    updateID(edCreateShipmentDestID,
+             rbCreateShipmentDestShop,
+             edCreateShipmentDestName)
+  else
+    updateName(edCreateShipmentDestID,
+             rbCreateShipmentDestShop,
+             edCreateShipmentDestName)
 end;
 
 procedure TfrMainForm.rbCreateShipmentDestWarehouseClick(Sender: TObject);
 begin
-  updateDestID;
+  if Length(edCreateShipmentDestName.Text) > 0 then
+    updateID(edCreateShipmentDestID,
+             rbCreateShipmentDestShop,
+             edCreateShipmentDestName)
+  else
+    updateName(edCreateShipmentDestID,
+             rbCreateShipmentDestShop,
+             edCreateShipmentDestName)
 end;
 
 procedure TfrMainForm.rbCreateShipmentSenderShopClick(Sender: TObject);
 begin
-  updateSenderID;
+  if Length(edCreateShipmentSenderName.Text) > 0 then
+    updateID(edCreateShipmentSenderID,
+             rbCreateShipmentSenderShop,
+             edCreateShipmentSenderName)
+  else
+    updateName(edCreateShipmentSenderID,
+             rbCreateShipmentSenderShop,
+             edCreateShipmentSenderName)
 end;
 
 procedure TfrMainForm.rbCreateShipmentSenderWarehouseClick(Sender: TObject);
 begin
-  updateSenderID;
+  if Length(edCreateShipmentSenderName.Text) > 0 then
+    updateID(edCreateShipmentSenderID,
+             rbCreateShipmentSenderShop,
+             edCreateShipmentSenderName)
+  else
+    updateName(edCreateShipmentSenderID,
+             rbCreateShipmentSenderShop,
+             edCreateShipmentSenderName)
 end;
 
 procedure TfrMainForm.resetPnCreateObj;
@@ -517,7 +558,6 @@ begin
 end;
 
 
-
 procedure TfrMainForm.pnObjectInfoHide(Sender: TObject);
 begin
   pnObjectInfo.Visible := false;
@@ -596,24 +636,48 @@ begin
 end;
 
 
-procedure TfrMainForm.edCreateShipmentDestIDExit(Sender: TObject);
+procedure TfrMainForm.edAddItemDestIDExit(Sender: TObject);
 begin
-  updateDestName;
+  updateName(edAddItemDestID,
+           rbAddItemTypeShop,
+           edAddItemDestName);
 end;
 
-procedure TfrMainForm.edCreateShipmentDestNameChange(Sender: TObject);
+procedure TfrMainForm.edAddItemDestNameExit(Sender: TObject);
 begin
-  updateDestID;
+  updateID(edAddItemDestID,
+           rbAddItemTypeShop,
+           edAddItemDestName);
+end;
+
+procedure TfrMainForm.edCreateShipmentDestIDExit(Sender: TObject);
+begin
+  updateName(edCreateShipmentDestID,
+             rbCreateShipmentDestShop,
+             edCreateShipmentDestName);
+end;
+
+
+procedure TfrMainForm.edCreateShipmentDestNameExit(Sender: TObject);
+begin
+  updateID(edCreateShipmentDestID,
+           rbCreateShipmentDestShop,
+           edCreateShipmentDestName);
 end;
 
 procedure TfrMainForm.edCreateShipmentSenderIDExit(Sender: TObject);
 begin
-  updateSenderName;
+  updateName(edCreateShipmentSenderID,
+                   rbCreateShipmentSenderShop,
+                   edCreateShipmentSenderName);
 end;
 
-procedure TfrMainForm.edCreateShipmentSenderNameChange(Sender: TObject);
+
+procedure TfrMainForm.edCreateShipmentSenderNameExit(Sender: TObject);
 begin
-  updateSenderID;
+  updateID(edCreateShipmentSenderID,
+           rbCreateShipmentSenderShop,
+           edCreateShipmentSenderName);
 end;
 
 procedure TfrMainForm.edFilterCapacityFromValChange(Sender: TObject);
@@ -663,6 +727,7 @@ begin
   if not validateFromTo(edFilterUsedCapacityFromVal, edFilterUsedCapacityToVal) then
     edFilterUsedCapacityToVal.color := clRed;
 end;
+
 
 procedure TfrMainForm.OnClickValidateLetters(Sender: TObject);
 begin
@@ -1019,9 +1084,6 @@ begin
 end;
 
 
-
-
-
 procedure TfrMainForm.N11Click(Sender: TObject);
 begin
   hideAllPanels;
@@ -1034,6 +1096,15 @@ begin
 
   spMapPoint.visible := false;
   pnCreateShipment.Visible := true;
+end;
+
+procedure TfrMainForm.N13Click(Sender: TObject);
+begin
+  hideAllPanels;
+  spMapPoint.Visible := false;
+  pnAddItem.Visible := true;
+  pnAddItem.Left := (pnMapWrap.Width - pnAddItem.Width) shr 1;
+  pnAddItem.Top := (pnMapWrap.Height - pnAddItem.Height) shr 1;
 end;
 
 end.

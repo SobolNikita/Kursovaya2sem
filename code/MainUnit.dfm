@@ -29755,8 +29755,7 @@ object frMainForm: TfrMainForm
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 22
-        ExplicitWidth = 191
+        ExplicitWidth = 127
       end
       object lbObjInfoUsedCapacity: TLabel
         Left = 24
@@ -30380,7 +30379,6 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         TabOrder = 0
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
-        ExplicitTop = 11
       end
       object edCreateShipmentSenderName: TEdit
         Left = 171
@@ -30389,8 +30387,7 @@ object frMainForm: TfrMainForm
         Height = 23
         Anchors = [akLeft, akBottom]
         TabOrder = 1
-        OnChange = edCreateShipmentSenderNameChange
-        ExplicitTop = 69
+        OnExit = edCreateShipmentSenderNameExit
       end
       object edCreateShipmentSenderID: TEdit
         Left = 171
@@ -30401,7 +30398,6 @@ object frMainForm: TfrMainForm
         NumbersOnly = True
         TabOrder = 2
         OnExit = edCreateShipmentSenderIDExit
-        ExplicitTop = 98
       end
       object edCreateShipmentDestName: TEdit
         Left = 171
@@ -30410,8 +30406,7 @@ object frMainForm: TfrMainForm
         Height = 23
         Anchors = [akLeft, akBottom]
         TabOrder = 3
-        OnChange = edCreateShipmentDestNameChange
-        ExplicitTop = 156
+        OnExit = edCreateShipmentDestNameExit
       end
       object edCreateShipmentDestID: TEdit
         Left = 171
@@ -30422,7 +30417,6 @@ object frMainForm: TfrMainForm
         NumbersOnly = True
         TabOrder = 4
         OnExit = edCreateShipmentDestIDExit
-        ExplicitTop = 185
       end
       object edCreateShipmentItemName: TEdit
         Left = 171
@@ -30431,7 +30425,6 @@ object frMainForm: TfrMainForm
         Height = 23
         Anchors = [akLeft, akBottom]
         TabOrder = 5
-        ExplicitTop = 214
       end
       object edCreateShipmentItemID: TEdit
         Left = 171
@@ -30441,7 +30434,6 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 6
-        ExplicitTop = 243
       end
       object edCreateShipmentCnt: TEdit
         Left = 171
@@ -30451,7 +30443,6 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 7
-        ExplicitTop = 272
       end
       object btnCreateShipmentCancel: TButton
         Left = 24
@@ -30466,7 +30457,6 @@ object frMainForm: TfrMainForm
         Caption = #1054#1090#1084#1077#1085#1072
         TabOrder = 8
         OnClick = btnCreateShipmentCancelClick
-        ExplicitTop = 312
       end
       object btnCreateShipmentConfirm: TButton
         Left = 172
@@ -30481,7 +30471,6 @@ object frMainForm: TfrMainForm
         Caption = #1057#1086#1079#1076#1072#1090#1100
         TabOrder = 9
         OnClick = btnCreateObjConfirmClick
-        ExplicitTop = 312
       end
       object pnCreateShipmentSenderType: TPanel
         Left = 171
@@ -30500,7 +30489,6 @@ object frMainForm: TfrMainForm
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 10
-        ExplicitTop = 38
         DesignSize = (
           135
           23)
@@ -30542,7 +30530,6 @@ object frMainForm: TfrMainForm
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 11
-        ExplicitTop = 125
         DesignSize = (
           135
           25)
@@ -30555,7 +30542,6 @@ object frMainForm: TfrMainForm
           Caption = #1052#1072#1075#1072#1079#1080#1085
           TabOrder = 0
           OnClick = rbCreateShipmentDestShopClick
-          ExplicitTop = 3
         end
         object rbCreateShipmentDestWarehouse: TRadioButton
           Left = 77
@@ -30571,19 +30557,21 @@ object frMainForm: TfrMainForm
     end
     object pnAddItem: TPanel
       Left = 898
-      Top = 265
-      Width = 327
-      Height = 331
+      Top = 285
+      Width = 353
+      Height = 276
+      AutoSize = True
       Padding.Left = 10
       Padding.Top = 10
       Padding.Right = 10
       Padding.Bottom = 10
+      ParentBackground = False
       TabOrder = 8
       Visible = False
-      object Label1: TLabel
+      object lbAddItem: TLabel
         Left = 11
         Top = 11
-        Width = 305
+        Width = 331
         Height = 30
         Align = alTop
         Alignment = taCenter
@@ -30595,27 +30583,26 @@ object frMainForm: TfrMainForm
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 2
-        ExplicitTop = 9
-        ExplicitWidth = 301
+        ExplicitLeft = 22
+        ExplicitWidth = 313
       end
-      object Label2: TLabel
-        Left = 16
-        Top = 64
+      object lbAddItemType: TLabel
+        Left = 11
+        Top = 88
         Width = 91
         Height = 15
         Caption = #1058#1080#1087' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
       end
-      object Label3: TLabel
-        Left = 16
-        Top = 163
+      object lbAddItemName: TLabel
+        Left = 11
+        Top = 59
         Width = 95
         Height = 15
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072':'
       end
-      object Label4: TLabel
-        Left = 8
-        Top = 99
+      object lbAddItemDestName: TLabel
+        Left = 11
+        Top = 117
         Width = 132
         Height = 15
         Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' ('#1053#1072#1079#1074#1072#1085#1080#1077'):'
@@ -30626,30 +30613,30 @@ object frMainForm: TfrMainForm
         Font.Style = []
         ParentFont = False
       end
-      object Label5: TLabel
-        Left = 16
-        Top = 131
+      object lbAddItemDestID: TLabel
+        Left = 11
+        Top = 146
         Width = 91
         Height = 15
         Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' (ID):'
       end
-      object Label6: TLabel
-        Left = 8
-        Top = 200
+      object lbAddItemVol: TLabel
+        Left = 11
+        Top = 175
         Width = 162
         Height = 15
         Caption = #1054#1073#1098#1077#1084' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' ('#1091'.'#1077'.):'
       end
-      object Label7: TLabel
-        Left = 8
-        Top = 248
+      object lbAddItemCnt: TLabel
+        Left = 11
+        Top = 204
         Width = 151
         Height = 15
         Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1077#1076#1080#1085#1080#1094' '#1090#1086#1074#1072#1088#1072':'
       end
-      object Panel2: TPanel
-        Left = 184
-        Top = 65
+      object pnAddItemType: TPanel
+        Left = 201
+        Top = 81
         Width = 135
         Height = 23
         AutoSize = True
@@ -30666,7 +30653,7 @@ object frMainForm: TfrMainForm
         DesignSize = (
           135
           23)
-        object RadioButton1: TRadioButton
+        object rbAddItemTypeShop: TRadioButton
           Left = 3
           Top = 3
           Width = 81
@@ -30674,9 +30661,9 @@ object frMainForm: TfrMainForm
           Anchors = [akLeft, akBottom]
           Caption = #1052#1072#1075#1072#1079#1080#1085
           TabOrder = 0
-          OnClick = rbCreateShipmentSenderShopClick
+          OnClick = rbAddItemTypeShopClick
         end
-        object RadioButton2: TRadioButton
+        object rbAddItemTypeWarehouse: TRadioButton
           Left = 77
           Top = 3
           Width = 55
@@ -30684,50 +30671,50 @@ object frMainForm: TfrMainForm
           Anchors = [akLeft, akBottom]
           Caption = #1057#1082#1083#1072#1076
           TabOrder = 1
-          OnClick = rbCreateShipmentSenderWarehouseClick
+          OnClick = rbAddItemTypeWarehouseClick
         end
       end
-      object Edit1: TEdit
-        Left = 184
-        Top = 155
-        Width = 121
+      object edAddItemName: TEdit
+        Left = 201
+        Top = 54
+        Width = 141
         Height = 23
         TabOrder = 1
       end
-      object Edit2: TEdit
-        Left = 183
-        Top = 94
+      object edAddItemDestName: TEdit
+        Left = 201
+        Top = 112
         Width = 141
         Height = 23
         TabOrder = 2
-        OnChange = edCreateShipmentSenderNameChange
+        OnExit = edAddItemDestNameExit
       end
-      object Edit3: TEdit
-        Left = 183
-        Top = 123
+      object edAddItemDestID: TEdit
+        Left = 201
+        Top = 141
         Width = 141
         Height = 23
         TabOrder = 3
-        OnChange = edCreateShipmentSenderNameChange
+        OnExit = edAddItemDestIDExit
       end
-      object Edit4: TEdit
-        Left = 189
-        Top = 200
-        Width = 121
+      object edAddItemVol: TEdit
+        Left = 201
+        Top = 170
+        Width = 141
         Height = 23
         TabOrder = 4
       end
-      object Edit5: TEdit
-        Left = 192
-        Top = 248
-        Width = 121
+      object edAddItemCnt: TEdit
+        Left = 201
+        Top = 199
+        Width = 141
         Height = 23
         TabOrder = 5
       end
-      object Button1: TButton
-        Left = 16
-        Top = 290
-        Width = 140
+      object btnAddItemCancel: TButton
+        Left = 11
+        Top = 240
+        Width = 158
         Height = 25
         Margins.Left = 0
         Margins.Top = 0
@@ -30737,10 +30724,10 @@ object frMainForm: TfrMainForm
         TabOrder = 6
         OnClick = btnCreateShipmentCancelClick
       end
-      object Button2: TButton
-        Left = 168
-        Top = 290
-        Width = 140
+      object btnAddItemConfirm: TButton
+        Left = 184
+        Top = 240
+        Width = 158
         Height = 25
         Margins.Left = 0
         Margins.Top = 0
@@ -30748,7 +30735,6 @@ object frMainForm: TfrMainForm
         Margins.Bottom = 0
         Caption = #1044#1086#1073#1072#1074#1080#1090#1100
         TabOrder = 7
-        OnClick = btnCreateShipmentCancelClick
       end
     end
   end
@@ -30821,6 +30807,7 @@ object frMainForm: TfrMainForm
       Caption = #1058#1086#1074#1072#1088#1099
       object N13: TMenuItem
         Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+        OnClick = N13Click
       end
     end
   end
