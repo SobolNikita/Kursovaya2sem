@@ -2,8 +2,9 @@ unit Filter;
 
 interface
 
-  type
+  uses CartesianTree, ObjectMask;
 
+  type
 
   TFilter = record
     buildingType: integer;
@@ -21,6 +22,7 @@ interface
                          const house, building,
                          capacityFrom, capacityTo,
                          usedCapacityFrom, usedCapacityTo: integer);
+  procedure ApplyFilter(const root: PTreapNode; const filter: TFilter);
 
 implementation
 
@@ -50,6 +52,58 @@ begin
   resObj.capacityTo := -1;
   resObj.usedCapacityFrom := -1;
   resObj.usedCapacityTo := -1;
+end;
+
+procedure ApplyFilter(const root: PTreapNode; const filter: TFilter);
+var
+  curType: integer;
+  show: boolean;
+begin
+  if root <> nil then
+  begin
+    show := true;
+
+    if (root^.Data^.Key and mask) <> 0 then
+      curType := 1
+    else
+      curType := 2;
+
+    if (curType and filter.buildingType) = 0 then
+      show := false;
+    if True then
+
+    if (Length(filter.street) > 0) and (filter.street <> root^.Data^.street) then
+      show := false;
+
+    if (filter.house <> -1) and (filter.house <> root^.Data^.house) then
+      show := false;
+
+    if (filter.building <> -1) and (filter.building <> root^.Data^.building) then
+      show := false;
+
+    if (filter.capacityFrom <> -1) and (filter.capacityFrom > root^.Data^.capacity) then
+      show := false;
+
+    if (filter.capacityTo <> -1) and (filter.capacityTo < root^.Data^.capacity) then
+      show := false;
+
+    if (filter.usedCapacityFrom <> -1) and (filter.usedCapacityFrom > root^.Data^.usedCapacity) then
+      show := false;
+
+    if (filter.usedCapacityTo <> -1) and (filter.usedCapacityTo < root^.Data^.usedCapacity) then
+      show := false;
+
+    if not show then
+      root^.Data^.shape.Visible := false
+    else
+      root^.Data^.shape.Visible := true;
+
+    if root^.Left <> nil then
+      ApplyFilter(root^.Left, filter);
+    if root^.Right <> nil then
+      ApplyFilter(root^.Right, filter);
+  end;
+
 end;
 
 end.
