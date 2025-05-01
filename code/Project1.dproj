@@ -134,6 +134,8 @@
         <DCCReference Include="Hash.pas"/>
         <DCCReference Include="Messages.pas"/>
         <DCCReference Include="Filter.pas"/>
+        <DCCReference Include="ObjectMask.pas"/>
+        <DCCReference Include="CartesianTreeItem.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

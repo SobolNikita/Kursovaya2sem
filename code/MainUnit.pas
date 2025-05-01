@@ -15,7 +15,7 @@ type
   TShipment = record
     SourceID: PLocation;       // Отправитель (склад)
     DestinationID: PLocation;  // Получатель (магазин)
-    ProductID: integer;
+    ProductName: string;
     Count: Integer;
     next: PShipment;
   end;
@@ -198,6 +198,7 @@ type
     function validateEditObj: boolean;
     function validateNumberFromText(const curText: string): integer;
     function validateAddItem: boolean;
+    function validateCreateSipment: boolean;
 
     procedure FormCreate(Sender: TObject);
 
@@ -252,6 +253,10 @@ type
     procedure edAddItemVolExit(Sender: TObject);
     procedure edAddItemCntExit(Sender: TObject);
     procedure ClearAddItem;
+    procedure btnCreateShipmentConfirmClick(Sender: TObject);
+    procedure ClearCreateShipment;
+    procedure edCreateShipmentItemNameExit(Sender: TObject);
+    procedure edCreateShipmentItemIDExit(Sender: TObject);
 
   private
     { Private declarations }
@@ -303,6 +308,24 @@ begin
   edAddItemCnt.Text := '';
   rbAddItemTypeShop.Checked := true;
   rbAddItemTypeWarehouse.Checked := false;
+end;
+
+procedure TfrMainForm.ClearCreateShipment;
+begin
+  edCreateShipmentCnt.color := clWindow;
+  edCreateShipmentName.Text := '';
+  edCreateShipmentSenderName.Text := '';
+  edCreateShipmentSenderID.Text := '';
+  edCreateShipmentDestName.Text := '';
+  edCreateShipmentDestID.Text := '';
+  edCreateShipmentItemName.Text := '';
+  edCreateShipmentItemID.Text := '';
+  edCreateShipmentCnt.Text := '';
+
+  rbCreateShipmentDestShop.Checked := true;
+  rbCreateShipmentDestWarehouse.Checked := false;
+  rbCreateShipmentSenderShop.Checked := false;
+  rbCreateShipmentSenderWarehouse.Checked := true;
 end;
 
 procedure TfrMainForm.updateID(const editID: TEdit;
@@ -603,6 +626,7 @@ begin
     newObj^.building := strToInt(edCreateObjBuilding.Text);
   newObj^.capacity := strToInt(edCreateObjCapacity.Text);
   newObj^.usedCapacity := 0;
+  newObj^.shipmentCapacity := 0;
 
   newObj^.X := xPos;
   newObj^.Y := yPos;
@@ -711,6 +735,36 @@ begin
   updateID(edCreateShipmentDestID,
            rbCreateShipmentDestShop,
            edCreateShipmentDestName);
+end;
+
+procedure TfrMainForm.edCreateShipmentItemIDExit(Sender: TObject);
+var
+  senderNode: PTreapNode;
+  itemNode: PTreapItemNode;
+begin
+  if rbCreateShipmentSenderShop.Checked then
+    senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
+  else
+    senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
+
+  itemNode := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
+  if itemNode <> nil then
+    edCreateShipmentItemName.Text := string(itemNode^.Data^.name);
+end;
+
+procedure TfrMainForm.edCreateShipmentItemNameExit(Sender: TObject);
+var
+  senderNode: PTreapNode;
+  itemNode: PTreapItemNode;
+begin
+  if rbCreateShipmentSenderShop.Checked then
+    senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
+  else
+    senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
+
+  itemNode := FindTreapItem(senderNode^.Data^.Items, getHash(edCreateShipmentItemName.Text));
+  if itemNode <> nil then
+    edCreateShipmentItemID.Text := intToStr(getHash(edCreateShipmentItemName.Text));
 end;
 
 procedure TfrMainForm.edCreateShipmentSenderIDExit(Sender: TObject);
@@ -837,13 +891,17 @@ function TfrMainForm.validateAddItem: Boolean;
 var
   node: PTreapNode;
   itemNode: PTreapItemNode;
+  var category: string;
 begin
   Result := true;
   Result := validateLength(edAddItemName) and Result;
   Result := validateLength(edAddItemVol) and Result;
   Result := validateLength(edAddItemCnt) and Result;
   if (Length(edAddItemDestName.Text) = 0) or (Length(edAddItemDestID.Text) = 0) then
-    showError('Получателя с таким именем/ID не существует!');
+  begin
+    showError('Получателя с таким названием/ID не существует!');
+    Result := false;
+  end;
 
   if Result then
   begin
@@ -862,6 +920,18 @@ begin
                     + ' но объем за единицу товара отличается!'
                     + ' Объем уже существующего товара: '
                     + intToStr(itemNode^.Data^.Volume));
+      end;
+      if edAddItemCategory.Text <> string(itemNode^.Data^.category) then
+      begin
+        if Length(edAddItemCategory.Text) = 0 then
+          category := 'Отсутствует'
+        else
+          category := edAddItemCategory.Text;
+        Result := false;
+        showError('Товар уже существует в магазине,'
+                    + ' но категория отличается!'
+                    + ' Категория уже существующего товара: '
+                    + category);
       end
     end;
 
@@ -874,10 +944,73 @@ begin
       showError('У получателя недостаточно свободного места!'
                  + ' Свободное место: '
                  + intToStr(node^.Data^.capacity - node^.Data^.usedCapacity)
-                 + ' у.е.');
+                 + ' у.е. Из них '
+                 + intToStr(node^.Data^.shipmentCapacity)
+                 + ' зарезервировано под отгрузку');
     end;
 
   end;
+end;
+
+function TfrMainForm.validateCreateSipment: boolean;
+var
+  senderNode, destNode: PTreapNode;
+begin
+  Result := true;
+
+  if (Length(edCreateShipmentSenderName.Text) = 0)
+     or (Length(edCreateShipmentSenderID.Text) = 0) then
+  begin
+    showError('Отправителя с таким названием/ID не существует!');
+    Result := false;
+  end;
+
+  if Result and ((Length(edCreateShipmentDestName.Text) = 0)
+     or (Length(edCreateShipmentDestID.Text) = 0)) then
+  begin
+    showError('Получателя с таким названием/ID не существует!');
+    Result := false;
+  end;
+
+  if Result and ((Length(edCreateShipmentItemName.Text) = 0)
+     or (Length(edCreateShipmentItemID.Text) = 0)) then
+  begin
+    showError('Товара с таким названием/артикулом не существует!');
+    Result := false;
+  end;
+
+  if Result then
+  begin
+    if rbCreateShipmentSenderShop.Checked then
+      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
+    else
+      senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
+    if FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text))^.Data^.Count
+      < strToInt(edCreateShipmentCnt.Text) then
+    begin
+      showError('У отправителя недостаточное количество товара!');
+      Result := false;
+    end;
+  end;
+
+  if Result then
+  begin
+    if rbCreateShipmentDestShop.Checked then
+      destNode := FindTreap(shops, strToInt(edCreateShipmentDestID.Text) xor mask)
+    else
+      destNode := FindTreap(warehouses, strToInt(edCreateShipmentDestID.Text));
+
+    if destNode^.Data^.usedCapacity + destNode^.Data^.shipmentCapacity
+       + strToInt(edCreateShipmentCnt.Text) > destNode^.Data^.capacity then
+    begin
+      showError('У получателя не хватает места!');
+      Result := false;
+    end;
+
+
+  end;
+
+  Result := validateLength(edCreateShipmentCnt) and Result;
 end;
 
 procedure TfrMainForm.btnCreateSelectClick(Sender: TObject);
@@ -909,19 +1042,34 @@ end;
 procedure TfrMainForm.btnCreateShipmentCancelClick(Sender: TObject);
 begin
   pnCreateShipment.Visible := false;
-  edCreateShipmentName.Text := '';
-  edCreateShipmentSenderName.Text := '';
-  edCreateShipmentSenderID.Text := '';
-  edCreateShipmentDestName.Text := '';
-  edCreateShipmentDestID.Text := '';
-  edCreateShipmentItemName.Text := '';
-  edCreateShipmentItemID.Text := '';
-  edCreateShipmentCnt.Text := '';
+  ClearCreateShipment;
+end;
 
-  rbCreateShipmentSenderShop.Checked := false;
-  rbCreateShipmentDestWarehouse.Checked := false;
-  rbCreateShipmentSenderShop.Checked := false;
-  rbCreateShipmentSenderWarehouse.Checked := false;
+procedure TfrMainForm.btnCreateShipmentConfirmClick(Sender: TObject);
+var
+  newShipment: PShipment;
+begin
+  if validateCreateSipment then
+  begin
+    newShipment := new(PShipment);
+    if rbCreateShipmentSenderShop.Checked then
+      newShipment^.SourceID := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)^.Data
+    else
+      newShipment^.SourceID := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text))^.Data;
+
+    if rbCreateShipmentDestShop.Checked then
+      newShipment^.DestinationID := FindTreap(shops, strToInt(edCreateShipmentDestID.Text) xor mask)^.Data
+    else
+      newShipment^.DestinationID := FindTreap(warehouses, strToInt(edCreateShipmentDestID.Text))^.Data;
+
+    newShipment^.ProductName := edCreateShipmentItemName.Text;
+    newShipment^.Count := strToInt(edCreateShipmentCnt.Text);
+    newShipment^.next := shipments;
+    shipments := newShipment;
+    pnCreateShipment.Visible := false;
+    ClearCreateShipment;
+  end;
+
 end;
 
 procedure TfrMainForm.btnEditObjConfirmClick(Sender: TObject);
@@ -1169,6 +1317,7 @@ begin
       newItem^.Volume := strToInt(edAddItemVol.Text);
       newItem^.Count := strToInt(edAddItemCnt.Text);
       newItem^.Key := getHash(string(newItem^.name));
+      newItem^.needToSend := 0;
       InsertTreapItem(node^.Data^.Items, newItem);
     end;
 

@@ -30425,6 +30425,7 @@ object frMainForm: TfrMainForm
         Height = 23
         Anchors = [akLeft, akBottom]
         TabOrder = 5
+        OnExit = edCreateShipmentItemNameExit
       end
       object edCreateShipmentItemID: TEdit
         Left = 171
@@ -30434,6 +30435,7 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 6
+        OnExit = edCreateShipmentItemIDExit
       end
       object edCreateShipmentCnt: TEdit
         Left = 171
@@ -30459,7 +30461,7 @@ object frMainForm: TfrMainForm
         OnClick = btnCreateShipmentCancelClick
       end
       object btnCreateShipmentConfirm: TButton
-        Left = 172
+        Left = 171
         Top = 355
         Width = 140
         Height = 25
@@ -30470,7 +30472,7 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         Caption = #1057#1086#1079#1076#1072#1090#1100
         TabOrder = 9
-        OnClick = btnCreateObjConfirmClick
+        OnClick = btnCreateShipmentConfirmClick
       end
       object pnCreateShipmentSenderType: TPanel
         Left = 171
@@ -30509,7 +30511,9 @@ object frMainForm: TfrMainForm
           Height = 17
           Anchors = [akLeft, akBottom]
           Caption = #1057#1082#1083#1072#1076
+          Checked = True
           TabOrder = 1
+          TabStop = True
           OnClick = rbCreateShipmentSenderWarehouseClick
         end
       end
@@ -30540,7 +30544,9 @@ object frMainForm: TfrMainForm
           Height = 17
           Anchors = [akLeft, akBottom]
           Caption = #1052#1072#1075#1072#1079#1080#1085
+          Checked = True
           TabOrder = 0
+          TabStop = True
           OnClick = rbCreateShipmentDestShopClick
         end
         object rbCreateShipmentDestWarehouse: TRadioButton

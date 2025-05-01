@@ -9,7 +9,9 @@ uses
   CartesianTreeByName in 'CartesianTreeByName.pas',
   Hash in 'Hash.pas',
   Messages in 'Messages.pas',
-  Filter in 'Filter.pas';
+  Filter in 'Filter.pas',
+  ObjectMask in 'ObjectMask.pas',
+  CartesianTreeItem in 'CartesianTreeItem.pas';
 
 {$R *.res}
 

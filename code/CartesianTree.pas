@@ -7,7 +7,7 @@ interface
   type
   TLocation = record
     name, street: string[255];
-    house, building, capacity, usedCapacity: integer;
+    house, building, capacity, usedCapacity, shipmentCapacity: integer;
     Key, X, Y: Integer;
     shape: TShape;
     Items: PTreapItemNode;
