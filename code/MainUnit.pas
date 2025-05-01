@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Imaging.jpeg, System.UITypes, Vcl.Menus, Vcl.NumberBox,
-  CartesianTree, CartesianTreeByName, Validation, GetKeys, Hash, Messages, Filter;
+  CartesianTree, CartesianTreeByName, Validation, GetKeys, Hash, Messages, Filter, ObjectMask;
 
 type
   TShipment = record
@@ -241,6 +241,7 @@ type
     procedure edAddItemDestIDExit(Sender: TObject);
     procedure rbAddItemTypeShopClick(Sender: TObject);
     procedure rbAddItemTypeWarehouseClick(Sender: TObject);
+    procedure btnAddItemCancelClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -251,7 +252,6 @@ type
     const
       shopColor = clHighlight;
       warehouseColor = clMaroon;
-      mask = 1 shl 30;
   public
     { Public declarations }
 
@@ -910,9 +910,9 @@ begin
   edFilterUsedCapacityFromVal.Text := '';
   edFilterUsedCapacityToVal.Text := '';
 
-  if (filter.buildingType and 2) <> 0 then
-    cbFilterTypeShop.Checked := true;
   if (filter.buildingType and 1) <> 0 then
+    cbFilterTypeShop.Checked := true;
+  if (filter.buildingType and 2) <> 0 then
     cbFilterTypeWarehouse.Checked := true;
   if Length(filter.street) > 0 then
     edFilterStreetVal.Text := string(filter.street);
@@ -967,9 +967,9 @@ begin
     cntFilter := cntFilteredItems;
     objType := 0;
     if cbFilterTypeShop.checked then
-      objType := objType or 2;
-    if cbFilterTypeWarehouse.checked then
       objType := objType or 1;
+    if cbFilterTypeWarehouse.checked then
+      objType := objType or 2;
 
     //передать -1 в числовое поле, если пусто
     createFilter(filter, objType,
@@ -981,6 +981,8 @@ begin
                  validateNumberFromText(edFilterUsedCapacityFromVal.Text),
                  validateNumberFromText(edFilterUsedCapacityToVal.Text)
                  );
+    ApplyFilter(shops, filter);
+    ApplyFilter(warehouses, filter);
     if cntFilter <> 0 then
       btnFilter.Caption := 'Фильтр (' + intToStr(cntFilter) + ')'
     else
@@ -1045,19 +1047,31 @@ end;
 
 procedure TfrMainForm.btnCreateSelectCancelClick(Sender: TObject);
 begin
-  hideAllPanels;
+  pnCreateSelect.Visible := false;
   spMapPoint.visible := false;
 end;
 
 
+procedure TfrMainForm.btnAddItemCancelClick(Sender: TObject);
+begin
+  pnAddItem.Visible := false;
+  edAddItemName.Text := '';
+  edAddItemDestName.Text := '';
+  edAddItemDestID.Text := '';
+  edAddItemVol.Text := '';
+  edAddItemCnt.Text := '';
+  rbAddItemTypeShop.Checked := false;
+  rbAddItemTypeWarehouse.Checked := false;
+end;
+
 procedure TfrMainForm.btnCreateObjCancelClick(Sender: TObject);
 begin
+  pnCreateObj.Visible := false;
   edCreateObjName.Text := '';
   edCreateObjStreet.Text := '';
   edCreateObjHouse.Text := '';
   edCreateObjBuilding.Text := '';
   edCreateObjCapacity.Text := '';
-  hideAllPanels;
   spMapPoint.visible := false;
 end;
 

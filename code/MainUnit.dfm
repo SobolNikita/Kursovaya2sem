@@ -30694,6 +30694,7 @@ object frMainForm: TfrMainForm
         Top = 141
         Width = 141
         Height = 23
+        NumbersOnly = True
         TabOrder = 3
         OnExit = edAddItemDestIDExit
       end
@@ -30702,6 +30703,7 @@ object frMainForm: TfrMainForm
         Top = 170
         Width = 141
         Height = 23
+        NumbersOnly = True
         TabOrder = 4
       end
       object edAddItemCnt: TEdit
@@ -30709,6 +30711,7 @@ object frMainForm: TfrMainForm
         Top = 199
         Width = 141
         Height = 23
+        NumbersOnly = True
         TabOrder = 5
       end
       object btnAddItemCancel: TButton
@@ -30722,7 +30725,7 @@ object frMainForm: TfrMainForm
         Margins.Bottom = 0
         Caption = #1054#1090#1084#1077#1085#1072
         TabOrder = 6
-        OnClick = btnCreateShipmentCancelClick
+        OnClick = btnAddItemCancelClick
       end
       object btnAddItemConfirm: TButton
         Left = 184
