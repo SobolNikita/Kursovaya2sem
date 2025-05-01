@@ -6,17 +6,19 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Imaging.jpeg, System.UITypes, Vcl.Menus, Vcl.NumberBox,
-  CartesianTree, CartesianTreeByName, Validation, GetKeys, Hash, Messages, Filter, ObjectMask;
+  CartesianTree, CartesianTreeByName, CartesianTreeItem, Validation,
+  GetKeys, Hash, Messages, Filter, ObjectMask;
 
 type
+
+  PShipment = ^TShipment;
   TShipment = record
     SourceID: PLocation;       // Отправитель (склад)
     DestinationID: PLocation;  // Получатель (магазин)
     ProductID: integer;
-    Quantity: Integer;
-    DepartureTime: TDateTime;
+    Count: Integer;
+    next: PShipment;
   end;
-  PShipment = ^TShipment;
 
   TfrMainForm = class(TForm)
     pnFilter: TPanel;
@@ -164,6 +166,8 @@ type
     edAddItemCnt: TEdit;
     btnAddItemCancel: TButton;
     btnAddItemConfirm: TButton;
+    lbAddItemCategory: TLabel;
+    edAddItemCategory: TEdit;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -193,6 +197,7 @@ type
     function validateCreateObj: boolean;
     function validateEditObj: boolean;
     function validateNumberFromText(const curText: string): integer;
+    function validateAddItem: boolean;
 
     procedure FormCreate(Sender: TObject);
 
@@ -242,6 +247,11 @@ type
     procedure rbAddItemTypeShopClick(Sender: TObject);
     procedure rbAddItemTypeWarehouseClick(Sender: TObject);
     procedure btnAddItemCancelClick(Sender: TObject);
+    procedure btnAddItemConfirmClick(Sender: TObject);
+    procedure edAddItemNameExit(Sender: TObject);
+    procedure edAddItemVolExit(Sender: TObject);
+    procedure edAddItemCntExit(Sender: TObject);
+    procedure ClearAddItem;
 
   private
     { Private declarations }
@@ -249,6 +259,7 @@ type
     shops, warehouses: PTreapNode;
     shopsNames, warehousesNames: PTreapNameNode;
     filter: TFilter;
+    shipments: PShipment;
     const
       shopColor = clHighlight;
       warehouseColor = clMaroon;
@@ -275,6 +286,23 @@ begin
   InitTreeName(shopsNames);
   InitTreeName(warehousesNames);
   InitHash(47, 40009);
+  shipments := new(PShipment);
+  shipments^.next := nil;
+end;
+
+procedure TfrMainForm.ClearAddItem;
+begin
+  edAddItemName.Color := clWindow;
+  edAddItemName.Text := '';
+  edAddItemCategory.Text := '';
+  edAddItemDestName.Text := '';
+  edAddItemDestID.Text := '';
+  edAddItemVol.Color := clWindow;
+  edAddItemVol.Text := '';
+  edAddItemCnt.Color := clWindow;
+  edAddItemCnt.Text := '';
+  rbAddItemTypeShop.Checked := true;
+  rbAddItemTypeWarehouse.Checked := false;
 end;
 
 procedure TfrMainForm.updateID(const editID: TEdit;
@@ -566,6 +594,7 @@ end;
 procedure TfrMainForm.createNewObj(var newObj: PLocation; const isShop: boolean);
 begin
   New(newObj);
+  newObj^.Items := nil;
   newObj^.name := shortString(edCreateObjName.Text);
   newObj^.street := shortString(edCreateObjStreet.Text);
   newObj^.house := strToInt(edCreateObjHouse.Text);
@@ -636,6 +665,12 @@ begin
 end;
 
 
+procedure TfrMainForm.edAddItemCntExit(Sender: TObject);
+begin
+  if validateLength(edAddItemCnt) then
+    (Sender as TEdit).color := clWindow
+end;
+
 procedure TfrMainForm.edAddItemDestIDExit(Sender: TObject);
 begin
   updateName(edAddItemDestID,
@@ -648,6 +683,19 @@ begin
   updateID(edAddItemDestID,
            rbAddItemTypeShop,
            edAddItemDestName);
+end;
+
+
+procedure TfrMainForm.edAddItemNameExit(Sender: TObject);
+begin
+  if validateLength(edAddItemName) then
+    (Sender as TEdit).color := clWindow
+end;
+
+procedure TfrMainForm.edAddItemVolExit(Sender: TObject);
+begin
+  if validateLength(edAddItemVol) then
+    (Sender as TEdit).color := clWindow
 end;
 
 procedure TfrMainForm.edCreateShipmentDestIDExit(Sender: TObject);
@@ -747,12 +795,8 @@ end;
 
 procedure TfrMainForm.OnClickValidateLength(Sender: TObject);
 begin
-
   if validateLength(Sender) then
-  begin
     (Sender as TEdit).color := clWindow;
-  end;
-
 end;
 
 procedure TfrMainForm.OnClickvalidateAll(Sender: TObject);
@@ -789,6 +833,53 @@ begin
   Result := validateLength(edEditObjCapacity) and Result;
 end;
 
+function TfrMainForm.validateAddItem: Boolean;
+var
+  node: PTreapNode;
+  itemNode: PTreapItemNode;
+begin
+  Result := true;
+  Result := validateLength(edAddItemName) and Result;
+  Result := validateLength(edAddItemVol) and Result;
+  Result := validateLength(edAddItemCnt) and Result;
+  if (Length(edAddItemDestName.Text) = 0) or (Length(edAddItemDestID.Text) = 0) then
+    showError('Получателя с таким именем/ID не существует!');
+
+  if Result then
+  begin
+    if rbAddItemTypeShop.Checked then
+      node := FindTreap(shops, strToInt(edAddItemDestID.Text) xor mask)
+    else
+      node := FindTreap(warehouses, strToInt(edAddItemDestID.Text));
+
+    itemNode := FindTreapItem(node^.Data^.Items, getHash(edAddItemName.Text));
+    if itemNode <> nil then
+    begin
+      if strToInt(edAddItemVol.Text) <> itemNode^.Data^.Volume then
+      begin
+        Result := false;
+        showError('Товар уже существует в магазине,'
+                    + ' но объем за единицу товара отличается!'
+                    + ' Объем уже существующего товара: '
+                    + intToStr(itemNode^.Data^.Volume));
+      end
+    end;
+
+    if Result and
+      (node^.Data^.usedCapacity
+       + strToInt(edAddItemCnt.Text) * strToInt(edAddItemVol.Text)
+       > node^.Data^.capacity) then
+    begin
+      Result := false;
+      showError('У получателя недостаточно свободного места!'
+                 + ' Свободное место: '
+                 + intToStr(node^.Data^.capacity - node^.Data^.usedCapacity)
+                 + ' у.е.');
+    end;
+
+  end;
+end;
+
 procedure TfrMainForm.btnCreateSelectClick(Sender: TObject);
 begin
   hideAllPanels;
@@ -817,6 +908,7 @@ end;
 
 procedure TfrMainForm.btnCreateShipmentCancelClick(Sender: TObject);
 begin
+  pnCreateShipment.Visible := false;
   edCreateShipmentName.Text := '';
   edCreateShipmentSenderName.Text := '';
   edCreateShipmentSenderID.Text := '';
@@ -830,8 +922,6 @@ begin
   rbCreateShipmentDestWarehouse.Checked := false;
   rbCreateShipmentSenderShop.Checked := false;
   rbCreateShipmentSenderWarehouse.Checked := false;
-
-  pnCreateShipment.Visible := false;
 end;
 
 procedure TfrMainForm.btnEditObjConfirmClick(Sender: TObject);
@@ -1038,10 +1128,6 @@ begin
       hideAllPanels;
       spMapPoint.visible := false;
     end;
-  end
-  else
-  begin
-
   end;
 end;
 
@@ -1055,13 +1141,43 @@ end;
 procedure TfrMainForm.btnAddItemCancelClick(Sender: TObject);
 begin
   pnAddItem.Visible := false;
-  edAddItemName.Text := '';
-  edAddItemDestName.Text := '';
-  edAddItemDestID.Text := '';
-  edAddItemVol.Text := '';
-  edAddItemCnt.Text := '';
-  rbAddItemTypeShop.Checked := false;
-  rbAddItemTypeWarehouse.Checked := false;
+  ClearAddItem;
+end;
+
+procedure TfrMainForm.btnAddItemConfirmClick(Sender: TObject);
+var
+  node: PTreapNode;
+  newItem: PItem;
+  itemNode: PTreapItemNode;
+begin
+  if validateAddItem then
+  begin
+    if rbAddItemTypeShop.Checked then
+      node := FindTreap(shops, strToInt(edAddItemDestID.Text) xor mask)
+    else
+      node := FindTreap(warehouses, strToInt(edAddItemDestID.Text));
+
+    itemNode := FindTreapItem(node^.Data^.Items, getHash(edAddItemName.Text));
+
+    if itemNode <> nil then
+      itemNode^.Data^.Count := itemNode^.Data^.Count + strToInt(edAddItemCnt.Text)
+    else
+    begin
+      newItem := new(PItem);
+      newItem^.name := shortString(edAddItemName.Text);
+      newItem^.category := shortString(edAddItemCategory.Text);
+      newItem^.Volume := strToInt(edAddItemVol.Text);
+      newItem^.Count := strToInt(edAddItemCnt.Text);
+      newItem^.Key := getHash(string(newItem^.name));
+      InsertTreapItem(node^.Data^.Items, newItem);
+    end;
+
+    node^.Data^.usedCapacity := node^.Data^.usedCapacity +
+                                strToInt(edAddItemCnt.Text)
+                                * strToInt(edAddItemVol.Text);
+    pnAddItem.Visible := false;
+    ClearAddItem;
+  end;
 end;
 
 procedure TfrMainForm.btnCreateObjCancelClick(Sender: TObject);

@@ -30556,10 +30556,10 @@ object frMainForm: TfrMainForm
       end
     end
     object pnAddItem: TPanel
-      Left = 898
-      Top = 285
+      Left = 866
+      Top = 258
       Width = 353
-      Height = 276
+      Height = 305
       AutoSize = True
       Padding.Left = 10
       Padding.Top = 10
@@ -30583,12 +30583,12 @@ object frMainForm: TfrMainForm
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 22
-        ExplicitWidth = 313
+        ExplicitLeft = -13
+        ExplicitTop = -5
       end
       object lbAddItemType: TLabel
         Left = 11
-        Top = 88
+        Top = 117
         Width = 91
         Height = 15
         Caption = #1058#1080#1087' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
@@ -30602,7 +30602,7 @@ object frMainForm: TfrMainForm
       end
       object lbAddItemDestName: TLabel
         Left = 11
-        Top = 117
+        Top = 146
         Width = 132
         Height = 15
         Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' ('#1053#1072#1079#1074#1072#1085#1080#1077'):'
@@ -30615,28 +30615,35 @@ object frMainForm: TfrMainForm
       end
       object lbAddItemDestID: TLabel
         Left = 11
-        Top = 146
+        Top = 175
         Width = 91
         Height = 15
         Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' (ID):'
       end
       object lbAddItemVol: TLabel
         Left = 11
-        Top = 175
+        Top = 204
         Width = 162
         Height = 15
         Caption = #1054#1073#1098#1077#1084' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' ('#1091'.'#1077'.):'
       end
       object lbAddItemCnt: TLabel
         Left = 11
-        Top = 204
+        Top = 233
         Width = 151
         Height = 15
         Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1077#1076#1080#1085#1080#1094' '#1090#1086#1074#1072#1088#1072':'
       end
+      object lbAddItemCategory: TLabel
+        Left = 11
+        Top = 88
+        Width = 59
+        Height = 15
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103':'
+      end
       object pnAddItemType: TPanel
         Left = 201
-        Top = 81
+        Top = 110
         Width = 135
         Height = 23
         AutoSize = True
@@ -30660,7 +30667,9 @@ object frMainForm: TfrMainForm
           Height = 17
           Anchors = [akLeft, akBottom]
           Caption = #1052#1072#1075#1072#1079#1080#1085
+          Checked = True
           TabOrder = 0
+          TabStop = True
           OnClick = rbAddItemTypeShopClick
         end
         object rbAddItemTypeWarehouse: TRadioButton
@@ -30680,10 +30689,11 @@ object frMainForm: TfrMainForm
         Width = 141
         Height = 23
         TabOrder = 1
+        OnExit = edAddItemNameExit
       end
       object edAddItemDestName: TEdit
         Left = 201
-        Top = 112
+        Top = 141
         Width = 141
         Height = 23
         TabOrder = 2
@@ -30691,7 +30701,7 @@ object frMainForm: TfrMainForm
       end
       object edAddItemDestID: TEdit
         Left = 201
-        Top = 141
+        Top = 170
         Width = 141
         Height = 23
         NumbersOnly = True
@@ -30700,23 +30710,25 @@ object frMainForm: TfrMainForm
       end
       object edAddItemVol: TEdit
         Left = 201
-        Top = 170
-        Width = 141
-        Height = 23
-        NumbersOnly = True
-        TabOrder = 4
-      end
-      object edAddItemCnt: TEdit
-        Left = 201
         Top = 199
         Width = 141
         Height = 23
         NumbersOnly = True
+        TabOrder = 4
+        OnExit = edAddItemVolExit
+      end
+      object edAddItemCnt: TEdit
+        Left = 201
+        Top = 228
+        Width = 141
+        Height = 23
+        NumbersOnly = True
         TabOrder = 5
+        OnExit = edAddItemCntExit
       end
       object btnAddItemCancel: TButton
         Left = 11
-        Top = 240
+        Top = 269
         Width = 158
         Height = 25
         Margins.Left = 0
@@ -30729,7 +30741,7 @@ object frMainForm: TfrMainForm
       end
       object btnAddItemConfirm: TButton
         Left = 184
-        Top = 240
+        Top = 269
         Width = 158
         Height = 25
         Margins.Left = 0
@@ -30738,6 +30750,15 @@ object frMainForm: TfrMainForm
         Margins.Bottom = 0
         Caption = #1044#1086#1073#1072#1074#1080#1090#1100
         TabOrder = 7
+        OnClick = btnAddItemConfirmClick
+      end
+      object edAddItemCategory: TEdit
+        Left = 201
+        Top = 83
+        Width = 141
+        Height = 23
+        TabOrder = 8
+        TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
       end
     end
   end

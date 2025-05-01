@@ -56,7 +56,9 @@ begin
   begin
     (Sender as TEdit).color := clRed;
     Result := false;
-  end;
+  end
+  else
+    (Sender as TEdit).color := clWhite;
 end;
 
 function validateFromTo(const firstField, secondField: TObject): boolean;

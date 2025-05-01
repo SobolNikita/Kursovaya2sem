@@ -2,7 +2,7 @@ unit CartesianTree;
 
 interface
 
-  uses Vcl.ExtCtrls, Vcl.StdCtrls;
+  uses Vcl.ExtCtrls, CartesianTreeItem;
 
   type
   TLocation = record
@@ -10,6 +10,7 @@ interface
     house, building, capacity, usedCapacity: integer;
     Key, X, Y: Integer;
     shape: TShape;
+    Items: PTreapItemNode;
   end;
   PLocation = ^TLocation;
 
