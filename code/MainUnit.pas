@@ -8,7 +8,8 @@ uses
   Vcl.Imaging.jpeg, System.UITypes, Vcl.Menus, Vcl.NumberBox,
   CartesianTree, CartesianTreeByName, CartesianTreeItem, Validation,
   GetKeys, Hash, Messages, Filter, ObjectMask, Data.FMTBcd, Data.DB,
-  Data.SqlExpr, Vcl.Grids;
+  Data.SqlExpr, Vcl.Grids,
+  TableUnit;
 
 type
 
@@ -287,6 +288,7 @@ type
 
 var
   frMainForm: TfrMainForm;
+  frtableForm: TfrTableForm;
 
 implementation
 
@@ -375,7 +377,7 @@ begin
   if Length(editID.Text) > 0 then
   begin
     if isShopRadio.Checked then
-      node := FindTreap(shops, strToInt(editID.Text) xor mask)
+      node := FindTreap(shops, strToInt(editID.Text) or mask)
     else
       node := FindTreap(warehouses, strToInt(editID.Text));
     if node <> nil then
@@ -544,6 +546,8 @@ procedure TfrMainForm.btnSelectObjItemListClick(Sender: TObject);
 var
   curNode: PTreapNode;
 begin
+  frtableForm := TfrTableForm.Create(Application);
+  frtableForm.show;
   if (pnSelectObject.tag and mask) <> 0 then
   begin
     //shop
@@ -552,6 +556,7 @@ begin
   else
   begin
     //warehouse
+    curNode := FindTreap(warehouses, pnSelectObject.tag);
   end;
 end;
 
@@ -770,7 +775,7 @@ begin
   if Length(edCreateShipmentSenderID.Text) > 0 then
     begin
     if rbCreateShipmentSenderShop.Checked then
-      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
+      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)
     else
       senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
 
@@ -789,7 +794,7 @@ begin
   if Length(edCreateShipmentSenderID.Text) > 0 then
   begin
     if rbCreateShipmentSenderShop.Checked then
-      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
+      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)
     else
       senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
     itemNode := FindTreapItem(senderNode^.Data^.Items, getHash(edCreateShipmentItemName.Text));
@@ -937,7 +942,7 @@ begin
   if Result then
   begin
     if rbAddItemTypeShop.Checked then
-      node := FindTreap(shops, strToInt(edAddItemDestID.Text) xor mask)
+      node := FindTreap(shops, strToInt(edAddItemDestID.Text) or mask)
     else
       node := FindTreap(warehouses, strToInt(edAddItemDestID.Text));
 
@@ -1013,7 +1018,7 @@ begin
   if Result then
   begin
     if rbCreateShipmentSenderShop.Checked then
-      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
+      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)
     else
       senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
     if FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text))^.Data^.Count
@@ -1027,7 +1032,7 @@ begin
   if Result then
   begin
     if rbCreateShipmentDestShop.Checked then
-      destNode := FindTreap(shops, strToInt(edCreateShipmentDestID.Text) xor mask)
+      destNode := FindTreap(shops, strToInt(edCreateShipmentDestID.Text) or mask)
     else
       destNode := FindTreap(warehouses, strToInt(edCreateShipmentDestID.Text));
 
@@ -1084,12 +1089,12 @@ begin
   begin
     newShipment := new(PShipment);
     if rbCreateShipmentSenderShop.Checked then
-      newShipment^.SourceID := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)^.Data
+      newShipment^.SourceID := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)^.Data
     else
       newShipment^.SourceID := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text))^.Data;
 
     if rbCreateShipmentDestShop.Checked then
-      newShipment^.DestinationID := FindTreap(shops, strToInt(edCreateShipmentDestID.Text) xor mask)^.Data
+      newShipment^.DestinationID := FindTreap(shops, strToInt(edCreateShipmentDestID.Text) or mask)^.Data
     else
       newShipment^.DestinationID := FindTreap(warehouses, strToInt(edCreateShipmentDestID.Text))^.Data;
 
@@ -1335,7 +1340,7 @@ begin
   if validateAddItem then
   begin
     if rbAddItemTypeShop.Checked then
-      node := FindTreap(shops, strToInt(edAddItemDestID.Text) xor mask)
+      node := FindTreap(shops, strToInt(edAddItemDestID.Text) or mask)
     else
       node := FindTreap(warehouses, strToInt(edAddItemDestID.Text));
 
