@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Imaging.jpeg, System.UITypes, Vcl.Menus, Vcl.NumberBox,
   CartesianTree, CartesianTreeByName, CartesianTreeItem, Validation,
-  GetKeys, Hash, Messages, Filter, ObjectMask;
+  GetKeys, Hash, Messages, Filter, ObjectMask, Data.FMTBcd, Data.DB,
+  Data.SqlExpr, Vcl.Grids;
 
 type
 
@@ -75,9 +76,6 @@ type
     lbObjInfoUsedCapacity: TLabel;
     lbObjInfoUsedCapacityVal: TLabel;
     MainMenu1: TMainMenu;
-    N1: TMenuItem;
-    N2: TMenuItem;
-    N3: TMenuItem;
     N4: TMenuItem;
     N5: TMenuItem;
     N6: TMenuItem;
@@ -168,6 +166,16 @@ type
     btnAddItemConfirm: TButton;
     lbAddItemCategory: TLabel;
     edAddItemCategory: TEdit;
+    File1: TMenuItem;
+    New1: TMenuItem;
+    Open1: TMenuItem;
+    Save1: TMenuItem;
+    SaveAs1: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N14: TMenuItem;
+    btnSelectObjItemList: TButton;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -257,6 +265,10 @@ type
     procedure ClearCreateShipment;
     procedure edCreateShipmentItemNameExit(Sender: TObject);
     procedure edCreateShipmentItemIDExit(Sender: TObject);
+    procedure N3Click(Sender: TObject);
+
+    procedure doShipment(const shipment: PShipment);
+    procedure btnSelectObjItemListClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -291,8 +303,7 @@ begin
   InitTreeName(shopsNames);
   InitTreeName(warehousesNames);
   InitHash(47, 40009);
-  shipments := new(PShipment);
-  shipments^.next := nil;
+  shipments := nil;
 end;
 
 procedure TfrMainForm.ClearAddItem;
@@ -480,7 +491,6 @@ begin
   panel.visible := true;
 end;
 
-
 procedure TfrMainForm.hideAllPanels;
 begin
   pnCreateObj.Visible := false;
@@ -529,6 +539,21 @@ begin
   edEditObjCapacity.Text := intToStr(curNode^.Data^.capacity);
 end;
 
+
+procedure TfrMainForm.btnSelectObjItemListClick(Sender: TObject);
+var
+  curNode: PTreapNode;
+begin
+  if (pnSelectObject.tag and mask) <> 0 then
+  begin
+    //shop
+    curNode := FindTreap(shops, pnSelectObject.tag);
+  end
+  else
+  begin
+    //warehouse
+  end;
+end;
 
 procedure TfrMainForm.btnSelectObjDeleteClick(Sender: TObject);
 var
@@ -742,14 +767,18 @@ var
   senderNode: PTreapNode;
   itemNode: PTreapItemNode;
 begin
-  if rbCreateShipmentSenderShop.Checked then
-    senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
-  else
-    senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
+  if Length(edCreateShipmentSenderID.Text) > 0 then
+    begin
+    if rbCreateShipmentSenderShop.Checked then
+      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
+    else
+      senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
 
-  itemNode := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
-  if itemNode <> nil then
-    edCreateShipmentItemName.Text := string(itemNode^.Data^.name);
+    itemNode := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
+    if itemNode <> nil then
+      edCreateShipmentItemName.Text := string(itemNode^.Data^.name);
+  end;
+
 end;
 
 procedure TfrMainForm.edCreateShipmentItemNameExit(Sender: TObject);
@@ -757,14 +786,16 @@ var
   senderNode: PTreapNode;
   itemNode: PTreapItemNode;
 begin
-  if rbCreateShipmentSenderShop.Checked then
-    senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
-  else
-    senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
-
-  itemNode := FindTreapItem(senderNode^.Data^.Items, getHash(edCreateShipmentItemName.Text));
+  if Length(edCreateShipmentSenderID.Text) > 0 then
+  begin
+    if rbCreateShipmentSenderShop.Checked then
+      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) xor mask)
+    else
+      senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
+    itemNode := FindTreapItem(senderNode^.Data^.Items, getHash(edCreateShipmentItemName.Text));
   if itemNode <> nil then
     edCreateShipmentItemID.Text := intToStr(getHash(edCreateShipmentItemName.Text));
+  end;
 end;
 
 procedure TfrMainForm.edCreateShipmentSenderIDExit(Sender: TObject);
@@ -899,7 +930,7 @@ begin
   Result := validateLength(edAddItemCnt) and Result;
   if (Length(edAddItemDestName.Text) = 0) or (Length(edAddItemDestID.Text) = 0) then
   begin
-    showError('Получателя с таким названием/ID не существует!');
+    showMessage('Ошибка', 'Получателя с таким названием/ID не существует!');
     Result := false;
   end;
 
@@ -916,7 +947,7 @@ begin
       if strToInt(edAddItemVol.Text) <> itemNode^.Data^.Volume then
       begin
         Result := false;
-        showError('Товар уже существует в магазине,'
+        showMessage('Ошибка', 'Товар уже существует в магазине,'
                     + ' но объем за единицу товара отличается!'
                     + ' Объем уже существующего товара: '
                     + intToStr(itemNode^.Data^.Volume));
@@ -928,7 +959,7 @@ begin
         else
           category := edAddItemCategory.Text;
         Result := false;
-        showError('Товар уже существует в магазине,'
+        showMessage('Ошибка', 'Товар уже существует в магазине,'
                     + ' но категория отличается!'
                     + ' Категория уже существующего товара: '
                     + category);
@@ -941,7 +972,7 @@ begin
        > node^.Data^.capacity) then
     begin
       Result := false;
-      showError('У получателя недостаточно свободного места!'
+      showMessage('Ошибка', 'У получателя недостаточно свободного места!'
                  + ' Свободное место: '
                  + intToStr(node^.Data^.capacity - node^.Data^.usedCapacity)
                  + ' у.е. Из них '
@@ -961,21 +992,21 @@ begin
   if (Length(edCreateShipmentSenderName.Text) = 0)
      or (Length(edCreateShipmentSenderID.Text) = 0) then
   begin
-    showError('Отправителя с таким названием/ID не существует!');
+    showMessage('Ошибка', 'Отправителя с таким названием/ID не существует!');
     Result := false;
   end;
 
   if Result and ((Length(edCreateShipmentDestName.Text) = 0)
      or (Length(edCreateShipmentDestID.Text) = 0)) then
   begin
-    showError('Получателя с таким названием/ID не существует!');
+    showMessage('Ошибка', 'Получателя с таким названием/ID не существует!');
     Result := false;
   end;
 
   if Result and ((Length(edCreateShipmentItemName.Text) = 0)
      or (Length(edCreateShipmentItemID.Text) = 0)) then
   begin
-    showError('Товара с таким названием/артикулом не существует!');
+    showMessage('Ошибка', 'Товара с таким названием/артикулом не существует!');
     Result := false;
   end;
 
@@ -988,7 +1019,7 @@ begin
     if FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text))^.Data^.Count
       < strToInt(edCreateShipmentCnt.Text) then
     begin
-      showError('У отправителя недостаточное количество товара!');
+      showMessage('Ошибка', 'У отправителя недостаточное количество товара!');
       Result := false;
     end;
   end;
@@ -1003,7 +1034,7 @@ begin
     if destNode^.Data^.usedCapacity + destNode^.Data^.shipmentCapacity
        + strToInt(edCreateShipmentCnt.Text) > destNode^.Data^.capacity then
     begin
-      showError('У получателя не хватает места!');
+      showMessage('Ошибка', 'У получателя не хватает места!');
       Result := false;
     end;
 
@@ -1087,30 +1118,33 @@ begin
     curNode := FindTreap(warehouses, pnSelectObject.tag);
   end;
 
-  if validateEditObj and getConfirmation then
+  if validateEditObj then
   begin
-    edEditObjName.Text := trim(edEditObjName.Text);
-    edEditObjStreet.Text := trim(edEditObjStreet.Text);
+    if strToInt(edEditObjCapacity.Text) < curNode^.Data^.usedCapacity
+                                          + curNode^.Data^.shipmentCapacity then
+    begin
+      showMessage('Ошибка', 'Новая вместимость не позволяет вместить существующие товары!');
+    end
+    else if getConfirmation then
+    begin
+      edEditObjName.Text := trim(edEditObjName.Text);
+      edEditObjStreet.Text := trim(edEditObjStreet.Text);
 
-    curNode^.Data^.name := shortString(edEditObjName.Text);
-    curNode^.Data^.street := shortString(edEditObjStreet.Text);
-    curNode^.Data^.house := strToInt(edEditObjHouse.Text);
-    curNode^.Data^.building := -1;
-    if Length(edEditObjBuilding.Text) > 0 then
-      curNode^.Data^.building := strToInt(edEditObjBuilding.Text);
-    curNode^.Data^.capacity := strToInt(edEditObjCapacity.Text);
+      curNode^.Data^.name := shortString(edEditObjName.Text);
+      curNode^.Data^.street := shortString(edEditObjStreet.Text);
+      curNode^.Data^.house := strToInt(edEditObjHouse.Text);
+      curNode^.Data^.building := -1;
+      if Length(edEditObjBuilding.Text) > 0 then
+        curNode^.Data^.building := strToInt(edEditObjBuilding.Text);
+      curNode^.Data^.capacity := strToInt(edEditObjCapacity.Text);
 
-    edEditObjName.Text := '';
-    edEditObjStreet.Text := '';
-    edEditObjHouse.Text := '';
-    edEditObjBuilding.Text := '';
-    edEditObjCapacity.Text := '';
-    hideAllPanels;
-  end
-  else
-  begin
-
-
+      edEditObjName.Text := '';
+      edEditObjStreet.Text := '';
+      edEditObjHouse.Text := '';
+      edEditObjBuilding.Text := '';
+      edEditObjCapacity.Text := '';
+      hideAllPanels;
+    end;
   end;
 end;
 
@@ -1246,11 +1280,11 @@ begin
     begin
       if pnCreateObj.tag = 1 then
       begin
-        showError('Магазин с таким именем уже существует');
+        showMessage('Ошибка', 'Магазин с таким именем уже существует');
       end
       else
       begin
-        showError('Склад с таким именем уже существует');
+        showMessage('Ошибка', 'Склад с таким именем уже существует');
       end;
     end
     else
@@ -1317,7 +1351,6 @@ begin
       newItem^.Volume := strToInt(edAddItemVol.Text);
       newItem^.Count := strToInt(edAddItemCnt.Text);
       newItem^.Key := getHash(string(newItem^.name));
-      newItem^.needToSend := 0;
       InsertTreapItem(node^.Data^.Items, newItem);
     end;
 
@@ -1384,6 +1417,69 @@ begin
   pnAddItem.Visible := true;
   pnAddItem.Left := (pnMapWrap.Width - pnAddItem.Width) shr 1;
   pnAddItem.Top := (pnMapWrap.Height - pnAddItem.Height) shr 1;
+end;
+
+procedure TfrMainForm.doShipment(const shipment: PShipment);
+var
+  sendItemNode, destItemNode: PTreapItemNode;
+  newNode: PItem;
+begin
+  destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
+  sendItemNode := FindTreapItem(shipment^.SourceID^.Items, getHash(shipment^.ProductName));
+
+  if destItemNode = nil then
+  begin
+    newNode.name := shortString(shipment^.ProductName);
+    newNode.category := sendItemNode^.Data^.category;
+    newNode.Volume := sendItemNode^.Data^.volume;
+    newNode.Count := 0;
+    newNode.Key := getHash(shipment^.ProductName);
+    InsertTreapItem(shipment^.DestinationID^.Items, newNode);
+    destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
+  end;
+
+  if sendItemNode^.Data^.Volume = destItemNode^.Data^.Volume then
+  begin
+    Dec(shipment^.SourceID^.usedCapacity, sendItemNode^.Data^.Volume * shipment^.Count);
+    Dec(shipment^.DestinationID^.shipmentCapacity, sendItemNode^.Data^.Volume * shipment^.Count);
+    Inc(shipment^.DestinationID^.usedCapacity, sendItemNode^.Data^.Volume * shipment^.Count);
+
+    Dec(sendItemNode^.Data^.Count, shipment^.Count);
+
+    if sendItemNode^.Data^.Count = 0 then
+    begin
+      EraseTreapItem(sendItemNode, getHash(shipment^.ProductName));
+    end;
+
+    Inc(destItemNode^.Data^.Count, shipment^.Count);
+  end
+  else
+  begin
+    ShowMessage('Уведомление', 'Некоторые отгрузки не были выполнены из-за отличий в объеме товара!');
+  end;
+
+
+
+
+end;
+
+procedure TfrMainForm.N3Click(Sender: TObject);
+var
+  curShipment, prev: PShipment;
+begin
+  if getConfirmation then
+  begin
+    curShipment := shipments;
+    while curShipment <> nil do
+    begin
+      doShipment(curShipment);
+      prev := curShipment;
+      curShipment := curShipment^.next;
+      Dispose(prev);
+    end;
+    showMessage('Успешно', 'Все отгрузки выполнены');
+    shipments := nil;
+  end;
 end;
 
 end.

@@ -153,7 +153,7 @@ Coordinates=471,146,71,58
 Coordinates=376,214,135,58
 
 []
-Coordinates=350,570,53,58
+Coordinates=1115,582,40,36
 Visible=True
 
 [pnFilter]
@@ -192,9 +192,6 @@ Coordinates=24,174,40,36
 [lbHints]
 Coordinates=791,582,54,58
 
-[N3]
-Coordinates=600,378,40,36
-
 [N11]
 Coordinates=551,378,40,36
 
@@ -206,9 +203,6 @@ Coordinates=1134,386,130,58
 
 [edFilterHouseVal]
 Coordinates=959,232,113,58
-
-[N2]
-Coordinates=1134,540,40,36
 
 [pnFilterParamsHouse]
 Coordinates=945,1,139,58
@@ -236,9 +230,6 @@ Coordinates=347,1,82,58
 
 [pnFilterButtons]
 Coordinates=800,427,101,58
-
-[N1]
-Coordinates=1115,582,40,36
 
 [edFilterStreetVal]
 Coordinates=529,1,111,58

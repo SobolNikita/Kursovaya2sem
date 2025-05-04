@@ -29449,7 +29449,7 @@ object frMainForm: TfrMainForm
       Left = 231
       Top = 6
       Width = 173
-      Height = 77
+      Height = 105
       AutoSize = True
       ParentBackground = False
       TabOrder = 2
@@ -29485,7 +29485,7 @@ object frMainForm: TfrMainForm
       object btnSelectObjCancel: TButton
         AlignWithMargins = True
         Left = 6
-        Top = 46
+        Top = 74
         Width = 160
         Height = 25
         Margins.Left = 5
@@ -29495,6 +29495,20 @@ object frMainForm: TfrMainForm
         Caption = #1054#1090#1084#1077#1085#1072
         TabOrder = 2
         OnClick = btnSelectObjCancelClick
+      end
+      object btnSelectObjItemList: TButton
+        AlignWithMargins = True
+        Left = 6
+        Top = 40
+        Width = 160
+        Height = 25
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Caption = #1057#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
+        TabOrder = 3
+        OnClick = btnSelectObjItemListClick
       end
     end
     object pnEditObj: TPanel
@@ -30792,15 +30806,19 @@ object frMainForm: TfrMainForm
   object MainMenu1: TMainMenu
     Left = 8
     Top = 26
-    object N1: TMenuItem
+    object File1: TMenuItem
       Caption = #1060#1072#1081#1083
-      object N2: TMenuItem
-        Caption = #1054#1090#1082#1088#1099#1090#1100
-        ShortCut = 16463
+      object New1: TMenuItem
+        Caption = #1057#1086#1079#1076#1072#1090#1100
       end
-      object N3: TMenuItem
-        Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100
-        ShortCut = 16467
+      object Open1: TMenuItem
+        Caption = #1054#1090#1082#1088#1099#1090#1100
+      end
+      object Save1: TMenuItem
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      end
+      object SaveAs1: TMenuItem
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1082#1072#1082
       end
     end
     object N4: TMenuItem
@@ -30831,6 +30849,19 @@ object frMainForm: TfrMainForm
       object N11: TMenuItem
         Caption = #1057#1086#1079#1076#1072#1090#1100
         OnClick = N11Click
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object N2: TMenuItem
+        Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
+        object N3: TMenuItem
+          Caption = #1042#1089#1077
+          OnClick = N3Click
+        end
+        object N14: TMenuItem
+          Caption = #1042#1099#1073#1088#1072#1090#1100
+        end
       end
     end
     object N12: TMenuItem
