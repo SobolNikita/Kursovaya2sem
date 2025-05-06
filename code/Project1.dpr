@@ -15,7 +15,7 @@ uses
   TableUnit in 'TableUnit.pas' {frTableForm},
   ShipmentsTableUnit in 'ShipmentsTableUnit.pas' {frShipmentsTable},
   shipments in 'shipments.pas',
-  SelectShipmentsUnit in 'SelectShipmentsUnit.pas' {Form1},
+  SelectShipmentsUnit in 'SelectShipmentsUnit.pas' {frSelectShipments},
   BalanceUnit in 'BalanceUnit.pas' {frBalance};
 
 {$R *.res}
@@ -26,7 +26,7 @@ begin
   Application.CreateForm(TfrMainForm, frMainForm);
   Application.CreateForm(TfrTableForm, frTableForm);
   Application.CreateForm(TfrShipmentsTable, frShipmentsTable);
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfrSelectShipments, frSelectShipments);
   Application.CreateForm(TfrBalance, frBalance);
   Application.Run;
 end.

@@ -9,7 +9,7 @@ uses
   CartesianTree, CartesianTreeByName, CartesianTreeItem, Validation,
   GetKeys, Hash, Messages, Filter, ObjectMask, Data.FMTBcd, Data.DB,
   Data.SqlExpr, Vcl.Grids,
-  TableUnit, ShipmentsTableUnit, shipments, BalanceUnit;
+  TableUnit, ShipmentsTableUnit, shipments, BalanceUnit, SelectShipmentsUnit;
 
 type
 
@@ -258,10 +258,11 @@ type
     procedure edCreateShipmentItemIDExit(Sender: TObject);
     procedure N3Click(Sender: TObject);
 
-    procedure doShipment(const shipment: PShipment);
     procedure btnSelectObjItemListClick(Sender: TObject);
     procedure N16Click(Sender: TObject);
     procedure N6Click(Sender: TObject);
+    procedure btnEditObjCancelClick(Sender: TObject);
+    procedure N14Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -284,6 +285,7 @@ var
   frTableForm: TfrTableForm;
   frShipmentTableForm: TfrShipmentsTable;
   frBalanceForm: TfrBalance;
+  frSelectShipments: TfrSelectShipments;
 
 implementation
 
@@ -1122,6 +1124,11 @@ begin
 
 end;
 
+procedure TfrMainForm.btnEditObjCancelClick(Sender: TObject);
+begin
+  pnEditObj.Visible := false;
+end;
+
 procedure TfrMainForm.btnEditObjConfirmClick(Sender: TObject);
 var
   curNode: PTreapNode;
@@ -1366,6 +1373,7 @@ begin
     begin
       newItem := new(PItem);
       newItem^.name := shortString(edAddItemName.Text);
+      newItem^.needToSend := 0;
       newItem^.category := shortString(edAddItemCategory.Text);
       newItem^.Volume := strToInt(edAddItemVol.Text);
       newItem^.Count := strToInt(edAddItemCnt.Text);
@@ -1438,6 +1446,13 @@ begin
   pnAddItem.Top := (pnMapWrap.Height - pnAddItem.Height) shr 1;
 end;
 
+procedure TfrMainForm.N14Click(Sender: TObject);
+begin
+  frSelectShipments := TfrSelectShipments.Create(Application);
+  frSelectShipments.LoadData(shipments);
+  frSelectShipments.ShowModal;
+end;
+
 procedure TfrMainForm.N16Click(Sender: TObject);
 begin
   frShipmentTableForm := TfrShipmentsTable.Create(Application);
@@ -1445,68 +1460,26 @@ begin
   frShipmentTableForm.ShowModal;
 end;
 
-procedure TfrMainForm.doShipment(const shipment: PShipment);
-var
-  sendItemNode, destItemNode: PTreapItemNode;
-  newNode: PItem;
-begin
-  destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
-  sendItemNode := FindTreapItem(shipment^.SourceID^.Items, getHash(shipment^.ProductName));
-
-  Dec(sendItemNode^.Data^.needToSend, shipment^.Count);
-
-  if destItemNode = nil then
-  begin
-    newNode := new(PItem);
-    newNode^.name := shortString(shipment^.ProductName);
-    newNode^.category := sendItemNode^.Data^.category;
-    newNode^.Volume := sendItemNode^.Data^.volume;
-    newNode^.Count := 0;
-    newNode^.Key := getHash(shipment^.ProductName);
-    InsertTreapItem(shipment^.DestinationID^.Items, newNode);
-    destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
-  end;
-
-  if sendItemNode^.Data^.Volume = destItemNode^.Data^.Volume then
-  begin
-    Dec(shipment^.SourceID^.usedCapacity, sendItemNode^.Data^.Volume * shipment^.Count);
-    Dec(shipment^.DestinationID^.shipmentCapacity, sendItemNode^.Data^.Volume * shipment^.Count);
-    Inc(shipment^.DestinationID^.usedCapacity, sendItemNode^.Data^.Volume * shipment^.Count);
-
-    Dec(sendItemNode^.Data^.Count, shipment^.Count);
-
-    if sendItemNode^.Data^.Count = 0 then
-    begin
-      EraseTreapItem(sendItemNode, getHash(shipment^.ProductName));
-    end;
-
-    Inc(destItemNode^.Data^.Count, shipment^.Count);
-  end
-  else
-  begin
-    ShowMessage('Уведомление', 'Некоторые отгрузки не были выполнены из-за отличий в объеме товара!');
-  end;
-
-
-
-
-end;
-
 procedure TfrMainForm.N3Click(Sender: TObject);
 var
   curShipment, prev: PShipment;
+  allDone: boolean;
 begin
+  allDone := true;
   if getConfirmation then
   begin
     curShipment := shipments;
     while curShipment <> nil do
     begin
-      doShipment(curShipment);
+      allDone := doShipment(curShipment) and allDone;
       prev := curShipment;
       curShipment := curShipment^.next;
       Dispose(prev);
     end;
-    showMessage('Успешно', 'Все отгрузки выполнены');
+    if not allDone then
+      ShowMessage('Уведомление', 'Некоторые отгрузки не были выполнены из-за отличий в объеме товара!')
+    else
+      showMessage('Успешно', 'Все отгрузки выполнены');
     shipments := nil;
   end;
 end;

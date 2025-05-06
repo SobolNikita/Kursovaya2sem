@@ -146,7 +146,7 @@
         </DCCReference>
         <DCCReference Include="shipments.pas"/>
         <DCCReference Include="SelectShipmentsUnit.pas">
-            <Form>Form1</Form>
+            <Form>frSelectShipments</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="BalanceUnit.pas">

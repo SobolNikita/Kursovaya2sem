@@ -143,6 +143,8 @@ begin
   sgBalanceTable.Cells[7, 0] := 'Артикул';
   sgBalanceTable.Cells[8, 0] := 'Количество';
   sgBalanceTable.Cells[9, 0] := 'Занято товаром';
+
+  sgBalanceTable.RowCount := 0;
 end;
 
 end.

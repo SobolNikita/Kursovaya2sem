@@ -29612,7 +29612,7 @@ object frMainForm: TfrMainForm
         Margins.Bottom = 0
         Caption = #1054#1090#1084#1077#1085#1072
         TabOrder = 4
-        OnClick = btnCreateObjCancelClick
+        OnClick = btnEditObjCancelClick
       end
       object edEditObjBuilding: TEdit
         Left = 125
@@ -30845,6 +30845,7 @@ object frMainForm: TfrMainForm
         end
         object N14: TMenuItem
           Caption = #1042#1099#1073#1088#1072#1090#1100
+          OnClick = N14Click
         end
       end
       object N15: TMenuItem

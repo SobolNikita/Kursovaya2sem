@@ -1,4 +1,4 @@
-object Form1: TForm1
+object frSelectShipments: TfrSelectShipments
   Left = 0
   Top = 0
   Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
@@ -10,26 +10,56 @@ object Form1: TForm1
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnClose = FormClose
+  OnCreate = FormCreate
   TextHeight = 15
-  object StringGrid1: TStringGrid
+  object sgSelectShipmentsTable: TStringGrid
     Left = 0
     Top = 0
     Width = 1280
     Height = 656
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 416
-    ExplicitTop = 120
-    ExplicitWidth = 320
-    ExplicitHeight = 120
+    ExplicitWidth = 1270
+    ExplicitHeight = 624
   end
-  object Panel1: TPanel
+  object pnSelectShipments: TPanel
     Left = 0
     Top = 656
     Width = 1280
     Height = 64
     Align = alBottom
-    Caption = 'Panel1'
     TabOrder = 1
+    ExplicitTop = 624
+    ExplicitWidth = 1270
+    object btnSelectConfirm: TButton
+      Left = 1144
+      Top = 16
+      Width = 115
+      Height = 33
+      Cursor = crHandPoint
+      Caption = #1054#1090#1075#1088#1091#1079#1080#1090#1100
+      TabOrder = 0
+    end
+    object btnSelectAll: TButton
+      Left = 1015
+      Top = 16
+      Width = 115
+      Height = 33
+      Cursor = crHandPoint
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1074#1089#1077
+      TabOrder = 1
+      OnClick = btnSelectAllClick
+    end
+    object btnSelectReset: TButton
+      Left = 887
+      Top = 16
+      Width = 115
+      Height = 33
+      Cursor = crHandPoint
+      Caption = #1057#1073#1088#1086#1089#1080#1090#1100
+      TabOrder = 2
+      OnClick = btnSelectResetClick
+    end
   end
 end
