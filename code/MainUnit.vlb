@@ -153,7 +153,7 @@ Coordinates=471,146,71,58
 Coordinates=376,214,135,58
 
 []
-Coordinates=1115,582,40,36
+Coordinates=24,174,40,36
 Visible=True
 
 [pnFilter]
@@ -180,14 +180,8 @@ Coordinates=755,1,152,58
 [N6]
 Coordinates=261,174,40,36
 
-[N8]
-Coordinates=73,174,40,36
-
 [lbFilterUsedCapacityTo]
 Coordinates=945,309,149,58
-
-[N5]
-Coordinates=24,174,40,36
 
 [lbHints]
 Coordinates=791,582,54,58
@@ -267,15 +261,9 @@ Coordinates=524,582,102,58
 [N10]
 Coordinates=1066,582,40,36
 
-[N7]
-Coordinates=475,582,40,36
-
 [pnFilterParamsUsedCapacity]
 Coordinates=1132,232,182,58
 
 [MainMenu1]
 Coordinates=386,582,81,36
-
-[N9]
-Coordinates=337,582,40,36
 

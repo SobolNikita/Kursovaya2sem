@@ -9,18 +9,9 @@ uses
   CartesianTree, CartesianTreeByName, CartesianTreeItem, Validation,
   GetKeys, Hash, Messages, Filter, ObjectMask, Data.FMTBcd, Data.DB,
   Data.SqlExpr, Vcl.Grids,
-  TableUnit;
+  TableUnit, ShipmentsTableUnit, shipments, BalanceUnit;
 
 type
-
-  PShipment = ^TShipment;
-  TShipment = record
-    SourceID: PLocation;       // Отправитель (склад)
-    DestinationID: PLocation;  // Получатель (магазин)
-    ProductName: string;
-    Count: Integer;
-    next: PShipment;
-  end;
 
   TfrMainForm = class(TForm)
     pnFilter: TPanel;
@@ -78,11 +69,7 @@ type
     lbObjInfoUsedCapacityVal: TLabel;
     MainMenu1: TMainMenu;
     N4: TMenuItem;
-    N5: TMenuItem;
     N6: TMenuItem;
-    N7: TMenuItem;
-    N8: TMenuItem;
-    N9: TMenuItem;
     N10: TMenuItem;
     N11: TMenuItem;
     pnHints: TPanel;
@@ -168,7 +155,6 @@ type
     lbAddItemCategory: TLabel;
     edAddItemCategory: TEdit;
     File1: TMenuItem;
-    New1: TMenuItem;
     Open1: TMenuItem;
     Save1: TMenuItem;
     SaveAs1: TMenuItem;
@@ -177,6 +163,10 @@ type
     N3: TMenuItem;
     N14: TMenuItem;
     btnSelectObjItemList: TButton;
+    N15: TMenuItem;
+    N16: TMenuItem;
+    N7: TMenuItem;
+    N5: TMenuItem;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -270,6 +260,8 @@ type
 
     procedure doShipment(const shipment: PShipment);
     procedure btnSelectObjItemListClick(Sender: TObject);
+    procedure N16Click(Sender: TObject);
+    procedure N6Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -278,6 +270,7 @@ type
     shopsNames, warehousesNames: PTreapNameNode;
     filter: TFilter;
     shipments: PShipment;
+    curShipmentID: integer;
     const
       shopColor = clHighlight;
       warehouseColor = clMaroon;
@@ -288,7 +281,9 @@ type
 
 var
   frMainForm: TfrMainForm;
-  frtableForm: TfrTableForm;
+  frTableForm: TfrTableForm;
+  frShipmentTableForm: TfrShipmentsTable;
+  frBalanceForm: TfrBalance;
 
 implementation
 
@@ -297,6 +292,7 @@ implementation
 procedure TfrMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
+  curShipmentID := 1;
   shopKey := 1;
   warehouseKey := 1;
   InitFilter(filter);
@@ -547,7 +543,6 @@ var
   curNode: PTreapNode;
 begin
   frtableForm := TfrTableForm.Create(Application);
-  frtableForm.show;
   if (pnSelectObject.tag and mask) <> 0 then
   begin
     //shop
@@ -558,6 +553,9 @@ begin
     //warehouse
     curNode := FindTreap(warehouses, pnSelectObject.tag);
   end;
+  frtableForm.Location := curNode^.Data;
+  frtableForm.LoadData;
+  frtableForm.ShowModal;
 end;
 
 procedure TfrMainForm.btnSelectObjDeleteClick(Sender: TObject);
@@ -991,6 +989,7 @@ end;
 function TfrMainForm.validateCreateSipment: boolean;
 var
   senderNode, destNode: PTreapNode;
+  curItem: PTreapItemNode;
 begin
   Result := true;
 
@@ -1015,13 +1014,17 @@ begin
     Result := false;
   end;
 
+  senderNode := nil;
   if Result then
   begin
     if rbCreateShipmentSenderShop.Checked then
       senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)
     else
       senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
-    if FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text))^.Data^.Count
+
+    //NEED TO ADD SEND COUNT CHECK
+    curItem := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
+    if curItem^.Data^.Count - curItem^.Data^.needToSend
       < strToInt(edCreateShipmentCnt.Text) then
     begin
       showMessage('Ошибка', 'У отправителя недостаточное количество товара!');
@@ -1029,7 +1032,7 @@ begin
     end;
   end;
 
-  if Result then
+  if (senderNode <> nil) and Result then
   begin
     if rbCreateShipmentDestShop.Checked then
       destNode := FindTreap(shops, strToInt(edCreateShipmentDestID.Text) or mask)
@@ -1037,7 +1040,8 @@ begin
       destNode := FindTreap(warehouses, strToInt(edCreateShipmentDestID.Text));
 
     if destNode^.Data^.usedCapacity + destNode^.Data^.shipmentCapacity
-       + strToInt(edCreateShipmentCnt.Text) > destNode^.Data^.capacity then
+       + strToInt(edCreateShipmentCnt.Text) * FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text))^.Data^.Volume
+       > destNode^.Data^.capacity then
     begin
       showMessage('Ошибка', 'У получателя не хватает места!');
       Result := false;
@@ -1084,10 +1088,18 @@ end;
 procedure TfrMainForm.btnCreateShipmentConfirmClick(Sender: TObject);
 var
   newShipment: PShipment;
+  curItem: PTreapItemNode;
+  senderNode: PTreapNode;
 begin
   if validateCreateSipment then
   begin
     newShipment := new(PShipment);
+    if rbCreateShipmentSenderShop.Checked then
+      senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)
+    else
+      senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
+    curItem := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
+    Inc(curItem^.Data^.needToSend, strToInt(edCreateShipmentCnt.Text));
     if rbCreateShipmentSenderShop.Checked then
       newShipment^.SourceID := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)^.Data
     else
@@ -1097,7 +1109,9 @@ begin
       newShipment^.DestinationID := FindTreap(shops, strToInt(edCreateShipmentDestID.Text) or mask)^.Data
     else
       newShipment^.DestinationID := FindTreap(warehouses, strToInt(edCreateShipmentDestID.Text))^.Data;
-
+    newShipment^.ID := curShipmentId;
+    Inc(curShipmentId);
+    newShipment^.ShipmentName := edCreateShipmentName.Text;
     newShipment^.ProductName := edCreateShipmentItemName.Text;
     newShipment^.Count := strToInt(edCreateShipmentCnt.Text);
     newShipment^.next := shipments;
@@ -1424,6 +1438,13 @@ begin
   pnAddItem.Top := (pnMapWrap.Height - pnAddItem.Height) shr 1;
 end;
 
+procedure TfrMainForm.N16Click(Sender: TObject);
+begin
+  frShipmentTableForm := TfrShipmentsTable.Create(Application);
+  frShipmentTableForm.LoadData(shipments);
+  frShipmentTableForm.ShowModal;
+end;
+
 procedure TfrMainForm.doShipment(const shipment: PShipment);
 var
   sendItemNode, destItemNode: PTreapItemNode;
@@ -1432,13 +1453,16 @@ begin
   destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
   sendItemNode := FindTreapItem(shipment^.SourceID^.Items, getHash(shipment^.ProductName));
 
+  Dec(sendItemNode^.Data^.needToSend, shipment^.Count);
+
   if destItemNode = nil then
   begin
-    newNode.name := shortString(shipment^.ProductName);
-    newNode.category := sendItemNode^.Data^.category;
-    newNode.Volume := sendItemNode^.Data^.volume;
-    newNode.Count := 0;
-    newNode.Key := getHash(shipment^.ProductName);
+    newNode := new(PItem);
+    newNode^.name := shortString(shipment^.ProductName);
+    newNode^.category := sendItemNode^.Data^.category;
+    newNode^.Volume := sendItemNode^.Data^.volume;
+    newNode^.Count := 0;
+    newNode^.Key := getHash(shipment^.ProductName);
     InsertTreapItem(shipment^.DestinationID^.Items, newNode);
     destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
   end;
@@ -1485,6 +1509,15 @@ begin
     showMessage('Успешно', 'Все отгрузки выполнены');
     shipments := nil;
   end;
+end;
+
+
+
+procedure TfrMainForm.N6Click(Sender: TObject);
+begin
+  frBalanceForm := TfrBalance.Create(Application);
+  frBalanceForm.SetData(shops, warehouses);
+  frBalanceForm.ShowModal;
 end;
 
 end.

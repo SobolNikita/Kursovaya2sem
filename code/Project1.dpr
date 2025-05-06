@@ -11,7 +11,12 @@ uses
   Messages in 'Messages.pas',
   Filter in 'Filter.pas',
   ObjectMask in 'ObjectMask.pas',
-  CartesianTreeItem in 'CartesianTreeItem.pas';
+  CartesianTreeItem in 'CartesianTreeItem.pas',
+  TableUnit in 'TableUnit.pas' {frTableForm},
+  ShipmentsTableUnit in 'ShipmentsTableUnit.pas' {frShipmentsTable},
+  shipments in 'shipments.pas',
+  SelectShipmentsUnit in 'SelectShipmentsUnit.pas' {Form1},
+  BalanceUnit in 'BalanceUnit.pas' {frBalance};
 
 {$R *.res}
 
@@ -19,5 +24,9 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrMainForm, frMainForm);
+  Application.CreateForm(TfrTableForm, frTableForm);
+  Application.CreateForm(TfrShipmentsTable, frShipmentsTable);
+  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfrBalance, frBalance);
   Application.Run;
 end.

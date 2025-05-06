@@ -4,7 +4,7 @@ interface
 uses Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, System.UITypes;
 
 function getConfirmation: boolean;
-procedure showError(const text: string);
+procedure showMessage(const capt: string; const text: string);
 
 implementation
 
@@ -36,14 +36,14 @@ begin
   end;
 end;
 
-procedure showError(const text: string);
+procedure showMessage(const capt: string; const text: string);
 var
   Dlg: TForm;
   i: integer;
 begin
   Dlg := CreateMessageDialog(text,
                              mtConfirmation, [mbYes]);
-  Dlg.Caption := 'Ошибка';
+  Dlg.Caption := capt;
   for i := 0 to Dlg.ComponentCount - 1 do
   begin
     if Dlg.Components[i] is TButton then
@@ -59,3 +59,4 @@ begin
     Dlg.Free;
   end;
 end.
+

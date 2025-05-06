@@ -6,7 +6,7 @@ interface
   type
   TItem = record
     name, category: string[255];
-    Volume, Count, Key: Integer;
+    Volume, Count, Key, needToSend: Integer;
   end;
   PItem = ^TItem;
 
