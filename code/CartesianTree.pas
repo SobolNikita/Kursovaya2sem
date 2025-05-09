@@ -177,6 +177,8 @@ begin
   begin
     ClearTreap(Root^.Left);
     ClearTreap(Root^.Right);
+    ClearTreapItem(Root^.Data^.Items);
+    Root^.Data^.shape.Free;
     Dispose(Root);
     Root := nil;
   end;

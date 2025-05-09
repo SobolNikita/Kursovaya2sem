@@ -30809,16 +30809,14 @@ object frMainForm: TfrMainForm
     object File1: TMenuItem
       Caption = #1060#1072#1081#1083
       object Open1: TMenuItem
-        Caption = #1054#1090#1082#1088#1099#1090#1100
+        Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100
         ShortCut = 16463
+        OnClick = Open1Click
       end
       object Save1: TMenuItem
         Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
         ShortCut = 16467
-      end
-      object SaveAs1: TMenuItem
-        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1082#1072#1082
-        ShortCut = 49235
+        OnClick = Save1Click
       end
     end
     object N4: TMenuItem
@@ -30861,12 +30859,6 @@ object frMainForm: TfrMainForm
       object N13: TMenuItem
         Caption = #1044#1086#1073#1072#1074#1080#1090#1100
         OnClick = N13Click
-      end
-    end
-    object N7: TMenuItem
-      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072
-      object N5: TMenuItem
-        Caption = #1055#1086#1082#1072#1079#1072#1090#1100
       end
     end
   end

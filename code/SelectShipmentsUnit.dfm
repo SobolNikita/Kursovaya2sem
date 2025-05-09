@@ -40,6 +40,7 @@ object frSelectShipments: TfrSelectShipments
       Cursor = crHandPoint
       Caption = #1054#1090#1075#1088#1091#1079#1080#1090#1100
       TabOrder = 0
+      OnClick = btnSelectConfirmClick
     end
     object btnSelectAll: TButton
       Left = 1015

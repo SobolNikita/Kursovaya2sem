@@ -16,7 +16,7 @@ type
     btnSelectReset: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure LoadData(shipment: PShipment);
+    procedure LoadData(var shipment: PShipment);
 
     procedure sgSelectShipmentsTableDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
@@ -24,11 +24,13 @@ type
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure btnSelectAllClick(Sender: TObject);
     procedure btnSelectResetClick(Sender: TObject);
+    procedure btnSelectConfirmClick(Sender: TObject);
   private
     { Private declarations }
     procedure ToggleCheckbox(const ARow: Integer);
     var
       siz: integer;
+      shipmentHead: PShipment;
   public
     { Public declarations }
   end;
@@ -56,6 +58,42 @@ begin
   sgSelectShipmentsTable.Repaint;
 end;
 
+procedure TfrSelectShipments.btnSelectConfirmClick(Sender: TObject);
+var
+  i: integer;
+  curShipment, prev, temp: PShipment;
+begin
+  curShipment := shipmentHead;
+  prev := nil;
+  for i := 1 to siz-1 do
+  begin
+    if sgSelectShipmentsTable.Cells[CHECKBOX_COL, i] = '1' then
+    begin
+      doShipment(curShipment);
+      if prev = nil then
+      begin
+        shipmentHead := curShipment^.Next;
+      end
+      else
+      begin
+        prev^.Next := curShipment^.Next;
+      end;
+      temp := curShipment;
+      curShipment := curShipment^.Next;
+      Dispose(temp);
+    end
+    else
+    begin
+      prev := curShipment;
+      curShipment := curShipment^.next;
+    end;
+    sgSelectShipmentsTable.Cells[CHECKBOX_COL, i] := '0';
+  end;
+
+  loadData(shipmentHead);
+  sgSelectShipmentsTable.Invalidate;
+end;
+
 procedure TfrSelectShipments.btnSelectResetClick(Sender: TObject);
 var
   i: integer;
@@ -73,11 +111,12 @@ begin
   Action := caFree;
 end;
 
-procedure TfrSelectShipments.LoadData(shipment: PShipment);
+procedure TfrSelectShipments.LoadData(var shipment: PShipment);
 var
   i: integer;
   curShipment: PShipment;
 begin
+  shipmentHead := shipment;
   siz := 1; //header
   curShipment := shipment;
   while curShipment <> nil do

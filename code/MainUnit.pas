@@ -157,7 +157,6 @@ type
     File1: TMenuItem;
     Open1: TMenuItem;
     Save1: TMenuItem;
-    SaveAs1: TMenuItem;
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -165,8 +164,6 @@ type
     btnSelectObjItemList: TButton;
     N15: TMenuItem;
     N16: TMenuItem;
-    N7: TMenuItem;
-    N5: TMenuItem;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -263,6 +260,8 @@ type
     procedure N6Click(Sender: TObject);
     procedure btnEditObjCancelClick(Sender: TObject);
     procedure N14Click(Sender: TObject);
+    procedure Save1Click(Sender: TObject);
+    procedure Open1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -271,7 +270,12 @@ type
     shopsNames, warehousesNames: PTreapNameNode;
     filter: TFilter;
     shipments: PShipment;
-    curShipmentID: integer;
+    function getSiz(const curNode: PTreapNode): integer;
+    procedure writeObjData(const curFile: TextFile; const curObj: PTreapNode);
+    function getItemsSiz(const curItem: PTreapItemNode): integer;
+    procedure WriteItemData(const curFile: TextFile;
+      const curObj: PTreapItemNode);
+    procedure createNewObjFile(const fil: textFile);
     const
       shopColor = clHighlight;
       warehouseColor = clMaroon;
@@ -474,6 +478,111 @@ begin
   edEditObjHouse.Text := '';
   edEditObjBuilding.Text := '';
   edEditObjCapacity.Text := '';
+end;
+
+function TfrMainForm.getSiz(const curNode: PTreapNode) : integer;
+begin
+  if curNode = nil then
+    Result := 0
+  else
+  begin
+    Result := 1 + getSiz(curNode^.Left) + getSiz(curNode^.Right);
+  end;
+end;
+
+function TfrMainForm.getItemsSiz(const curItem: PTreapItemNode): integer;
+begin
+  if curItem = nil then
+    Result := 0
+  else
+  begin
+    Result := 1 + getItemsSiz(curItem^.Left) + getItemsSiz(curItem^.Right);
+  end;
+end;
+
+procedure TfrMainForm.WriteItemData(const curFile: TextFile; const curObj: PTreapItemNode);
+begin
+  if curObj <> nil then
+  begin
+    writeln(curFile, curObj^.Data^.name);
+    writeln(curFile, curObj^.Data^.category);
+    writeln(curFile, curObj^.Data^.Volume);
+    writeln(curFile, curObj^.Data^.Count);
+    writeln(curFile, curObj^.Data^.Key);
+    writeln(curFile, curObj^.Data^.needToSend);
+    WriteItemData(curFile, curObj^.Left);
+    WriteItemData(curFile, curObj^.Right);
+  end;
+end;
+
+procedure TfrMainForm.writeObjData(const curFile: TextFile; const curObj: PTreapNode);
+begin
+  if curObj <> nil then
+  begin
+    writeln(curFile, curObj^.Data^.name);
+    writeln(curFile, curObj^.Data^.street);
+    writeln(curFile, curObj^.Data^.house);
+    writeln(curFile, curObj^.Data^.building);
+    writeln(curFile, curObj^.Data^.capacity);
+    writeln(curFile, curObj^.Data^.usedCapacity);
+    writeln(curFile, curObj^.Data^.shipmentCapacity);
+    writeln(curFile, curObj^.Data^.Key);
+    writeln(curFile, curObj^.Data^.X);
+    writeln(curFile, curObj^.Data^.Y);
+    writeln(curFile, getItemsSiz(curObj^.Data^.Items));
+    WriteItemData(curFile, curObj^.Data^.Items);
+    writeObjData(curFile, curObj^.Left);
+    writeObjData(curFile, curObj^.Right);
+  end;
+end;
+
+procedure TfrMainForm.Save1Click(Sender: TObject);
+var
+  shopsFile, warehousesFile, shipmentsFile: TextFile;
+  curObject: PTreapNode;
+  curShip: PShipment;
+  siz: integer;
+begin
+  if getconfirmation then
+  begin
+    AssignFile(shopsFile, 'shops.txt');
+    Rewrite(shopsFile);
+    curObject := shops;
+    writeln(shopsFile, getSiz(shops));
+    writeObjData(shopsFile, curObject);
+    CloseFile(shopsFile);
+
+    AssignFile(warehousesFile, 'warehouses.txt');
+    Rewrite(warehousesFile);
+    curObject := warehouses;
+    writeln(warehousesFile, getSiz(warehouses));
+    writeObjData(warehousesFile, curObject);
+    CloseFile(warehousesFile);
+
+    AssignFile(shipmentsFile, 'shipments.txt');
+    Rewrite(shipmentsFile);
+    curShip := shipments;
+    siz := 0;
+    while curShip <> nil do
+    begin
+      Inc(siz);
+      curShip := curShip^.next;
+    end;
+    writeln(shipmentsFile, siz);
+    curShip := shipments;
+    while curShip <> nil do
+    begin
+      writeln(shipmentsFile, curShip^.ShipmentName);
+      writeln(shipmentsFile, curShip^.ID);
+      writeln(shipmentsFile, curShip^.SourceID^.Key);
+      writeln(shipmentsFile, curShip^.DestinationID^.Key);
+      writeln(shipmentsFile, curShip^.ProductName);
+      writeln(shipmentsFile, curShip^.Count);
+      curShip := curShip^.next;
+    end;
+    CloseFile(shipmentsFile);
+    showMessage('Успешно', 'Успешно сохранено');
+  end;
 end;
 
 procedure TfrMainForm.showPanel(const panel: TPanel; const x, y: integer);
@@ -875,6 +984,161 @@ begin
   end;
 end;
 
+procedure TfrMainForm.createNewObjFile(const fil: textFile);
+var
+  i, j, cntObj, cntItems: integer;
+  newObj: PLocation;
+  curItem: PItem;
+begin
+      readln(fil, cntObj);
+      for i := 1 to cntObj do
+      begin
+        newObj := new(PLocation);
+        newObj^.Items := nil;
+        readln(fil, newObj^.name);
+        readln(fil, newObj^.street);
+        readln(fil, newObj^.house);
+        readln(fil, newObj^.building);
+        readln(fil, newObj^.capacity);
+        readln(fil, newObj^.usedCapacity);
+        readln(fil, newObj^.shipmentCapacity);
+        readln(fil, newObj^.key);
+        readln(fil, newObj^.x);
+        readln(fil, newObj^.y);
+        readln(fil, cntItems);
+        newObj^.shape := TShape.Create(self);
+
+        newObj^.shape.Parent := spMapPoint.Parent;
+        newObj^.shape.Width := spMapPoint.Width;
+        newObj^.shape.Height := spMapPoint.Height;
+
+        newObj^.shape.Left := newObj^.x - newObj^.shape.width shr 1;
+        newObj^.shape.Top := newObj^.y - newObj^.shape.height shr 1;
+
+
+        newObj^.shape.Shape := stCircle;
+
+        newObj^.shape.Cursor := crHandPoint;
+        
+        if (newObj^.Key and mask) <> 0 then
+        begin
+          if newObj^.Key >= warehouseKey then
+            warehouseKey := newObj^.Key + 1;
+          newObj^.shape.Brush.Color := shopColor;
+        end
+        else
+        begin
+          if (newObj^.Key xor mask) >= shopKey then
+            shopKey := (newObj^.Key xor mask) + 1;
+          newObj^.shape.Brush.Color := warehouseColor;
+        end;
+
+        newObj^.shape.Tag := newObj^.key;
+
+        newObj^.shape.onMouseUp := pnSelectObjectShow;
+        newObj^.shape.OnMouseEnter := pnObjectInfoShow;
+        newObj^.shape.OnMouseLeave := pnObjectInfoHide;
+
+        newObj^.shape.Visible := true;
+        newObj^.shape.BringToFront;
+        for j := 1 to cntItems do
+        begin
+          curItem := new(PItem);
+          readln(fil, curItem^.name);
+          readln(fil, curItem^.category);
+          readln(fil, curItem^.Volume);
+          readln(fil, curItem^.Count);
+          readln(fil, curItem^.Key);
+          readln(fil, curItem^.needToSend);
+          InsertTreapItem(newObj^.Items, curItem);
+        end;
+        if (newObj^.Key and mask) <> 0 then
+        begin
+          InsertTreap(shops, newObj);
+          InsertTreapName(shopsNames, string(newObj^.name), newObj^.Key);  
+        end
+        else
+        begin
+          InsertTreap(warehouses, newObj);
+          InsertTreapName(warehousesNames, string(newObj^.name), newObj^.Key);
+        end;
+      end;
+end;
+
+procedure TfrMainForm.Open1Click(Sender: TObject);
+var
+  shopsFile, warehousesFile, shipmentsFile: textFile;
+  cntShipments, i, sourceKey, destKey: integer;
+  curShipment: PShipment;
+begin
+  if not FileExists('warehouses.txt')
+     or not FileExists('shops.txt')
+     or not FileExists('shipments.txt') then
+  begin
+    showMessage('Ошибка', 'Ошибка загрузки');
+  end
+  else
+  begin
+    if getconfirmation then
+    begin
+      curShipmentID := 1;
+      shopKey := 1;
+      warehouseKey := 1;
+        
+      ClearTreap(shops);
+      ClearTreap(warehouses);
+      ClearShipments(shipments);
+      ClearTreapName(shopsNames);
+      ClearTreapName(warehousesNames);
+      
+      shops := nil;
+      warehouses := nil;
+      shipments := nil;
+      shopsNames := nil;
+      warehousesNames := nil;
+      AssignFile(warehousesFile, 'warehouses.txt');
+      Reset(warehousesFile);
+      createNewObjFile(warehousesFile);
+      CloseFile(warehousesFile);
+
+      AssignFile(shopsFile, 'shops.txt');
+      Reset(shopsFile);
+      createNewObjFile(shopsFile);      
+      CloseFile(shopsFile);
+
+      AssignFile(shipmentsFile, 'shipments.txt');
+      Reset(shipmentsFile);
+      readln(shipmentsFile, cntShipments);
+      curShipmentID := cntShipments + 1;
+      for i := 1 to cntShipments do
+      begin
+        curShipment := new(PShipment);
+        readln(shipmentsFile, curShipment^.ShipmentName);
+        readln(shipmentsFile, curShipment^.ID);
+        readln(shipmentsFile, sourceKey);
+        readln(shipmentsFile, destKey);
+        if (sourceKey and mask) <> 0 then
+          curShipment^.SourceID := FindTreap(shops, sourceKey).Data
+        else
+          curShipment^.SourceID := FindTreap(warehouses, sourceKey).Data;
+
+        if (destKey and mask) <> 0 then
+          curShipment^.DestinationID := FindTreap(shops, destKey).Data
+        else
+          curShipment^.DestinationID := FindTreap(warehouses, destKey).Data;
+          
+        readln(shipmentsFile, curShipment^.ProductName);
+        readln(shipmentsFile, curShipment^.Count);
+        curShipment^.next := shipments;
+        shipments := curShipment;  
+      end;
+      CloseFile(shipmentsFile);
+      spMapPoint.Parent.Invalidate;
+      showMessage('Успешно', 'Данные успешно загружены');
+    end;
+  end;
+end;
+
 function TfrMainForm.validateNumberFromText(const curText: string): integer;
 begin
   if Length(curText) > 0 then
@@ -1013,6 +1277,14 @@ begin
      or (Length(edCreateShipmentItemID.Text) = 0)) then
   begin
     showMessage('Ошибка', 'Товара с таким названием/артикулом не существует!');
+    Result := false;
+  end;
+
+  if Result and (edCreateShipmentDestID.Text = edCreateShipmentSenderID.Text)
+  and ((rbCreateShipmentSenderWarehouse.Checked and rbCreateShipmentDestWarehouse.checked)
+  or (not rbCreateShipmentSenderWarehouse.Checked and not rbCreateShipmentDestWarehouse.checked)) then
+  begin
+    showMessage('Ошибка', 'Отправитель и получатель не должны совпадать!');
     Result := false;
   end;
 

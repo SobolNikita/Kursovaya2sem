@@ -14,20 +14,32 @@ type
     next: PShipment;
   end;
 
-function doShipment(const shipment: PShipment): boolean;
+function doShipment(var shipment: PShipment): boolean;
+procedure ClearShipments(var shipment: PShipment);
 
 implementation
 
-function doShipment(const shipment: PShipment): boolean;
+procedure ClearShipments(var shipment: PShipment);
+var
+  prev: PShipment;
+begin
+  while shipment <> nil do
+  begin
+    prev := shipment;
+    shipment := shipment^.next;
+    Dispose(prev);
+  end;
+end;
+
+function doShipment(var shipment: PShipment): boolean;
 var
   sendItemNode, destItemNode: PTreapItemNode;
   newNode: PItem;
 begin
   Result := true;
+
   destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
   sendItemNode := FindTreapItem(shipment^.SourceID^.Items, getHash(shipment^.ProductName));
-
-  Dec(sendItemNode^.Data^.needToSend, shipment^.Count);
 
   if destItemNode = nil then
   begin
@@ -43,6 +55,7 @@ begin
 
   if sendItemNode^.Data^.Volume = destItemNode^.Data^.Volume then
   begin
+    Dec(sendItemNode^.Data^.needToSend, shipment^.Count);
     Dec(shipment^.SourceID^.usedCapacity, sendItemNode^.Data^.Volume * shipment^.Count);
     Dec(shipment^.DestinationID^.shipmentCapacity, sendItemNode^.Data^.Volume * shipment^.Count);
     Inc(shipment^.DestinationID^.usedCapacity, sendItemNode^.Data^.Volume * shipment^.Count);
@@ -51,7 +64,7 @@ begin
 
     if sendItemNode^.Data^.Count = 0 then
     begin
-      EraseTreapItem(sendItemNode, getHash(shipment^.ProductName));
+      EraseTreapItem(shipment^.SourceID^.Items, getHash(shipment^.ProductName));
     end;
 
     Inc(destItemNode^.Data^.Count, shipment^.Count);
@@ -59,7 +72,7 @@ begin
   else
   begin
     Result := false;
-    end;
+  end;
 end;
 
 end.
