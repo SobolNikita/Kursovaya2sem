@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.Imaging.jpeg, System.UITypes, Vcl.Menus, Vcl.NumberBox,
+  Vcl.Imaging.jpeg, System.UITypes, System.Types, Vcl.Menus, Vcl.NumberBox,
   CartesianTree, CartesianTreeByName, CartesianTreeItem, Validation,
   GetKeys, Hash, Messages, Filter, ObjectMask, Data.FMTBcd, Data.DB,
   Data.SqlExpr, Vcl.Grids,
@@ -265,6 +265,9 @@ type
     procedure Save1Click(Sender: TObject);
     procedure Open1Click(Sender: TObject);
     procedure pbMapPaint(Sender: TObject);
+    procedure pbMapMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure FormDestroy(Sender: TObject);
 
   private
     { Private declarations }
@@ -301,9 +304,11 @@ implementation
 
 {$R *.dfm}
 
+
 procedure TfrMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
+  Arrows := TList<PArrow>.Create;
   curShipmentID := 1;
   shopKey := 1;
   warehouseKey := 1;
@@ -314,6 +319,12 @@ begin
   InitTreeName(warehousesNames);
   InitHash(47, 40009);
   shipments := nil;
+end;
+
+procedure TfrMainForm.FormDestroy(Sender: TObject);
+begin
+  //Очистка всего
+  Arrows.Free;
 end;
 
 procedure TfrMainForm.ClearAddItem;
@@ -754,14 +765,54 @@ begin
 end;
 
 
+procedure TfrMainForm.pbMapMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+var
+  i: Integer;
+  Arrow: PArrow;
+  Pt: TPoint;
+  nearLine: PArrow;
+begin
+  Pt := Point(X, Y);
+  nearLine := nil;
+  i := 0;
+  while (i <= Arrows.Count - 1) and (nearLine = nil) do
+  begin
+    Arrow := Arrows[i];
+    if IsPointNearLine(Pt, Point(Arrow^.FromLoc^.X, Arrow^.FromLoc^.Y),
+                          Point(Arrow^.ToLoc^.X, Arrow^.ToLoc^.Y), 5) then
+    begin
+      Screen.Cursor := crHandPoint;
+      nearLine := Arrow;
+    end;
+  end;
+  if nearLine = nil then
+    Screen.Cursor := crDefault;
+end;
+
 procedure TfrMainForm.pbMapPaint(Sender: TObject);
 var
   Background: TBitmap;
+  i: Integer;
+  Arrow: PArrow;
+  FromPt, ToPt: TPoint;
 begin
   Background := TBitmap.Create;
   try
     Background.LoadFromFile('map.bmp');
     pbMap.Canvas.StretchDraw(pbMap.ClientRect, Background);
+
+    pbMap.Canvas.Pen.Color := clBlack;
+    pbMap.Canvas.Pen.Width := 2;
+    for i := 0 to Arrows.Count - 1 do
+    begin
+      Arrow := Arrows[i];
+      FromPt := Point(Arrow^.FromLoc^.X, Arrow^.FromLoc^.Y);
+      ToPt := Point(Arrow^.ToLoc^.X, Arrow^.ToLoc^.Y);
+      pbMap.Canvas.MoveTo(FromPt.X, FromPt.Y);
+      pbMap.Canvas.LineTo(ToPt.X, ToPt.Y);
+      // Здесь можно добавить рисование стрелочной головки
+    end;
   finally
     Background.Free;
   end;

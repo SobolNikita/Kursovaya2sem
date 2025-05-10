@@ -13,6 +13,7 @@ object frMainForm: TfrMainForm
   Menu = MainMenu1
   Position = poDesigned
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   TextHeight = 15
   object pnMapWrap: TPanel
     Left = 0
@@ -43,6 +44,7 @@ object frMainForm: TfrMainForm
       Width = 1278
       Height = 694
       Align = alClient
+      OnMouseMove = pbMapMouseMove
       OnMouseUp = imgMapMouseUp
       OnPaint = pbMapPaint
       ExplicitLeft = 674
