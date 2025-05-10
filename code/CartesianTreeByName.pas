@@ -134,17 +134,17 @@ begin
   NewNode^.Right := nil;
   NewNode^.Priority := GenerateUniquePriorityName(Root);
 
-  if Root = nil then
+  if (Root = nil) or (NewNode^.Priority > Root^.Priority) then
   begin
-    Root := NewNode;
-  end
-  else
-  begin
-    SplitTreapName(Root, NewNode^.Data^.Key, L, R);
-    NewNode^.Left := L;
+    SplitTreapName(Root, newNode^.Data^.Key, L, R);
+    NewNode^.Left  := L;
     NewNode^.Right := R;
     Root := NewNode;
-  end;
+  end
+  else if newNode.Data^.Key < Root^.Data^.Key then
+    InsertTreapName(Root^.Left, name, ID)
+  else
+    InsertTreapName(Root^.Right, name, ID);
 end;
 
 procedure EraseTreapName(var Root: PTreapNameNode; const Key: Integer);

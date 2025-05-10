@@ -3,6 +3,8 @@ unit shipments;
 interface
 uses CartesianTree, CartesianTreeItem, Hash;
 type
+
+  PPShipment = ^PShipment;
   PShipment = ^TShipment;
   TShipment = record
     ShipmentName: string;
@@ -37,6 +39,13 @@ var
   newNode: PItem;
 begin
   Result := true;
+
+  if shipment.ProductName = 'xiaomi' then
+  begin
+    var i: integer;
+    i := 5;
+  end;
+
 
   destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
   sendItemNode := FindTreapItem(shipment^.SourceID^.Items, getHash(shipment^.ProductName));

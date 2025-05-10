@@ -134,17 +134,17 @@ begin
   NewNode^.Right := nil;
   NewNode^.Priority := GenerateUniquePriority(Root);
 
-  if Root = nil then
-  begin
-    Root := NewNode;
-  end
-  else
+  if (Root = nil) or (NewNode^.Priority > Root^.Priority) then
   begin
     SplitTreap(Root, Data^.Key, L, R);
-    NewNode^.Left := L;
+    NewNode^.Left  := L;
     NewNode^.Right := R;
     Root := NewNode;
-  end;
+  end
+  else if Data^.Key < Root^.Data^.Key then
+    InsertTreap(Root^.Left, Data)
+  else
+    InsertTreap(Root^.Right, Data);
 end;
 
 procedure EraseTreap(var Root: PTreapNode; const Key: Integer);

@@ -16,7 +16,7 @@ type
     btnSelectReset: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure LoadData(var shipment: PShipment);
+    procedure LoadData(shipmentsPtr: PPShipment);
 
     procedure sgSelectShipmentsTableDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
@@ -30,7 +30,7 @@ type
     procedure ToggleCheckbox(const ARow: Integer);
     var
       siz: integer;
-      shipmentHead: PShipment;
+      FShipmentsPtr: PPShipment;
   public
     { Public declarations }
   end;
@@ -63,7 +63,7 @@ var
   i: integer;
   curShipment, prev, temp: PShipment;
 begin
-  curShipment := shipmentHead;
+  curShipment := FShipmentsPtr^;
   prev := nil;
   for i := 1 to siz-1 do
   begin
@@ -71,9 +71,7 @@ begin
     begin
       doShipment(curShipment);
       if prev = nil then
-      begin
-        shipmentHead := curShipment^.Next;
-      end
+       FShipmentsPtr^ := curShipment^.Next
       else
       begin
         prev^.Next := curShipment^.Next;
@@ -90,7 +88,7 @@ begin
     sgSelectShipmentsTable.Cells[CHECKBOX_COL, i] := '0';
   end;
 
-  loadData(shipmentHead);
+  loadData(FShipmentsPtr);
   sgSelectShipmentsTable.Invalidate;
 end;
 
@@ -111,21 +109,21 @@ begin
   Action := caFree;
 end;
 
-procedure TfrSelectShipments.LoadData(var shipment: PShipment);
+procedure TfrSelectShipments.LoadData(shipmentsPtr: PPShipment);
 var
   i: integer;
   curShipment: PShipment;
 begin
-  shipmentHead := shipment;
+  FShipmentsPtr := shipmentsPtr;
   siz := 1; //header
-  curShipment := shipment;
+  curShipment := FShipmentsPtr^;
   while curShipment <> nil do
   begin
     Inc(siz);
     curShipment := curShipment^.next;
   end;
   sgSelectShipmentsTable.RowCount := siz;
-  curShipment := shipment;
+  curShipment := FShipmentsPtr^;
   i := 1;
   while curShipment <> nil do
   begin

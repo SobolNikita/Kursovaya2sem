@@ -10,7 +10,7 @@ type
   TfrShipmentsTable = class(TForm)
     sgShipmentsTable: TStringGrid;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure LoadData(shipment: PShipment);
+    procedure LoadData(var shipment: PShipment);
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -31,7 +31,7 @@ begin
   Action := caFree;
 end;
 
-procedure TfrShipmentsTable.LoadData(shipment: PShipment);
+procedure TfrShipmentsTable.LoadData(var shipment: PShipment);
 var
   siz, i: integer;
   curShipment: PShipment;
