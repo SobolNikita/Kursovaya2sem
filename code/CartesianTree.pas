@@ -2,17 +2,25 @@ unit CartesianTree;
 
 interface
 
-  uses Vcl.ExtCtrls, CartesianTreeItem;
+  uses Vcl.ExtCtrls, CartesianTreeItem, System.Generics.Collections;
 
   type
+  PLocation = ^TLocation;
+
+  PArrow = ^TArrow;
+  TArrow = record
+    FromLoc, ToLoc: PLocation;
+  end;
+
   TLocation = record
     name, street: string[255];
     house, building, capacity, usedCapacity, shipmentCapacity: integer;
     Key, X, Y: Integer;
     shape: TShape;
     Items: PTreapItemNode;
+    OutgoingArrows: TList<PArrow>;
+    IncomingArrows: TList<PArrow>;
   end;
-  PLocation = ^TLocation;
 
 
   PTreapNode = ^TTreapNode;
@@ -21,6 +29,7 @@ interface
     Left, Right: PTreapNode;
     Priority: Integer;
   end;
+
 
   function ExistsPriority(var Node: PTreapNode; const pr: Integer): Boolean;
   function GenerateUniquePriority(var Root: PTreapNode): Integer;

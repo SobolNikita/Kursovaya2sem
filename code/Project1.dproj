@@ -153,6 +153,7 @@
             <Form>frBalance</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="ArrowsUnit.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

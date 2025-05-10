@@ -9,7 +9,9 @@ uses
   CartesianTree, CartesianTreeByName, CartesianTreeItem, Validation,
   GetKeys, Hash, Messages, Filter, ObjectMask, Data.FMTBcd, Data.DB,
   Data.SqlExpr, Vcl.Grids,
-  TableUnit, ShipmentsTableUnit, shipments, BalanceUnit, SelectShipmentsUnit;
+  TableUnit, ShipmentsTableUnit, shipments, BalanceUnit, SelectShipmentsUnit,
+  ArrowsUnit,
+  System.Generics.Collections;
 
 type
 
@@ -17,7 +19,6 @@ type
     pnFilter: TPanel;
     btnFilter: TButton;
     pnMapWrap: TPanel;
-    imgMap: TImage;
     pnCreateSelect: TPanel;
     btnCreateSelectShop: TButton;
     btnCreateSelectWarehouse: TButton;
@@ -164,6 +165,7 @@ type
     btnSelectObjItemList: TButton;
     N15: TMenuItem;
     N16: TMenuItem;
+    pbMap: TPaintBox;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -262,6 +264,7 @@ type
     procedure N14Click(Sender: TObject);
     procedure Save1Click(Sender: TObject);
     procedure Open1Click(Sender: TObject);
+    procedure pbMapPaint(Sender: TObject);
 
   private
     { Private declarations }
@@ -270,12 +273,15 @@ type
     shopsNames, warehousesNames: PTreapNameNode;
     filter: TFilter;
     shipments: PShipment;
+
+
     function getSiz(const curNode: PTreapNode): integer;
     procedure writeObjData(const curFile: TextFile; const curObj: PTreapNode);
     function getItemsSiz(const curItem: PTreapItemNode): integer;
     procedure WriteItemData(const curFile: TextFile;
       const curObj: PTreapItemNode);
     procedure createNewObjFile(const fil: textFile);
+
     const
       shopColor = clHighlight;
       warehouseColor = clMaroon;
@@ -594,7 +600,7 @@ begin
 
   //check x pos
   panel.left := x;
-  if X + panel.width > imgMap.width then
+  if X + panel.width > pbMap.width then
     panel.left := panel.left - panel.width;
 
   panel.visible := true;
@@ -747,6 +753,19 @@ begin
            );
 end;
 
+
+procedure TfrMainForm.pbMapPaint(Sender: TObject);
+var
+  Background: TBitmap;
+begin
+  Background := TBitmap.Create;
+  try
+    Background.LoadFromFile('map.bmp');
+    pbMap.Canvas.StretchDraw(pbMap.ClientRect, Background);
+  finally
+    Background.Free;
+  end;
+end;
 
 procedure TfrMainForm.pnObjectInfoHide(Sender: TObject);
 begin
@@ -1345,7 +1364,7 @@ begin
 
   //check x pos
   pnCreateObj.left := xPos;
-  if xPos + pnCreateObj.width > imgMap.width then
+  if xPos + pnCreateObj.width > pbMap.width then
     pnCreateObj.left := pnCreateObj.left - pnCreateObj.width;
 
   pnCreateObj.tag := (Sender as TButton).tag;  //tag=1 - shop, tag=2 - Warehouse
@@ -1673,9 +1692,6 @@ begin
 end;
 
 
-
-
-
 procedure TfrMainForm.imgMapMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
@@ -1691,6 +1707,7 @@ begin
   //print green point
   spMapPoint.top := Y - spMapPoint.height shr 1;
   spMapPoint.left := X - spMapPoint.width shr 1;
+  spMapPoint.BringToFront;
   spMapPoint.visible := true;
 end;
 
@@ -1718,10 +1735,11 @@ begin
   pnAddItem.Top := (pnMapWrap.Height - pnAddItem.Height) shr 1;
 end;
 
+
 procedure TfrMainForm.N14Click(Sender: TObject);
 begin
   frSelectShipments := TfrSelectShipments.Create(Application);
-  frSelectShipments.LoadData(shipments);
+  frSelectShipments.LoadData(@shipments);
   frSelectShipments.ShowModal;
 end;
 

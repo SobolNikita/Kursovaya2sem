@@ -4,6 +4,7 @@ interface
   uses Vcl.ExtCtrls;
 
   type
+
   TItem = record
     name, category: string[255];
     Volume, Count, Key, needToSend: Integer;
