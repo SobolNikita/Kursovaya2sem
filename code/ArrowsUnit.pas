@@ -1,9 +1,9 @@
 unit ArrowsUnit;
 
 interface
-uses CartesianTree, System.Generics.Collections, System.Types;
+uses CartesianTree, System.Generics.Collections, System.Types, shipments;
 
-procedure AddArrow(FromLoc, ToLoc: PLocation);
+procedure AddArrow(var Shipment: PShipment);
 procedure RemoveArrow(Arrow: PArrow);
 function IsPointNearLine(P, A, B: TPoint; Tolerance: Integer): Boolean;
 
@@ -12,22 +12,21 @@ var
 
 implementation
 
-procedure AddArrow(FromLoc, ToLoc: PLocation);
+procedure AddArrow(var Shipment: PShipment);
 var
   NewArrow: PArrow;
 begin
-  New(NewArrow);
-  NewArrow^.FromLoc := FromLoc;
-  NewArrow^.ToLoc := ToLoc;
+  NewArrow := New(PArrow);
+  NewArrow^.shipment := Shipment;
   Arrows.Add(NewArrow);
 
-  if FromLoc^.OutgoingArrows = nil then
-    FromLoc^.OutgoingArrows := TList<PArrow>.Create;
-  if ToLoc^.IncomingArrows = nil then
-    ToLoc^.IncomingArrows := TList<PArrow>.Create;
+  if Shipment^.SourceID^.OutgoingArrows = nil then
+    Shipment^.SourceID^.OutgoingArrows := TList<PArrow>.Create;
+  if Shipment^.DestinationID^.IncomingArrows = nil then
+    Shipment^.DestinationID^.IncomingArrows := TList<PArrow>.Create;
 
-  FromLoc^.OutgoingArrows.Add(NewArrow);
-  ToLoc^.IncomingArrows.Add(NewArrow);
+  Shipment^.SourceID^.OutgoingArrows.Add(NewArrow);
+  Shipment^.DestinationID^.IncomingArrows.Add(NewArrow);
 end;
 
 function IsPointNearLine(P, A, B: TPoint; Tolerance: Integer): Boolean;
@@ -43,8 +42,8 @@ end;
 
 procedure RemoveArrow(Arrow: PArrow);
 begin
-  Arrow^.FromLoc^.OutgoingArrows.Remove(Arrow);
-  Arrow^.ToLoc^.IncomingArrows.Remove(Arrow);
+  Arrow^.Shipment^.SourceID^.OutgoingArrows.Remove(Arrow);
+  Arrow^.Shipment^.DestinationID^.IncomingArrows.Remove(Arrow);
   Arrows.Remove(Arrow);
   Dispose(Arrow);
 end;

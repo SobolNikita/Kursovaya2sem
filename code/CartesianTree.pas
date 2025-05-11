@@ -5,11 +5,25 @@ interface
   uses Vcl.ExtCtrls, CartesianTreeItem, System.Generics.Collections;
 
   type
+
   PLocation = ^TLocation;
+  PPShipment = ^PShipment;
+  PShipment = ^TShipment;
+  PTreapNode = ^TTreapNode;
+
+  TShipment = record
+    ShipmentName: string;
+    ID: integer;
+    SourceID: PLocation;       // Отправитель
+    DestinationID: PLocation;  // Получатель
+    ProductName: string;
+    Count: Integer;
+    next: PShipment;
+  end;
 
   PArrow = ^TArrow;
   TArrow = record
-    FromLoc, ToLoc: PLocation;
+    shipment: PShipment;
   end;
 
   TLocation = record
@@ -22,8 +36,6 @@ interface
     IncomingArrows: TList<PArrow>;
   end;
 
-
-  PTreapNode = ^TTreapNode;
   TTreapNode = record
     Data: PLocation;
     Left, Right: PTreapNode;

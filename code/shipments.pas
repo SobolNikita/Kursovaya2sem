@@ -2,19 +2,6 @@ unit shipments;
 
 interface
 uses CartesianTree, CartesianTreeItem, Hash;
-type
-
-  PPShipment = ^PShipment;
-  PShipment = ^TShipment;
-  TShipment = record
-    ShipmentName: string;
-    ID: integer;
-    SourceID: PLocation;       // Отправитель
-    DestinationID: PLocation;  // Получатель
-    ProductName: string;
-    Count: Integer;
-    next: PShipment;
-  end;
 
 function doShipment(var shipment: PShipment): boolean;
 procedure ClearShipments(var shipment: PShipment);

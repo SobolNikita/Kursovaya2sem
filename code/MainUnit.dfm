@@ -47,10 +47,7 @@ object frMainForm: TfrMainForm
       OnMouseMove = pbMapMouseMove
       OnMouseUp = imgMapMouseUp
       OnPaint = pbMapPaint
-      ExplicitLeft = 674
-      ExplicitTop = 527
-      ExplicitWidth = 105
-      ExplicitHeight = 105
+      ExplicitTop = 0
     end
     object pnCreateSelect: TPanel
       Left = 80
@@ -424,8 +421,8 @@ object frMainForm: TfrMainForm
       end
     end
     object pnObjectInfo: TPanel
-      Left = 938
-      Top = 6
+      Left = 349
+      Top = 444
       Width = 224
       Height = 246
       AutoSize = True
@@ -632,8 +629,8 @@ object frMainForm: TfrMainForm
       end
     end
     object pnFilterParams: TPanel
-      Left = 454
-      Top = 247
+      Left = 349
+      Top = 218
       Width = 370
       Height = 222
       Padding.Left = 10
@@ -1022,8 +1019,8 @@ object frMainForm: TfrMainForm
       end
     end
     object pnCreateShipment: TPanel
-      Left = 72
-      Top = 205
+      Left = 8
+      Top = 151
       Width = 335
       Height = 391
       Padding.Left = 10
@@ -1364,8 +1361,8 @@ object frMainForm: TfrMainForm
       end
     end
     object pnAddItem: TPanel
-      Left = 866
-      Top = 258
+      Left = 725
+      Top = 324
       Width = 353
       Height = 305
       AutoSize = True
@@ -1567,6 +1564,241 @@ object frMainForm: TfrMainForm
         Height = 23
         TabOrder = 8
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+      end
+    end
+    object pnArrowInfo: TPanel
+      Left = 894
+      Top = 13
+      Width = 268
+      Height = 346
+      AutoSize = True
+      Padding.Left = 15
+      Padding.Top = 5
+      Padding.Right = 15
+      Padding.Bottom = 15
+      ParentBackground = False
+      TabOrder = 9
+      Visible = False
+      object lbArrowInfoShipmentName: TLabel
+        AlignWithMargins = True
+        Left = 16
+        Top = 6
+        Width = 236
+        Height = 30
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = 30
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 194
+      end
+      object lbArrowInfoSenderType: TLabel
+        Left = 16
+        Top = 54
+        Width = 99
+        Height = 15
+        Caption = #1058#1080#1087' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103': '
+      end
+      object lbArrowInfoSenderNameVal: TLabel
+        Left = 155
+        Top = 83
+        Width = 75
+        Height = 15
+        Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbArrowInfoSenderName: TLabel
+        Left = 16
+        Top = 83
+        Width = 74
+        Height = 15
+        Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100':'
+      end
+      object lbArrowInfoDestTypeVal: TLabel
+        Left = 155
+        Top = 141
+        Width = 90
+        Height = 15
+        Caption = #1058#1080#1087' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbArrowInfoSenderID: TLabel
+        Left = 16
+        Top = 112
+        Width = 86
+        Height = 15
+        Caption = 'ID '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103':'
+      end
+      object lbArrowInfoSenderIDVal: TLabel
+        Left = 155
+        Top = 112
+        Width = 89
+        Height = 15
+        Caption = 'ID '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbArrowInfoDestName: TLabel
+        Left = 16
+        Top = 170
+        Width = 69
+        Height = 15
+        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100':'
+      end
+      object lbArrowInfoSenderTypeVal: TLabel
+        Left = 155
+        Top = 54
+        Width = 97
+        Height = 15
+        Caption = #1058#1080#1087' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbArrowInfoDestType: TLabel
+        Left = 16
+        Top = 141
+        Width = 91
+        Height = 15
+        Caption = #1058#1080#1087' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
+      end
+      object lbArrowInfoDestNameVal: TLabel
+        Left = 155
+        Top = 170
+        Width = 68
+        Height = 15
+        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbArrowInfoDestID: TLabel
+        Left = 16
+        Top = 199
+        Width = 81
+        Height = 15
+        Caption = 'ID '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
+      end
+      object lbArrowInfoDestIDVal: TLabel
+        Left = 155
+        Top = 199
+        Width = 82
+        Height = 15
+        Caption = 'ID '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbArrowInfoItemID: TLabel
+        Left = 16
+        Top = 257
+        Width = 49
+        Height = 15
+        Caption = #1040#1088#1090#1080#1082#1091#1083':'
+      end
+      object lbArrowInfoItemIDVal: TLabel
+        Left = 155
+        Top = 257
+        Width = 47
+        Height = 15
+        Caption = #1040#1088#1090#1080#1082#1091#1083
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbArrowInfoItemName: TLabel
+        Left = 16
+        Top = 228
+        Width = 36
+        Height = 15
+        Caption = #1058#1086#1074#1072#1088':'
+      end
+      object lbArrowInfoItemNameVal: TLabel
+        Left = 155
+        Top = 228
+        Width = 33
+        Height = 15
+        Caption = #1058#1086#1074#1072#1088
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbArrowInfoItemCnt: TLabel
+        Left = 16
+        Top = 286
+        Width = 68
+        Height = 15
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086':'
+      end
+      object lbArrowInfoItemCntVal: TLabel
+        Left = 155
+        Top = 286
+        Width = 69
+        Height = 15
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbArrowInfoItemVol: TLabel
+        Left = 16
+        Top = 315
+        Width = 92
+        Height = 15
+        Caption = #1054#1073#1098#1105#1084' '#1086#1090#1075#1088#1091#1079#1082#1080':'
+      end
+      object lbArrowInfoItemVolVal: TLabel
+        Left = 155
+        Top = 315
+        Width = 94
+        Height = 15
+        Caption = #1054#1073#1098#1105#1084' '#1086#1090#1075#1088#1091#1079#1082#1080
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
       end
     end
   end

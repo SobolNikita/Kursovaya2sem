@@ -6,11 +6,11 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Imaging.jpeg, System.UITypes, System.Types, Vcl.Menus, Vcl.NumberBox,
-  CartesianTree, CartesianTreeByName, CartesianTreeItem, Validation,
+  CartesianTreeByName, CartesianTreeItem, Validation,
   GetKeys, Hash, Messages, Filter, ObjectMask, Data.FMTBcd, Data.DB,
   Data.SqlExpr, Vcl.Grids,
   TableUnit, ShipmentsTableUnit, shipments, BalanceUnit, SelectShipmentsUnit,
-  ArrowsUnit,
+  ArrowsUnit, CartesianTree,
   System.Generics.Collections;
 
 type
@@ -166,6 +166,28 @@ type
     N15: TMenuItem;
     N16: TMenuItem;
     pbMap: TPaintBox;
+    pnArrowInfo: TPanel;
+    lbArrowInfoShipmentName: TLabel;
+    lbArrowInfoSenderType: TLabel;
+    lbArrowInfoSenderNameVal: TLabel;
+    lbArrowInfoSenderName: TLabel;
+    lbArrowInfoDestTypeVal: TLabel;
+    lbArrowInfoSenderID: TLabel;
+    lbArrowInfoSenderIDVal: TLabel;
+    lbArrowInfoDestName: TLabel;
+    lbArrowInfoSenderTypeVal: TLabel;
+    lbArrowInfoDestType: TLabel;
+    lbArrowInfoDestNameVal: TLabel;
+    lbArrowInfoDestID: TLabel;
+    lbArrowInfoDestIDVal: TLabel;
+    lbArrowInfoItemID: TLabel;
+    lbArrowInfoItemIDVal: TLabel;
+    lbArrowInfoItemName: TLabel;
+    lbArrowInfoItemNameVal: TLabel;
+    lbArrowInfoItemCnt: TLabel;
+    lbArrowInfoItemCntVal: TLabel;
+    lbArrowInfoItemVol: TLabel;
+    lbArrowInfoItemVolVal: TLabel;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -268,6 +290,8 @@ type
     procedure pbMapMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure FormDestroy(Sender: TObject);
+
+    procedure showArrowInfo(var arrow: PArrow; const x, y: integer);
 
   private
     { Private declarations }
@@ -602,6 +626,44 @@ begin
   end;
 end;
 
+procedure TfrMainForm.showArrowInfo(var arrow: PArrow; const x, y: integer);
+var
+  curItem: PTreapItemNode;
+begin
+  lbArrowInfoShipmentName.Caption := arrow^.shipment^.ShipmentName;
+
+  if (arrow^.shipment^.SourceID^.key and mask) <> 0 then
+  begin
+    lbArrowInfoSenderTypeVal.Caption := 'Магазин' ;
+    lbArrowInfoSenderIDVal.Caption := intToStr(arrow^.shipment^.SourceID^.Key xor mask);
+  end
+  else
+  begin
+    lbArrowInfoSenderTypeVal.Caption := 'Склад';
+    lbArrowInfoSenderIDVal.Caption := intToStr(arrow^.shipment^.SourceID^.Key);
+  end;
+  lbArrowInfoSenderNameVal.Caption := string(arrow^.shipment^.SourceID^.name);
+
+  if (arrow^.shipment^.DestinationID^.key and mask) <> 0 then
+  begin
+    lbArrowInfoDestTypeVal.Caption := 'Магазин' ;
+    lbArrowInfoDestIDVal.Caption := intToStr(arrow^.shipment^.DestinationID^.Key xor mask);
+  end
+  else
+  begin
+    lbArrowInfoDestTypeVal.Caption := 'Склад';
+    lbArrowInfoDestIDVal.Caption := intToStr(arrow^.shipment^.DestinationID^.Key);
+  end;
+  lbArrowInfoDestNameVal.Caption := string(arrow^.shipment^.DestinationID^.name);
+
+  lbArrowInfoItemNameVal.Caption := arrow^.shipment^.ShipmentName;
+  lbArrowInfoItemIDVal.Caption := intToStr(arrow^.shipment^.ID);
+  lbArrowInfoItemCntVal.Caption := intToStr(arrow^.shipment^.Count);
+  curItem := FindTreapItem(arrow^.shipment^.SourceID^.Items, getHash(arrow^.shipment^.ProductName));
+  lbArrowInfoItemVolVal.Caption := intToStr(arrow^.shipment^.Count * curItem^.Data^.Volume);
+  showPanel(pnArrowInfo, x, y);
+end;
+
 procedure TfrMainForm.showPanel(const panel: TPanel; const x, y: integer);
 begin
   //check y pos
@@ -626,6 +688,7 @@ begin
   pnFilterParams.Visible := false;
   pnCreateShipment.Visible := false;
   pnAddItem.Visible := false;
+  pnArrowInfo.Visible := false;
 end;
 
 procedure TfrMainForm.btnSelectObjCancelClick(Sender: TObject);
@@ -733,6 +796,7 @@ procedure TfrMainForm.pnObjectInfoShow(Sender: TObject);
 var
   curNode: PTreapNode;
 begin
+  pnArrowInfo.Visible := false;
   if ((Sender as TShape).tag and mask) <> 0 then
   begin
     //shop
@@ -775,19 +839,27 @@ var
 begin
   Pt := Point(X, Y);
   nearLine := nil;
-  i := 0;
-  while (i <= Arrows.Count - 1) and (nearLine = nil) do
+  i := Arrows.Count - 1;
+  while (i >= 0) and (nearLine = nil) do
   begin
     Arrow := Arrows[i];
-    if IsPointNearLine(Pt, Point(Arrow^.FromLoc^.X, Arrow^.FromLoc^.Y),
-                          Point(Arrow^.ToLoc^.X, Arrow^.ToLoc^.Y), 5) then
+    if IsPointNearLine(Pt, Point(Arrow^.Shipment^.SourceID^.X, Arrow^.Shipment^.SourceID^.Y),
+                          Point(Arrow^.Shipment^.DestinationID^.X, Arrow^.Shipment^.DestinationID^.Y), 5) then
     begin
       Screen.Cursor := crHandPoint;
       nearLine := Arrow;
     end;
+    Dec(i);
   end;
   if nearLine = nil then
+  begin
     Screen.Cursor := crDefault;
+    pnArrowInfo.Visible := false;
+  end
+  else
+  begin
+    showArrowInfo(nearLine, X, Y);
+  end;
 end;
 
 procedure TfrMainForm.pbMapPaint(Sender: TObject);
@@ -807,8 +879,8 @@ begin
     for i := 0 to Arrows.Count - 1 do
     begin
       Arrow := Arrows[i];
-      FromPt := Point(Arrow^.FromLoc^.X, Arrow^.FromLoc^.Y);
-      ToPt := Point(Arrow^.ToLoc^.X, Arrow^.ToLoc^.Y);
+      FromPt := Point(Arrow^.Shipment^.SourceID^.X, Arrow^.Shipment^.SourceID^.Y);
+      ToPt := Point(Arrow^.Shipment^.DestinationID^.X, Arrow^.Shipment^.DestinationID^.Y);
       pbMap.Canvas.MoveTo(FromPt.X, FromPt.Y);
       pbMap.Canvas.LineTo(ToPt.X, ToPt.Y);
       // Здесь можно добавить рисование стрелочной головки
@@ -1196,11 +1268,14 @@ begin
           curShipment^.DestinationID := FindTreap(shops, destKey).Data
         else
           curShipment^.DestinationID := FindTreap(warehouses, destKey).Data;
-          
+
+        AddArrow(curShipment);
+        pbMap.Invalidate;
+
         readln(shipmentsFile, curShipment^.ProductName);
         readln(shipmentsFile, curShipment^.Count);
         curShipment^.next := shipments;
-        shipments := curShipment;  
+        shipments := curShipment;
       end;
       CloseFile(shipmentsFile);
       spMapPoint.Parent.Invalidate;
@@ -1462,6 +1537,8 @@ begin
     shipments := newShipment;
     pnCreateShipment.Visible := false;
     ClearCreateShipment;
+    AddArrow(newShipment);
+    pbMap.Invalidate;
   end;
 
 end;
