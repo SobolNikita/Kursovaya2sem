@@ -292,6 +292,7 @@ type
     procedure FormDestroy(Sender: TObject);
 
     procedure showArrowInfo(var arrow: PArrow; const x, y: integer);
+    procedure FormResize(Sender: TObject);
 
   private
     { Private declarations }
@@ -323,7 +324,7 @@ var
   frShipmentTableForm: TfrShipmentsTable;
   frBalanceForm: TfrBalance;
   frSelectShipments: TfrSelectShipments;
-
+  startWidth, startHeight: integer;
 implementation
 
 {$R *.dfm}
@@ -332,6 +333,8 @@ implementation
 procedure TfrMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
+  startWidth := frMainForm.ClientWidth;
+  startHeight := frMainForm.ClientHeight;
   Arrows := TList<PArrow>.Create;
   curShipmentID := 1;
   shopKey := 1;
@@ -349,6 +352,12 @@ procedure TfrMainForm.FormDestroy(Sender: TObject);
 begin
   //Очистка всего
   Arrows.Free;
+end;
+
+procedure TfrMainForm.FormResize(Sender: TObject);
+begin
+  frMainForm.ClientHeight := startHeight;
+  frMainForm.ClientWidth := startWidth;
 end;
 
 procedure TfrMainForm.ClearAddItem;

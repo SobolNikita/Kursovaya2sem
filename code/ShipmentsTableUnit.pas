@@ -12,6 +12,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure LoadData(var shipment: PShipment);
     procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
   public
@@ -22,6 +23,9 @@ var
   frShipmentsTable: TfrShipmentsTable;
 
 implementation
+
+var
+  startHeight, startWidth: integer;
 
 {$R *.dfm}
 
@@ -79,6 +83,8 @@ end;
 
 procedure TfrShipmentsTable.FormCreate(Sender: TObject);
 begin
+  startWidth := frShipmentsTable.ClientWidth;
+  startHeight := frShipmentsTable.ClientHeight;
   FormStyle := fsNormal;
   Position := poMainFormCenter;
 
@@ -118,6 +124,12 @@ begin
   sgShipmentsTable.Cells[8, 0] := 'Количество';
 
   sgShipmentsTable.RowCount := 0;
+end;
+
+procedure TfrShipmentsTable.FormResize(Sender: TObject);
+begin
+  frShipmentsTable.ClientWidth := startWidth;
+  frShipmentsTable.ClientHeight := startHeight;
 end;
 
 end.

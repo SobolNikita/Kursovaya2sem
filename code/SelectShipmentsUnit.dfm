@@ -12,6 +12,7 @@ object frSelectShipments: TfrSelectShipments
   Font.Style = []
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   TextHeight = 15
   object sgSelectShipmentsTable: TStringGrid
     Left = 0

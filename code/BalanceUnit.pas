@@ -18,6 +18,7 @@ type
     function getSizItems(const item: PTreapItemNode): integer;
     procedure showDataObject(const item: PTreapNode; var i: integer);
     procedure showDataItem(const curObject: PTreapNode; const item: PTreapItemNode; var i: integer);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
   public
@@ -30,6 +31,9 @@ var
 implementation
 
 {$R *.dfm}
+
+var
+  startHeight, startWidth: integer;
 
 procedure TfrBalance.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -106,6 +110,8 @@ end;
 
 procedure TfrBalance.FormCreate(Sender: TObject);
 begin
+  startHeight := frBalance.ClientHeight;
+  startWidth := frBalance.ClientWidth;
   FormStyle := fsNormal;
   Position := poMainFormCenter;
 
@@ -145,6 +151,12 @@ begin
   sgBalanceTable.Cells[9, 0] := 'Занято товаром';
 
   sgBalanceTable.RowCount := 0;
+end;
+
+procedure TfrBalance.FormResize(Sender: TObject);
+begin
+  frBalance.ClientHeight := startHeight;
+  frBalance.ClientWidth := startWidth;
 end;
 
 end.

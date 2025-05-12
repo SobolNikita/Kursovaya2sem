@@ -14,6 +14,7 @@ object frMainForm: TfrMainForm
   Position = poDesigned
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnResize = FormResize
   TextHeight = 15
   object pnMapWrap: TPanel
     Left = 0

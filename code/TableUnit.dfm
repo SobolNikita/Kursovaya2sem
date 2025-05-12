@@ -12,6 +12,7 @@ object frTableForm: TfrTableForm
   Font.Style = []
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   TextHeight = 15
   object pnItemsTableName: TPanel
     Left = 0
@@ -26,6 +27,7 @@ object frTableForm: TfrTableForm
     Font.Style = []
     ParentFont = False
     TabOrder = 0
+    ExplicitWidth = 1270
   end
   object sgItemsTable: TStringGrid
     Left = 0
@@ -34,10 +36,8 @@ object frTableForm: TfrTableForm
     Height = 623
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 672
-    ExplicitTop = 472
-    ExplicitWidth = 320
-    ExplicitHeight = 120
+    ExplicitWidth = 1270
+    ExplicitHeight = 591
     RowHeights = (
       24
       24

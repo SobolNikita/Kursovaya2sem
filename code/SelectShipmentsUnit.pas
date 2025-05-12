@@ -25,6 +25,7 @@ type
     procedure btnSelectAllClick(Sender: TObject);
     procedure btnSelectResetClick(Sender: TObject);
     procedure btnSelectConfirmClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
     procedure ToggleCheckbox(const ARow: Integer);
@@ -46,6 +47,9 @@ implementation
 const
   CHECKBOX_COL = 9;
   CHECKBOX_SIZE = 28;
+
+var
+  startHeight, startWidth: integer;
 
 procedure TfrSelectShipments.btnSelectAllClick(Sender: TObject);
 var
@@ -233,6 +237,8 @@ end;
 
 procedure TfrSelectShipments.FormCreate(Sender: TObject);
 begin
+  startWidth := frSelectShipments.ClientWidth;
+  startHeight := frSelectShipments.ClientHeight;
   FormStyle := fsNormal;
   Position := poMainFormCenter;
 
@@ -283,6 +289,12 @@ begin
 
   sgSelectShipmentsTable.Cells[CHECKBOX_COL, 0] := 'Выбрать';
 
+end;
+
+procedure TfrSelectShipments.FormResize(Sender: TObject);
+begin
+  frSelectShipments.ClientWidth := startWidth;
+  frSelectShipments.ClientHeight := startHeight;
 end;
 
 end.

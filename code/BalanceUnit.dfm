@@ -12,6 +12,7 @@ object frBalance: TfrBalance
   Font.Style = []
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   TextHeight = 15
   object pnBalance: TPanel
     Left = 0

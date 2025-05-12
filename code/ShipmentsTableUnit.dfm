@@ -12,6 +12,7 @@ object frShipmentsTable: TfrShipmentsTable
   Font.Style = []
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   TextHeight = 15
   object sgShipmentsTable: TStringGrid
     Left = 0
@@ -20,5 +21,7 @@ object frShipmentsTable: TfrShipmentsTable
     Height = 720
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1270
+    ExplicitHeight = 688
   end
 end

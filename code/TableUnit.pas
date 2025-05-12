@@ -16,6 +16,7 @@ type
     function GetTreeSize(const root: PTreapItemNode): integer;
     procedure LoadData;
     procedure SetDataToTable(const root: PTreapItemNode; var i: integer);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
   public
@@ -27,6 +28,9 @@ var
   frTableForm: TfrTableForm;
 
 implementation
+
+var
+  startWidth, startHeight: integer;
 
 {$R *.dfm}
 
@@ -79,6 +83,10 @@ end;
 
 procedure TfrTableForm.FormCreate(Sender: TObject);
 begin
+
+  startWidth := frTableForm.ClientWidth;
+  startHeight := frTableForm.ClientHeight;
+
   FormStyle := fsNormal;
   Position := poMainFormCenter;
 
@@ -104,6 +112,12 @@ begin
 
   sgItemsTable.RowCount := 0;
 
+end;
+
+procedure TfrTableForm.FormResize(Sender: TObject);
+begin
+  frTableForm.ClientWidth := startWidth;
+  frTableForm.ClientHeight := startHeight;
 end;
 
 end.
