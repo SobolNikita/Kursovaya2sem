@@ -165,7 +165,7 @@ object frMainForm: TfrMainForm
         ParentShowHint = False
         ShowHint = False
         TabOrder = 0
-        OnChange = OnClickValidateLength
+        OnExit = OnClickValidateLength
       end
       object edCreateObjStreet: TEdit
         Left = 125
@@ -173,7 +173,7 @@ object frMainForm: TfrMainForm
         Width = 121
         Height = 23
         TabOrder = 1
-        OnChange = OnClickvalidateAll
+        OnExit = OnClickvalidateAll
       end
       object edCreateObjHouse: TEdit
         Left = 125
@@ -182,7 +182,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 2
-        OnChange = OnClickValidateLength
+        OnExit = OnClickValidateLength
       end
       object btnCreateObjConfirm: TButton
         Left = 133
@@ -228,7 +228,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 6
-        OnChange = OnClickValidateLength
+        OnExit = OnClickValidateLength
       end
     end
     object pnSelectObject: TPanel
@@ -355,7 +355,7 @@ object frMainForm: TfrMainForm
         ParentShowHint = False
         ShowHint = False
         TabOrder = 0
-        OnChange = OnClickValidateLength
+        OnExit = OnClickValidateLength
       end
       object edEditObjStreet: TEdit
         Left = 125
@@ -363,7 +363,7 @@ object frMainForm: TfrMainForm
         Width = 121
         Height = 23
         TabOrder = 1
-        OnChange = OnClickvalidateAll
+        OnExit = OnClickvalidateAll
       end
       object edEditObjHouse: TEdit
         Left = 125
@@ -372,7 +372,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 2
-        OnChange = OnClickValidateLength
+        OnExit = OnClickValidateLength
       end
       object btnEditObjConfirm: TButton
         Left = 133
@@ -418,7 +418,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 6
-        OnChange = OnClickValidateLength
+        OnExit = OnClickValidateLength
       end
     end
     object pnObjectInfo: TPanel
@@ -1572,6 +1572,7 @@ object frMainForm: TfrMainForm
       Top = 13
       Width = 268
       Height = 346
+      Cursor = crArrow
       AutoSize = True
       Padding.Left = 15
       Padding.Top = 5

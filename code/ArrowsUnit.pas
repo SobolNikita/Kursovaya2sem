@@ -4,7 +4,7 @@ interface
 uses CartesianTree, System.Generics.Collections, System.Types, shipments;
 
 procedure AddArrow(var Shipment: PShipment);
-procedure RemoveArrow(Arrow: PArrow);
+procedure RemoveArrow(var arrowsList: TList<PArrow>; var Arrow: PArrow);
 function IsPointNearLine(P, A, B: TPoint; Tolerance: Integer): Boolean;
 
 var
@@ -40,7 +40,7 @@ begin
   Result := (numerator / denominator) <= Tolerance;
 end;
 
-procedure RemoveArrow(Arrow: PArrow);
+procedure RemoveArrow(var arrowsList: TList<PArrow>; var Arrow: PArrow);
 begin
   Arrow^.Shipment^.SourceID^.OutgoingArrows.Remove(Arrow);
   Arrow^.Shipment^.DestinationID^.IncomingArrows.Remove(Arrow);

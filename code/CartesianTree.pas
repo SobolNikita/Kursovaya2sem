@@ -199,6 +199,14 @@ begin
     ClearTreap(Root^.Left);
     ClearTreap(Root^.Right);
     ClearTreapItem(Root^.Data^.Items);
+    while root^.Data^.OutgoingArrows.Count <> 0 do
+    begin
+      root^.Data^.OutgoingArrows.Remove(root^.Data^.OutgoingArrows[0]);
+    end;
+    while root^.Data^.IncomingArrows.Count <> 0 do
+    begin
+      root^.Data^.IncomingArrows.Remove(root^.Data^.IncomingArrows[0]);
+    end;
     Root^.Data^.shape.Free;
     Dispose(Root);
     Root := nil;

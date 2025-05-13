@@ -309,6 +309,9 @@ type
     procedure WriteItemData(const curFile: TextFile;
       const curObj: PTreapItemNode);
     procedure createNewObjFile(const fil: textFile);
+    procedure ClearAllData(var shops, warehouses: PTreapNode;
+      var shipments: PShipment; var shopsNames, warehousesNames: PTreapNameNode;
+      var Arrows: TList<PArrow>);
 
     const
       shopColor = clHighlight;
@@ -350,8 +353,7 @@ end;
 
 procedure TfrMainForm.FormDestroy(Sender: TObject);
 begin
-  //Очистка всего
-  Arrows.Free;
+   ClearAllData(shops, warehouses, shipments, shopsNames, warehousesNames, Arrows);
 end;
 
 procedure TfrMainForm.FormResize(Sender: TObject);
@@ -769,17 +771,35 @@ begin
     begin
       //shop
       curNode := FindTreap(shops, pnSelectObject.tag);
-      FreeAndNil(curNode^.Data^.shape);
-      EraseTreap(shops, pnSelectObject.tag);
-      EraseTreapName(shopsNames, getHash(string(curNode^.Data^.name)));
+      if (curNode^.Data^.OutgoingArrows.count = 0)
+          and (curNode^.Data^.IncomingArrows.count = 0) then
+      begin
+        FreeAndNil(curNode^.Data^.shape);
+        EraseTreap(shops, pnSelectObject.tag);
+        EraseTreapName(shopsNames, getHash(string(curNode^.Data^.name)));
+        showMessage('Успешно', 'Магазин был удалён');
+      end
+      else
+      begin
+        showMessage('Ошибка', 'Невозможно удалить. Есть отгрузки, связанные с этим магазином!');
+      end;
     end
     else
     begin
       //warehouse
       curNode := FindTreap(warehouses, pnSelectObject.tag);
-      FreeAndNil(curNode^.Data^.shape);
-      EraseTreap(warehouses, pnSelectObject.tag);
-      EraseTreapName(warehousesNames, getHash(string(curNode^.Data^.name)));
+      if (curNode^.Data^.OutgoingArrows.count = 0)
+          and (curNode^.Data^.IncomingArrows.count = 0) then
+      begin
+        FreeAndNil(curNode^.Data^.shape);
+        EraseTreap(warehouses, pnSelectObject.tag);
+        EraseTreapName(warehousesNames, getHash(string(curNode^.Data^.name)));
+        showMessage('Успешно', 'Склад был удалён');
+      end
+      else
+      begin
+        showMessage('Ошибка', 'Невозможно удалить. Есть отгрузки, связанные с этим складом!');
+      end;
     end;
   end;
 end;
@@ -904,6 +924,7 @@ begin
   pnObjectInfo.Visible := false;
 end;
 
+
 procedure TfrMainForm.createNewObj(var newObj: PLocation; const isShop: boolean);
 begin
   New(newObj);
@@ -948,6 +969,9 @@ begin
   end;
 
   newObj^.shape.Tag := newObj^.key;
+
+  newObj^.OutgoingArrows := TList<PArrow>.Create;
+  newObj^.IncomingArrows := TList<PArrow>.Create;
 
   newObj^.shape.onMouseUp := pnSelectObjectShow;
   newObj^.shape.OnMouseEnter := pnObjectInfoShow;
@@ -1012,12 +1036,17 @@ begin
     (Sender as TEdit).color := clWindow
 end;
 
+
+
+
 procedure TfrMainForm.edCreateShipmentDestIDExit(Sender: TObject);
 begin
   updateName(edCreateShipmentDestID,
              rbCreateShipmentDestShop,
              edCreateShipmentDestName);
 end;
+
+
 
 
 procedure TfrMainForm.edCreateShipmentDestNameExit(Sender: TObject);
@@ -1186,6 +1215,9 @@ begin
 
         newObj^.shape.Tag := newObj^.key;
 
+        newObj^.OutgoingArrows := TList<PArrow>.Create;
+        newObj^.IncomingArrows := TList<PArrow>.Create;
+
         newObj^.shape.onMouseUp := pnSelectObjectShow;
         newObj^.shape.OnMouseEnter := pnObjectInfoShow;
         newObj^.shape.OnMouseLeave := pnObjectInfoHide;
@@ -1216,6 +1248,19 @@ begin
       end;
 end;
 
+procedure TfrMainForm.ClearAllData(var shops, warehouses: PTreapNode;
+                                   var shipments: PShipment;
+                                   var shopsNames, warehousesNames: PTreapNameNode;
+                                   var Arrows: TList<PArrow>);
+begin
+  ClearTreap(shops);
+  ClearTreap(warehouses);
+  ClearShipments(shipments);
+  ClearTreapName(shopsNames);
+  ClearTreapName(warehousesNames);
+  Arrows.Free;
+end;
+
 procedure TfrMainForm.Open1Click(Sender: TObject);
 var
   shopsFile, warehousesFile, shipmentsFile: textFile;
@@ -1226,7 +1271,7 @@ begin
      or not FileExists('shops.txt')
      or not FileExists('shipments.txt') then
   begin
-    showMessage('Ошибка', 'Ошибка загрузки');
+    showMessage('Ошибка', 'Ошибка загрузки. Одного/нексокльких файлов не существует!');
   end
   else
   begin
@@ -1235,13 +1280,9 @@ begin
       curShipmentID := 1;
       shopKey := 1;
       warehouseKey := 1;
-        
-      ClearTreap(shops);
-      ClearTreap(warehouses);
-      ClearShipments(shipments);
-      ClearTreapName(shopsNames);
-      ClearTreapName(warehousesNames);
-      
+
+      ClearAllData(shops, warehouses, shipments, shopsNames, warehousesNames, Arrows);
+
       shops := nil;
       warehouses := nil;
       shipments := nil;

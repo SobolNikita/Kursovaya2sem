@@ -27,12 +27,10 @@ var
 begin
   Result := true;
 
-  if shipment.ProductName = 'xiaomi' then
+  if shipment = shipment^.next then
   begin
-    var i: integer;
-    i := 5;
-  end;
 
+  end;
 
   destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
   sendItemNode := FindTreapItem(shipment^.SourceID^.Items, getHash(shipment^.ProductName));
