@@ -1,18 +1,17 @@
 unit ArrowsUnit;
 
 interface
-uses CartesianTree, System.Generics.Collections, System.Types, shipments;
+uses System.Generics.Collections, System.Types, Types, Vars;
 
-procedure AddArrow(var Shipment: PShipment);
+procedure AddArrow(var Arrows: TList<PArrow>; var Shipment: PShipment);
 procedure RemoveArrow(var arrowsList: TList<PArrow>; var Arrow: PArrow);
 function IsPointNearLine(P, A, B: TPoint; Tolerance: Integer): Boolean;
 
-var
-  Arrows: TList<PArrow>;
+
 
 implementation
 
-procedure AddArrow(var Shipment: PShipment);
+procedure AddArrow(var Arrows: TList<PArrow>; var Shipment: PShipment);
 var
   NewArrow: PArrow;
 begin

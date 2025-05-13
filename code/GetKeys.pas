@@ -2,11 +2,11 @@ unit GetKeys;
 
 interface
 
+  uses Vars;
+
   function getShopKey: integer;
   function getWarehouseKey: integer;
-  var shopKey: integer = 1;
-      warehouseKey: integer = 1;
-      curShipmentID: integer = 1;
+
 implementation
 
 function getShopKey: integer;

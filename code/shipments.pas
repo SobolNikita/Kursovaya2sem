@@ -1,7 +1,7 @@
 unit shipments;
 
 interface
-uses CartesianTree, CartesianTreeItem, Hash;
+uses CartesianTreeItem, Hash, Types;
 
 function doShipment(var shipment: PShipment): boolean;
 procedure ClearShipments(var shipment: PShipment);
@@ -24,13 +24,35 @@ function doShipment(var shipment: PShipment): boolean;
 var
   sendItemNode, destItemNode: PTreapItemNode;
   newNode: PItem;
+  found: boolean;
+  i: integer;
 begin
   Result := true;
 
-  if shipment = shipment^.next then
+  found := false;
+  i := 0;
+  while (not found) and (i < shipment^.SourceID^.OutgoingArrows.Count) do
   begin
-
+    if shipment^.SourceID^.OutgoingArrows[i]^.shipment = shipment then
+    begin
+      shipment^.SourceID^.OutgoingArrows.Remove(shipment^.SourceID^.OutgoingArrows[i]);
+      found := true;
+    end;
+    Inc(i);
   end;
+
+  found := false;
+  i := 0;
+  while (not found) and (i < shipment^.DestinationID^.OutgoingArrows.Count) do
+  begin
+    if shipment^.DestinationID^.OutgoingArrows[i]^.shipment = shipment then
+    begin
+      shipment^.DestinationID^.OutgoingArrows.Remove(shipment^.DestinationID^.OutgoingArrows[i]);
+      found := true;
+    end;
+    Inc(i);
+  end;
+
 
   destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
   sendItemNode := FindTreapItem(shipment^.SourceID^.Items, getHash(shipment^.ProductName));

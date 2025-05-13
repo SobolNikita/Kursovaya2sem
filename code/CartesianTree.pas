@@ -2,45 +2,7 @@ unit CartesianTree;
 
 interface
 
-  uses Vcl.ExtCtrls, CartesianTreeItem, System.Generics.Collections;
-
-  type
-
-  PLocation = ^TLocation;
-  PPShipment = ^PShipment;
-  PShipment = ^TShipment;
-  PTreapNode = ^TTreapNode;
-
-  TShipment = record
-    ShipmentName: string;
-    ID: integer;
-    SourceID: PLocation;       // Отправитель
-    DestinationID: PLocation;  // Получатель
-    ProductName: string;
-    Count: Integer;
-    next: PShipment;
-  end;
-
-  PArrow = ^TArrow;
-  TArrow = record
-    shipment: PShipment;
-  end;
-
-  TLocation = record
-    name, street: string[255];
-    house, building, capacity, usedCapacity, shipmentCapacity: integer;
-    Key, X, Y: Integer;
-    shape: TShape;
-    Items: PTreapItemNode;
-    OutgoingArrows: TList<PArrow>;
-    IncomingArrows: TList<PArrow>;
-  end;
-
-  TTreapNode = record
-    Data: PLocation;
-    Left, Right: PTreapNode;
-    Priority: Integer;
-  end;
+  uses Vcl.ExtCtrls, CartesianTreeItem, System.Generics.Collections, Types;
 
 
   function ExistsPriority(var Node: PTreapNode; const pr: Integer): Boolean;
@@ -199,14 +161,8 @@ begin
     ClearTreap(Root^.Left);
     ClearTreap(Root^.Right);
     ClearTreapItem(Root^.Data^.Items);
-    while root^.Data^.OutgoingArrows.Count <> 0 do
-    begin
-      root^.Data^.OutgoingArrows.Remove(root^.Data^.OutgoingArrows[0]);
-    end;
-    while root^.Data^.IncomingArrows.Count <> 0 do
-    begin
-      root^.Data^.IncomingArrows.Remove(root^.Data^.IncomingArrows[0]);
-    end;
+    root^.Data^.OutgoingArrows.Free;
+    root^.Data^.IncomingArrows.Free;
     Root^.Data^.shape.Free;
     Dispose(Root);
     Root := nil;

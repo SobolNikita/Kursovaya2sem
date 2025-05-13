@@ -7,11 +7,12 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Imaging.jpeg, System.UITypes, System.Types, Vcl.Menus, Vcl.NumberBox,
   CartesianTreeByName, CartesianTreeItem, Validation,
-  GetKeys, Hash, Messages, Filter, ObjectMask, Data.FMTBcd, Data.DB,
+  GetKeys, Hash, Messages, Filter, Data.FMTBcd, Data.DB,
   Data.SqlExpr, Vcl.Grids,
   TableUnit, ShipmentsTableUnit, shipments, BalanceUnit, SelectShipmentsUnit,
   ArrowsUnit, CartesianTree,
-  System.Generics.Collections;
+  System.Generics.Collections,
+  Types, Vars;
 
 type
 
@@ -313,9 +314,6 @@ type
       var shipments: PShipment; var shopsNames, warehousesNames: PTreapNameNode;
       var Arrows: TList<PArrow>);
 
-    const
-      shopColor = clHighlight;
-      warehouseColor = clMaroon;
   public
     { Public declarations }
 
@@ -1319,7 +1317,9 @@ begin
         else
           curShipment^.DestinationID := FindTreap(warehouses, destKey).Data;
 
-        AddArrow(curShipment);
+        Arrows := TList<PArrow>.Create;
+
+        AddArrow(Arrows, curShipment);
         pbMap.Invalidate;
 
         readln(shipmentsFile, curShipment^.ProductName);
@@ -1587,7 +1587,7 @@ begin
     shipments := newShipment;
     pnCreateShipment.Visible := false;
     ClearCreateShipment;
-    AddArrow(newShipment);
+    AddArrow(Arrows, newShipment);
     pbMap.Invalidate;
   end;
 

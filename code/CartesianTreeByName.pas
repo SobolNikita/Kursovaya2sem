@@ -2,22 +2,8 @@ unit CartesianTreeByName;
 
 interface
 
-  uses Vcl.ExtCtrls, Hash;
+  uses Vcl.ExtCtrls, Hash, Types;
 
-  type
-  TName = record
-    name: string[255];
-    ID: integer;
-    Key: integer;
-  end;
-  PName = ^TName;
-
-  PTreapNameNode = ^TTreapNameNode;
-  TTreapNameNode = record
-    Data: PName;
-    Left, Right: PTreapNameNode;
-    Priority: Integer;
-  end;
 
   function ExistsPriorityName(var Node: PTreapNameNode; const pr: Integer): Boolean;
   function GenerateUniquePriorityName(var Root: PTreapNameNode): Integer;

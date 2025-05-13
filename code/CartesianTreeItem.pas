@@ -1,23 +1,7 @@
 unit CartesianTreeItem;
 
 interface
-  uses Vcl.ExtCtrls;
-
-  type
-
-  TItem = record
-    name, category: string[255];
-    Volume, Count, Key, needToSend: Integer;
-  end;
-  PItem = ^TItem;
-
-
-  PTreapItemNode = ^TTreapNode;
-  TTreapNode = record
-    Data: PItem;
-    Left, Right: PTreapItemNode;
-    Priority: Integer;
-  end;
+  uses Vcl.ExtCtrls, Types;
 
   function ExistsPriorityItem(var Node: PTreapItemNode; const pr: Integer): Boolean;
   function GenerateUniquePriorityItem(var Root: PTreapItemNode): Integer;

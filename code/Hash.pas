@@ -2,13 +2,10 @@ unit Hash;
 
 interface
 
+  uses Vars;
+
   procedure initHash(const userP, userM: integer);
   function getHash(const str: string): integer;
-
-  var
-    p: integer = 47;
-    m: integer = 40009;
-    pows: array[0..255] of integer;
 
 implementation
 

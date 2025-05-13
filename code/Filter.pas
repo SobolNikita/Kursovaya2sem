@@ -2,20 +2,7 @@ unit Filter;
 
 interface
 
-  uses CartesianTree, ObjectMask;
-
-  type
-
-  TFilter = record
-    buildingType: integer;
-    //objType = 0 (00b): none, 1(01b): shop, 2(10b): warehouse, 3(11b): both
-
-    street: string[255];
-
-    house, building,
-    capacityFrom, capacityTo,
-    usedCapacityFrom, usedCapacityTo: integer;
-  end;
+  uses Types, Vars;
 
   procedure InitFilter(var resObj: TFilter);
   procedure CreateFilter(var resObj: TFilter; const objType: integer; const objStreet: string;

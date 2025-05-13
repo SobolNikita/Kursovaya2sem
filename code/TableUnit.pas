@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.UITypes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.ExtCtrls,
-  CartesianTree, CartesianTreeItem, ObjectMask;
+  Types, Vars;
 
 type
   TfrTableForm = class(TForm)
