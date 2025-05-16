@@ -1,7 +1,7 @@
 unit Validation;
 
 interface
-  uses SysUtils, Vcl.Graphics, Vcl.StdCtrls;
+  uses SysUtils, Vcl.Graphics, Vcl.StdCtrls, messages;
 
   function validateLength(Sender: TObject): boolean;
   function validateLetters(Sender: TObject): boolean;
@@ -31,9 +31,14 @@ begin
          )
          and
          (
-          (lowerCase((Sender as TEdit).Text[i]) > 'ÿ')
-          or (lowerCase((Sender as TEdit).Text[i]) < 'à'))
+          ((Sender as TEdit).Text[i] > 'ÿ')
+          or ((Sender as TEdit).Text[i] < 'à'))
          ))
+         and
+         (
+          ((Sender as TEdit).Text[i] > 'ß')
+          or ((Sender as TEdit).Text[i] < 'À')
+         )
          and
          (
           ((Sender as TEdit).Text[i] > '9')

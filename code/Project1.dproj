@@ -134,24 +134,19 @@
         <DCCReference Include="Hash.pas"/>
         <DCCReference Include="Messages.pas"/>
         <DCCReference Include="Filter.pas"/>
-        <DCCReference Include="ObjectMask.pas"/>
         <DCCReference Include="CartesianTreeItem.pas"/>
         <DCCReference Include="TableUnit.pas">
             <Form>frTableForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ShipmentsTableUnit.pas">
             <Form>frShipmentsTable</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="shipments.pas"/>
         <DCCReference Include="SelectShipmentsUnit.pas">
             <Form>frSelectShipments</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="BalanceUnit.pas">
             <Form>frBalance</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ArrowsUnit.pas"/>
         <BuildConfiguration Include="Base">

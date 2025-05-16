@@ -10,7 +10,6 @@ uses
   Hash in 'Hash.pas',
   Messages in 'Messages.pas',
   Filter in 'Filter.pas',
-  ObjectMask in 'ObjectMask.pas',
   CartesianTreeItem in 'CartesianTreeItem.pas',
   TableUnit in 'TableUnit.pas' {frTableForm},
   ShipmentsTableUnit in 'ShipmentsTableUnit.pas' {frShipmentsTable},

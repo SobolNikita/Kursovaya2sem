@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Grids, Vcl.StdCtrls,
-  Shipments, Hash, CartesianTree, Types;
+  Shipments, Hash, CartesianTree, Types, Messages;
 
 type
   TfrSelectShipments = class(TForm)
@@ -66,14 +66,16 @@ procedure TfrSelectShipments.btnSelectConfirmClick(Sender: TObject);
 var
   i: integer;
   curShipment, prev, temp: PShipment;
+  allCorrect: boolean;
 begin
   curShipment := FShipmentsPtr^;
   prev := nil;
+  allCorrect := true;
   for i := 1 to siz-1 do
   begin
     if sgSelectShipmentsTable.Cells[CHECKBOX_COL, i] = '1' then
     begin
-      doShipment(curShipment);
+      allCorrect := doShipment(curShipment) and allCorrect;
       if prev = nil then
        FShipmentsPtr^ := curShipment^.Next
       else
@@ -91,7 +93,14 @@ begin
     end;
     sgSelectShipmentsTable.Cells[CHECKBOX_COL, i] := '0';
   end;
-
+  if allCorrect then
+  begin
+    showMessage('Успешно', 'Все отгрузки были выполнены успешно!');
+  end
+  else
+  begin
+    showMessage('Ошибка', 'Произошл ошибка!');
+  end;
   loadData(FShipmentsPtr);
   sgSelectShipmentsTable.Invalidate;
 end;

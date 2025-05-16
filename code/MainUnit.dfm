@@ -5,6 +5,7 @@ object frMainForm: TfrMainForm
   ClientHeight = 719
   ClientWidth = 1280
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
@@ -540,7 +541,7 @@ object frMainForm: TfrMainForm
         AlignWithMargins = True
         Left = 11
         Top = 6
-        Width = 127
+        Width = 202
         Height = 30
         Margins.Left = 0
         Margins.Top = 0
@@ -555,6 +556,7 @@ object frMainForm: TfrMainForm
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 127
       end
       object lbObjInfoUsedCapacity: TLabel
         Left = 24
@@ -712,13 +714,14 @@ object frMainForm: TfrMainForm
           Left = 0
           Top = 0
           Width = 24
-          Height = 15
+          Height = 22
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1058#1080#1087':'
+          ExplicitHeight = 15
         end
         object cbFilterTypeShop: TCheckBox
           AlignWithMargins = True
@@ -770,9 +773,10 @@ object frMainForm: TfrMainForm
           Left = 0
           Top = 0
           Width = 37
-          Height = 15
+          Height = 22
           Align = alLeft
           Caption = #1059#1083#1080#1094#1072':'
+          ExplicitHeight = 15
         end
         object edFilterStreetVal: TEdit
           Left = 180
@@ -803,9 +807,10 @@ object frMainForm: TfrMainForm
           Left = 0
           Top = 0
           Width = 27
-          Height = 15
+          Height = 22
           Align = alLeft
           Caption = #1044#1086#1084':'
+          ExplicitHeight = 15
         end
         object edFilterHouseVal: TEdit
           Left = 180
@@ -836,13 +841,14 @@ object frMainForm: TfrMainForm
           Left = 0
           Top = 0
           Width = 158
-          Height = 15
+          Height = 22
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1050#1086#1088#1087#1091#1089' (0, '#1077#1089#1083#1080' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090'):'
+          ExplicitHeight = 15
         end
         object edFilterBuildingVal: TEdit
           Left = 180
@@ -874,26 +880,28 @@ object frMainForm: TfrMainForm
           Left = 0
           Top = 0
           Width = 91
-          Height = 15
+          Height = 22
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 90
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1042#1084#1077#1089#1090#1080#1084#1086#1089#1090#1100' '#1086#1090' '
+          ExplicitHeight = 15
         end
         object lbFilterCapacityTo: TLabel
           AlignWithMargins = True
           Left = 258
           Top = 0
           Width = 13
-          Height = 15
+          Height = 22
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 10
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1076#1086
+          ExplicitHeight = 15
         end
         object edFilterCapacityFromVal: TEdit
           AlignWithMargins = True
@@ -965,13 +973,14 @@ object frMainForm: TfrMainForm
           Left = 258
           Top = 0
           Width = 13
-          Height = 15
+          Height = 20
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 10
           Margins.Bottom = 0
           Align = alLeft
           Caption = #1076#1086
+          ExplicitHeight = 15
         end
         object edFilterUsedCapacityFromVal: TEdit
           AlignWithMargins = True
@@ -1577,7 +1586,7 @@ object frMainForm: TfrMainForm
         AlignWithMargins = True
         Left = 16
         Top = 6
-        Width = 194
+        Width = 236
         Height = 30
         Margins.Left = 0
         Margins.Top = 0
@@ -1592,6 +1601,7 @@ object frMainForm: TfrMainForm
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 194
       end
       object lbArrowInfoSenderType: TLabel
         Left = 16

@@ -497,7 +497,8 @@ begin
   else
     updateName(edCreateShipmentSenderID,
              rbCreateShipmentSenderShop,
-             edCreateShipmentSenderName)
+             edCreateShipmentSenderName);
+  edCreateShipmentItemNameExit(self);
 end;
 
 procedure TfrMainForm.rbCreateShipmentSenderWarehouseClick(Sender: TObject);
@@ -509,7 +510,8 @@ begin
   else
     updateName(edCreateShipmentSenderID,
              rbCreateShipmentSenderShop,
-             edCreateShipmentSenderName)
+             edCreateShipmentSenderName);
+  edCreateShipmentItemNameExit(self);
 end;
 
 procedure TfrMainForm.resetPnCreateObj;
@@ -1065,13 +1067,17 @@ begin
       senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)
     else
       senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
-
-    itemNode := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
+    itemNode := nil;
+    if Length(edCreateShipmentItemID.Text) > 0 then
+      itemNode := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
     if itemNode <> nil then
-      edCreateShipmentItemName.Text := string(itemNode^.Data^.name);
+      edCreateShipmentItemName.Text := string(itemNode^.Data^.name)
+    else
+      edCreateShipmentItemName.Text := '';
   end;
 
 end;
+
 
 procedure TfrMainForm.edCreateShipmentItemNameExit(Sender: TObject);
 var
@@ -1084,9 +1090,11 @@ begin
       senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)
     else
       senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
-    itemNode := FindTreapItem(senderNode^.Data^.Items, getHash(edCreateShipmentItemName.Text));
+  itemNode := FindTreapItem(senderNode^.Data^.Items, getHash(edCreateShipmentItemName.Text));
   if itemNode <> nil then
-    edCreateShipmentItemID.Text := intToStr(getHash(edCreateShipmentItemName.Text));
+    edCreateShipmentItemID.Text := intToStr(getHash(edCreateShipmentItemName.Text))
+  else
+    edCreateShipmentItemID.Text := '';
   end;
 end;
 
@@ -1095,6 +1103,7 @@ begin
   updateName(edCreateShipmentSenderID,
                    rbCreateShipmentSenderShop,
                    edCreateShipmentSenderName);
+  edCreateShipmentItemNameExit(self);
 end;
 
 
@@ -1103,6 +1112,7 @@ begin
   updateID(edCreateShipmentSenderID,
            rbCreateShipmentSenderShop,
            edCreateShipmentSenderName);
+  edCreateShipmentItemNameExit(self);
 end;
 
 procedure TfrMainForm.edFilterCapacityFromValChange(Sender: TObject);
@@ -1450,7 +1460,7 @@ end;
 function TfrMainForm.validateCreateSipment: boolean;
 var
   senderNode, destNode: PTreapNode;
-  curItem: PTreapItemNode;
+  curItem, senderItemNode, destItemNode: PTreapItemNode;
 begin
   Result := true;
 
@@ -1491,7 +1501,6 @@ begin
     else
       senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
 
-    //NEED TO ADD SEND COUNT CHECK
     curItem := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
     if curItem^.Data^.Count - curItem^.Data^.needToSend
       < strToInt(edCreateShipmentCnt.Text) then
@@ -1515,8 +1524,30 @@ begin
       showMessage('Ошибка', 'У получателя не хватает места!');
       Result := false;
     end;
+  end;
 
-
+  if Result and (senderNode <> nil) and (destNode <> nil) then
+  begin
+    senderItemNode := nil;
+    destItemNode := nil;
+    if Length(edCreateShipmentItemID.Text) > 0 then
+    begin
+      senderItemNode := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
+      destItemNode := FindTreapItem(destNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
+    end;
+    if (senderItemNode <> nil) and (destItemNode <> nil) then
+    begin
+      if senderItemNode^.Data^.category <> destItemNode^.Data^.category then
+      begin
+        showMessage('Ошибка', 'Категории текущего товара у данных объектов не совпадают!');
+        Result := false;
+      end;
+    end;
+    if Result and (senderItemNode^.Data^.Volume <> destItemNode^.Data^.Volume) then
+    begin
+      showMessage('Ошибка', 'Объемы единицы текущего товара у данных объектов не совпадают!');
+      Result := false;
+    end;
   end;
 
   Result := validateLength(edCreateShipmentCnt) and Result;
@@ -1945,7 +1976,7 @@ begin
       Dispose(prev);
     end;
     if not allDone then
-      ShowMessage('Уведомление', 'Некоторые отгрузки не были выполнены из-за отличий в объеме товара!')
+      ShowMessage('Ошибка', 'Произошла ошибка!')
     else
       showMessage('Успешно', 'Все отгрузки выполнены');
     shipments := nil;
