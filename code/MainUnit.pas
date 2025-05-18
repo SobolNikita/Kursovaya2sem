@@ -820,11 +820,11 @@ begin
   pnSelectObject.tag := (Sender as TShape).tag;
 end;
 
-
 procedure TfrMainForm.pnObjectInfoShow(Sender: TObject);
 var
   curNode: PTreapNode;
 begin
+
   pnArrowInfo.Visible := false;
   if ((Sender as TShape).tag and mask) <> 0 then
   begin
@@ -987,19 +987,31 @@ end;
 procedure TfrMainForm.createShop(Sender: TObject);
 var
   newObj: PLocation;
+  NewNode: PTreapNode;
+  NewNameNode: PTreapNameNode;
 begin
   createNewObj(newObj, true);
-  InsertTreap(shops, newObj);
-  InsertTreapName(shopsNames, string(newObj^.name), newObj^.Key);
+
+  NewNode := CreateNewNode(newObj);
+
+  InsertTreap(shops, NewNode);
+
+  NewNameNode := CreateNewNameNode(string(newObj^.name), newObj^.Key);
+  InsertTreapName(shopsNames, NewNameNode);
 end;
 
 procedure TfrMainForm.createWarehouse(Sender: TObject);
 var
   newObj: PLocation;
+  NewNode: PTreapNode;
+  NewNameNode: PTreapNameNode;
 begin
   createNewObj(newObj, false);
-  InsertTreap(warehouses, newObj);
-  InsertTreapName(warehousesNames, string(newObj^.name), newObj^.Key);
+  NewNode := CreateNewNode(newObj);
+  InsertTreap(warehouses, NewNode);
+
+  NewNameNode := CreateNewNameNode(string(newObj^.name), newObj^.Key);
+  InsertTreapName(warehousesNames, NewNameNode);
 end;
 
 
@@ -1177,6 +1189,9 @@ var
   i, j, cntObj, cntItems: integer;
   newObj: PLocation;
   curItem: PItem;
+  NewNode: PTreapNode;
+  NewNameNode: PTreapNameNode;
+  newItemNode: PTreapItemNode;
 begin
       readln(fil, cntObj);
       for i := 1 to cntObj do
@@ -1208,17 +1223,17 @@ begin
 
         newObj^.shape.Cursor := crHandPoint;
         
-        if (newObj^.Key and mask) <> 0 then
+        if (newObj^.Key and mask) = 0 then
         begin
           if newObj^.Key >= warehouseKey then
             warehouseKey := newObj^.Key + 1;
-          newObj^.shape.Brush.Color := shopColor;
+          newObj^.shape.Brush.Color := warehouseColor;
         end
         else
         begin
           if (newObj^.Key xor mask) >= shopKey then
             shopKey := (newObj^.Key xor mask) + 1;
-          newObj^.shape.Brush.Color := warehouseColor;
+          newObj^.shape.Brush.Color := shopColor;
         end;
 
         newObj^.shape.Tag := newObj^.key;
@@ -1241,17 +1256,24 @@ begin
           readln(fil, curItem^.Count);
           readln(fil, curItem^.Key);
           readln(fil, curItem^.needToSend);
-          InsertTreapItem(newObj^.Items, curItem);
+          newItemNode := CreateNewItemNode(curItem);
+          InsertTreapItem(newObj^.Items, newItemNode);
         end;
         if (newObj^.Key and mask) <> 0 then
         begin
-          InsertTreap(shops, newObj);
-          InsertTreapName(shopsNames, string(newObj^.name), newObj^.Key);  
+          NewNode := CreateNewNode(newObj);
+          InsertTreap(shops, NewNode);
+
+          NewNameNode := CreateNewNameNode(string(newObj^.name), newObj^.Key);
+          InsertTreapName(shopsNames, NewNameNode);
         end
         else
         begin
-          InsertTreap(warehouses, newObj);
-          InsertTreapName(warehousesNames, string(newObj^.name), newObj^.Key);
+          NewNode := CreateNewNode(newObj);
+          InsertTreap(warehouses, NewNode);
+
+          NewNameNode := CreateNewNameNode(string(newObj^.name), newObj^.Key);
+          InsertTreapName(warehousesNames, NewNameNode);
         end;
       end;
 end;
@@ -1303,13 +1325,16 @@ begin
 
       AssignFile(shopsFile, 'shops.txt');
       Reset(shopsFile);
-      createNewObjFile(shopsFile);      
+      createNewObjFile(shopsFile);
       CloseFile(shopsFile);
 
       AssignFile(shipmentsFile, 'shipments.txt');
       Reset(shipmentsFile);
       readln(shipmentsFile, cntShipments);
       curShipmentID := cntShipments + 1;
+
+      Arrows := TList<PArrow>.Create;
+
       for i := 1 to cntShipments do
       begin
         curShipment := new(PShipment);
@@ -1326,8 +1351,6 @@ begin
           curShipment^.DestinationID := FindTreap(shops, destKey).Data
         else
           curShipment^.DestinationID := FindTreap(warehouses, destKey).Data;
-
-        Arrows := TList<PArrow>.Create;
 
         AddArrow(Arrows, curShipment);
         pbMap.Invalidate;
@@ -1509,6 +1532,8 @@ begin
       Result := false;
     end;
   end;
+
+  destNode := nil;
 
   if (senderNode <> nil) and Result then
   begin
@@ -1856,7 +1881,7 @@ procedure TfrMainForm.btnAddItemConfirmClick(Sender: TObject);
 var
   node: PTreapNode;
   newItem: PItem;
-  itemNode: PTreapItemNode;
+  itemNode, newItemNode: PTreapItemNode;
 begin
   if validateAddItem then
   begin
@@ -1878,7 +1903,9 @@ begin
       newItem^.Volume := strToInt(edAddItemVol.Text);
       newItem^.Count := strToInt(edAddItemCnt.Text);
       newItem^.Key := getHash(string(newItem^.name));
-      InsertTreapItem(node^.Data^.Items, newItem);
+
+      newItemNode := CreateNewItemNode(newItem);
+      InsertTreapItem(node^.Data^.Items, newItemNode);
     end;
 
     node^.Data^.usedCapacity := node^.Data^.usedCapacity +

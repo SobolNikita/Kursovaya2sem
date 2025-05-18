@@ -3,11 +3,10 @@ unit CartesianTreeItem;
 interface
   uses Vcl.ExtCtrls, Types;
 
-  function ExistsPriorityItem(var Node: PTreapItemNode; const pr: Integer): Boolean;
-  function GenerateUniquePriorityItem(var Root: PTreapItemNode): Integer;
+  function CreateNewItemNode(const Data: PItem): PTreapItemNode;
   procedure SplitTreapItem(var t: PTreapItemNode; const key: Integer; var L, R: PTreapItemNode);
   function MergeTreapItem(var L, R: PTreapItemNode): PTreapItemNode;
-  procedure InsertTreapItem(var Root: PTreapItemNode; var Data: PItem);
+  procedure InsertTreapItem(var Root, NewNode: PTreapItemNode);
   procedure EraseTreapItem(var Root: PTreapItemNode; const Key: Integer);
   procedure ClearTreapItem(var Root: PTreapItemNode);
   procedure InitTreeItem(var root: PTreapItemNode);
@@ -18,6 +17,15 @@ implementation
 procedure InitTreeItem(var root: PTreapItemNode);
 begin
   root := nil;
+end;
+
+function CreateNewItemNode(const Data: PItem): PTreapItemNode;
+begin
+  New(Result);
+  Result^.Data := Data;
+  Result^.Left := nil;
+  Result^.Right := nil;
+  Result^.Priority := Random(MaxInt);
 end;
 
 function FindTreapItem(var Root: PTreapItemNode; const Key: Integer): PTreapItemNode;
@@ -38,32 +46,6 @@ begin
   begin
     Result := FindTreapItem(Root^.Right, Key);
   end;
-end;
-
-function ExistsPriorityItem(var Node: PTreapItemNode; const pr: Integer): Boolean;
-begin
-  if Node = nil then
-  begin
-    Result := False;
-  end
-  else if Node^.Priority = pr then
-  begin
-    Result := True;
-  end
-  else
-  begin
-    Result := ExistsPriorityItem(Node^.Left, pr) or ExistsPriorityItem(Node^.Right, pr);
-  end;
-end;
-
-function GenerateUniquePriorityItem(var Root: PTreapItemNode): Integer;
-var
-  pr: Integer;
-begin
-  repeat
-    pr := Random(MaxInt);
-  until not ExistsPriorityItem(Root, pr);
-  Result := pr;
 end;
 
 
@@ -90,10 +72,12 @@ end;
 function MergeTreapItem(var L, R: PTreapItemNode): PTreapItemNode;
 begin
   if L = nil then
-    Result := R
-  else if R = nil then
-    Result := L
-  else if L^.Priority > R^.Priority then
+    Exit(R);
+  if R = nil then
+    Exit(L);
+
+  if (L^.Priority > R^.Priority)
+     or ((L^.Priority = R^.Priority) and (L^.Data^.Key < R^.Data^.Key)) then
   begin
     L^.Right := MergeTreapItem(L^.Right, R);
     Result := L;
@@ -105,27 +89,22 @@ begin
   end;
 end;
 
-procedure InsertTreapItem(var Root: PTreapItemNode; var Data: PItem);
+procedure InsertTreapItem(var Root, NewNode: PTreapItemNode);
 var
-  NewNode, L, R: PTreapItemNode;
+  L, R: PTreapItemNode;
 begin
-  New(NewNode);
-  NewNode^.Data := Data;
-  NewNode^.Left := nil;
-  NewNode^.Right := nil;
-  NewNode^.Priority := GenerateUniquePriorityItem(Root);
 
-  if (Root = nil) or (NewNode^.Priority > Root^.Priority) then
+  if Root = nil then
   begin
-    SplitTreapItem(Root, Data^.Key, L, R);
+    SplitTreapItem(Root, NewNode^.Data^.Key, L, R);
     NewNode^.Left  := L;
     NewNode^.Right := R;
     Root := NewNode;
   end
-  else if Data^.Key < Root^.Data^.Key then
-    InsertTreapItem(Root^.Left, Data)
+  else if NewNode^.Data^.Key < Root^.Data^.Key then
+    InsertTreapItem(Root^.Left, NewNode)
   else
-    InsertTreapItem(Root^.Right, Data);
+    InsertTreapItem(Root^.Right, NewNode);
 end;
 
 procedure EraseTreapItem(var Root: PTreapItemNode; const Key: Integer);

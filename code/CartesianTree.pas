@@ -4,22 +4,29 @@ interface
 
   uses Vcl.ExtCtrls, CartesianTreeItem, System.Generics.Collections, Types;
 
-
-  function ExistsPriority(var Node: PTreapNode; const pr: Integer): Boolean;
-  function GenerateUniquePriority(var Root: PTreapNode): Integer;
   procedure SplitTreap(var t: PTreapNode; const key: Integer; var L, R: PTreapNode);
   function MergeTreap(var L, R: PTreapNode): PTreapNode;
-  procedure InsertTreap(var Root: PTreapNode; var Data: PLocation);
+  procedure InsertTreap(var Root: PTreapNode; var NewNode: PTreapNode);
   procedure EraseTreap(var Root: PTreapNode; const Key: Integer);
   procedure ClearTreap(var Root: PTreapNode);
   procedure InitTree(var root: PTreapNode);
   function FindTreap(var Root: PTreapNode; const Key: Integer): PTreapNode;
+  function CreateNewNode(var Data: PLocation): PTreapNode;
 
 implementation
 
 procedure InitTree(var root: PTreapNode);
 begin
   root := nil;
+end;
+
+function CreateNewNode(var Data: PLocation): PTreapNode;
+begin
+  New(Result);
+  Result^.Data := Data;
+  Result^.Left := nil;
+  Result^.Right := nil;
+  Result^.Priority := Random(MaxInt);
 end;
 
 function FindTreap(var Root: PTreapNode; const Key: Integer): PTreapNode;
@@ -41,33 +48,6 @@ begin
     Result := FindTreap(Root^.Right, Key);
   end;
 end;
-
-function ExistsPriority(var Node: PTreapNode; const pr: Integer): Boolean;
-begin
-  if Node = nil then
-  begin
-    Result := False;
-  end
-  else if Node^.Priority = pr then
-  begin
-    Result := True;
-  end
-  else
-  begin
-    Result := ExistsPriority(Node^.Left, pr) or ExistsPriority(Node^.Right, pr);
-  end;
-end;
-
-function GenerateUniquePriority(var Root: PTreapNode): Integer;
-var
-  pr: Integer;
-begin
-  repeat
-    pr := Random(MaxInt);
-  until not ExistsPriority(Root, pr);
-  Result := pr;
-end;
-
 
 procedure SplitTreap(var t: PTreapNode; const key: Integer; var L, R: PTreapNode);
 begin
@@ -91,11 +71,13 @@ end;
 
 function MergeTreap(var L, R: PTreapNode): PTreapNode;
 begin
-  if L = nil then
-    Result := R
-  else if R = nil then
-    Result := L
-  else if L^.Priority > R^.Priority then
+    if L = nil then
+    Exit(R);
+  if R = nil then
+    Exit(L);
+
+  if (L^.Priority > R^.Priority)
+     or ((L^.Priority = R^.Priority) and (L^.Data^.Key < R^.Data^.Key)) then
   begin
     L^.Right := MergeTreap(L^.Right, R);
     Result := L;
@@ -107,27 +89,21 @@ begin
   end;
 end;
 
-procedure InsertTreap(var Root: PTreapNode; var Data: PLocation);
+procedure InsertTreap(var Root: PTreapNode; var NewNode: PTreapNode);
 var
-  NewNode, L, R: PTreapNode;
+  L, R: PTreapNode;
 begin
-  New(NewNode);
-  NewNode^.Data := Data;
-  NewNode^.Left := nil;
-  NewNode^.Right := nil;
-  NewNode^.Priority := GenerateUniquePriority(Root);
-
-  if (Root = nil) or (NewNode^.Priority > Root^.Priority) then
+  if Root = nil then
   begin
-    SplitTreap(Root, Data^.Key, L, R);
+    SplitTreap(Root, NewNode^.Data^.Key, L, R);
     NewNode^.Left  := L;
     NewNode^.Right := R;
     Root := NewNode;
   end
-  else if Data^.Key < Root^.Data^.Key then
-    InsertTreap(Root^.Left, Data)
+  else if NewNode^.Data^.Key < Root^.Data^.Key then
+    InsertTreap(Root^.Left, NewNode)
   else
-    InsertTreap(Root^.Right, Data);
+    InsertTreap(Root^.Right, NewNode);
 end;
 
 procedure EraseTreap(var Root: PTreapNode; const Key: Integer);
@@ -136,7 +112,7 @@ var
 begin
   if Root = nil then
   begin
-    { Узел с таким ключом отсутствует }
+    { Узла не существует }
   end
   else if Key < Root^.Data^.Key then
   begin

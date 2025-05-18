@@ -35,6 +35,10 @@ begin
           or ((Sender as TEdit).Text[i] < 'à'))
          ))
          and
+         ((Sender as TEdit).Text[i] <> '¸')
+         and
+         ((Sender as TEdit).Text[i] <> '¨')
+         and
          (
           ((Sender as TEdit).Text[i] > 'ß')
           or ((Sender as TEdit).Text[i] < 'À')

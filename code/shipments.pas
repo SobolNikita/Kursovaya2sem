@@ -26,6 +26,7 @@ var
   newNode: PItem;
   found: boolean;
   i: integer;
+  newItemNode: PTreapItemNode;
 begin
   Result := true;
   try
@@ -66,7 +67,8 @@ begin
       newNode^.Volume := sendItemNode^.Data^.volume;
       newNode^.Count := 0;
       newNode^.Key := getHash(shipment^.ProductName);
-      InsertTreapItem(shipment^.DestinationID^.Items, newNode);
+      newItemNode := CreateNewItemNode(newNode);
+      InsertTreapItem(shipment^.DestinationID^.Items, newItemNode);
       destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
     end;
 

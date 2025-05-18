@@ -149,6 +149,8 @@
             <Form>frBalance</Form>
         </DCCReference>
         <DCCReference Include="ArrowsUnit.pas"/>
+        <DCCReference Include="Types.pas"/>
+        <DCCReference Include="Vars.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -4,12 +4,10 @@ interface
 
   uses Vcl.ExtCtrls, Hash, Types;
 
-
-  function ExistsPriorityName(var Node: PTreapNameNode; const pr: Integer): Boolean;
-  function GenerateUniquePriorityName(var Root: PTreapNameNode): Integer;
+  function CreateNewNameNode(const name: string; const ID: integer): PTreapNameNode;
   procedure SplitTreapName(var t: PTreapNameNode; const key: Integer; var L, R: PTreapNameNode);
   function MergeTreapName(var L, R: PTreapNameNode): PTreapNameNode;
-  procedure InsertTreapName(var Root: PTreapNameNode; const name: string; const ID: integer);
+  procedure InsertTreapName(var Root, NewNode: PTreapNameNode);
   procedure EraseTreapName(var Root: PTreapNameNode; const Key: Integer);
   procedure ClearTreapName(var Root: PTreapNameNode);
   procedure InitTreeName(var root: PTreapNameNode);
@@ -20,6 +18,27 @@ implementation
 procedure InitTreeName(var root: PTreapNameNode);
 begin
   root := nil;
+end;
+
+function CreateNewNode(var Data: PLocation): PTreapNode;
+begin
+  New(Result);
+  Result^.Data := Data;
+  Result^.Left := nil;
+  Result^.Right := nil;
+  Result^.Priority := Random(MaxInt);
+end;
+
+function CreateNewNameNode(const name: string; const ID: integer): PTreapNameNode;
+begin
+  New(Result);
+  New(Result^.Data);
+  Result^.Data^.name := shortString(name);
+  Result^.Data^.Key := getHash(name);
+  Result^.Data^.ID := ID;
+  Result^.Left := nil;
+  Result^.Right := nil;
+  Result^.Priority := Random(MaxInt);
 end;
 
 function FindTreapName(var Root: PTreapNameNode; const Key: Integer): PTreapNameNode;
@@ -58,16 +77,6 @@ begin
   end;
 end;
 
-function GenerateUniquePriorityName(var Root: PTreapNameNode): Integer;
-var
-  pr: Integer;
-begin
-  repeat
-    pr := Random(MaxInt);
-  until not ExistsPriorityName(Root, pr);
-  Result := pr;
-end;
-
 
 procedure SplitTreapName(var t: PTreapNameNode; const key: Integer; var L, R: PTreapNameNode);
 begin
@@ -92,10 +101,12 @@ end;
 function MergeTreapName(var L, R: PTreapNameNode): PTreapNameNode;
 begin
   if L = nil then
-    Result := R
-  else if R = nil then
-    Result := L
-  else if L^.Priority > R^.Priority then
+    Exit(R);
+  if R = nil then
+    Exit(L);
+
+  if (L^.Priority > R^.Priority)
+     or ((L^.Priority = R^.Priority) and (L^.Data^.Key < R^.Data^.Key)) then
   begin
     L^.Right := MergeTreapName(L^.Right, R);
     Result := L;
@@ -107,20 +118,12 @@ begin
   end;
 end;
 
-procedure InsertTreapName(var Root: PTreapNameNode; const name: string; const ID: integer);
+procedure InsertTreapName(var Root, NewNode: PTreapNameNode);
 var
-  NewNode, L, R: PTreapNameNode;
+  L, R: PTreapNameNode;
 begin
-  New(NewNode);
-  New(NewNode^.Data);
-  NewNode^.Data^.name := shortString(name);
-  NewNode^.Data^.Key := getHash(name);
-  NewNode^.Data^.ID := ID;
-  NewNode^.Left := nil;
-  NewNode^.Right := nil;
-  NewNode^.Priority := GenerateUniquePriorityName(Root);
 
-  if (Root = nil) or (NewNode^.Priority > Root^.Priority) then
+  if Root = nil then
   begin
     SplitTreapName(Root, newNode^.Data^.Key, L, R);
     NewNode^.Left  := L;
@@ -128,9 +131,9 @@ begin
     Root := NewNode;
   end
   else if newNode.Data^.Key < Root^.Data^.Key then
-    InsertTreapName(Root^.Left, name, ID)
+    InsertTreapName(Root^.Left, NewNode)
   else
-    InsertTreapName(Root^.Right, name, ID);
+    InsertTreapName(Root^.Right, NewNode);
 end;
 
 procedure EraseTreapName(var Root: PTreapNameNode; const Key: Integer);

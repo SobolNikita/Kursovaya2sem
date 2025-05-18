@@ -16,7 +16,9 @@ uses
   shipments in 'shipments.pas',
   SelectShipmentsUnit in 'SelectShipmentsUnit.pas' {frSelectShipments},
   BalanceUnit in 'BalanceUnit.pas' {frBalance},
-  ArrowsUnit in 'ArrowsUnit.pas';
+  ArrowsUnit in 'ArrowsUnit.pas',
+  Types in 'Types.pas',
+  Vars in 'Vars.pas';
 
 {$R *.res}
 
