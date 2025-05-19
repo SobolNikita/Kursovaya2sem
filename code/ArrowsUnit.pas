@@ -17,6 +17,12 @@ var
 begin
   NewArrow := New(PArrow);
   NewArrow^.shipment := Shipment;
+  if NewArrow^.shipment^.SourceID^.shape.Visible
+    and NewArrow^.shipment^.DestinationID^.shape.Visible then
+    NewArrow^.Visible := true
+  else
+    NewArrow^.Visible := false;
+
   Arrows.Add(NewArrow);
 
   if Shipment^.SourceID^.OutgoingArrows = nil then

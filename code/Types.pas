@@ -38,6 +38,7 @@ type
   PArrow = ^TArrow;
   TArrow = record
     shipment: PShipment;
+    Visible: boolean;
   end;
 
   TLocation = record

@@ -873,7 +873,7 @@ begin
   while (i >= 0) and (nearLine = nil) do
   begin
     Arrow := Arrows[i];
-    if IsPointNearLine(Pt, Point(Arrow^.Shipment^.SourceID^.X, Arrow^.Shipment^.SourceID^.Y),
+    if Arrow^.Visible and IsPointNearLine(Pt, Point(Arrow^.Shipment^.SourceID^.X, Arrow^.Shipment^.SourceID^.Y),
                           Point(Arrow^.Shipment^.DestinationID^.X, Arrow^.Shipment^.DestinationID^.Y), 5) then
     begin
       Screen.Cursor := crHandPoint;
@@ -919,7 +919,7 @@ begin
       end
       else
       begin
-        Arrow^.Visible := true;
+        Arrow^.Visible := false;
       end;
     end;
   finally
