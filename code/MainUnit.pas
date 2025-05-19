@@ -757,6 +757,7 @@ begin
   end;
   frtableForm.Location := curNode^.Data;
   frtableForm.LoadData;
+  pnSelectObject.Visible := false;
   frtableForm.ShowModal;
 end;
 
@@ -910,9 +911,16 @@ begin
       Arrow := Arrows[i];
       FromPt := Point(Arrow^.Shipment^.SourceID^.X, Arrow^.Shipment^.SourceID^.Y);
       ToPt := Point(Arrow^.Shipment^.DestinationID^.X, Arrow^.Shipment^.DestinationID^.Y);
-      pbMap.Canvas.MoveTo(FromPt.X, FromPt.Y);
-      pbMap.Canvas.LineTo(ToPt.X, ToPt.Y);
-      // Здесь можно добавить рисование стрелочной головки
+      if Arrow^.Shipment^.SourceID^.shape.Visible and Arrow^.Shipment^.DestinationID^.shape.Visible then
+      begin
+        Arrow^.Visible := true;
+        pbMap.Canvas.MoveTo(FromPt.X, FromPt.Y);
+        pbMap.Canvas.LineTo(ToPt.X, ToPt.Y);
+      end
+      else
+      begin
+        Arrow^.Visible := true;
+      end;
     end;
   finally
     Background.Free;
@@ -1418,8 +1426,10 @@ end;
 function TfrMainForm.validateAddItem: Boolean;
 var
   node: PTreapNode;
-  itemNode: PTreapItemNode;
-  var category: string;
+  itemNode, senderItemNode: PTreapItemNode;
+  category: string;
+  shipmentCapacity: integer;
+  curShip: PShipment;
 begin
   Result := true;
   Result := validateLength(edAddItemName) and Result;
@@ -1463,9 +1473,23 @@ begin
       end
     end;
 
+    curShip := Shipments;
+    shipmentCapacity := 0;
+    while curShip <> nil do
+    begin
+      if curShip^.DestinationID = node^.Data then
+      begin
+        senderItemNode := FindTreapItem(curShip^.SourceID^.Items, getHash(curShip^.ProductName));
+        shipmentCapacity := shipmentCapacity + curShip^.Count
+                            * senderItemNode^.Data^.Volume;
+      end;
+      curShip := curShip^.next;
+    end;
+
     if Result and
       (node^.Data^.usedCapacity
        + strToInt(edAddItemCnt.Text) * strToInt(edAddItemVol.Text)
+       + shipmentCapacity
        > node^.Data^.capacity) then
     begin
       Result := false;
@@ -1567,14 +1591,13 @@ begin
         showMessage('Ошибка', 'Категории текущего товара у данных объектов не совпадают!');
         Result := false;
       end;
-    end;
-    if Result and (senderItemNode^.Data^.Volume <> destItemNode^.Data^.Volume) then
-    begin
-      showMessage('Ошибка', 'Объемы единицы текущего товара у данных объектов не совпадают!');
-      Result := false;
+      if Result and (senderItemNode^.Data^.Volume <> destItemNode^.Data^.Volume) then
+      begin
+        showMessage('Ошибка', 'Объемы единицы текущего товара у данных объектов не совпадают!');
+        Result := false;
+      end;
     end;
   end;
-
   Result := validateLength(edCreateShipmentCnt) and Result;
 end;
 
@@ -1634,6 +1657,7 @@ begin
       newShipment^.DestinationID := FindTreap(shops, strToInt(edCreateShipmentDestID.Text) or mask)^.Data
     else
       newShipment^.DestinationID := FindTreap(warehouses, strToInt(edCreateShipmentDestID.Text))^.Data;
+
     newShipment^.ID := curShipmentId;
     Inc(curShipmentId);
     newShipment^.ShipmentName := edCreateShipmentName.Text;
@@ -1644,6 +1668,10 @@ begin
     pnCreateShipment.Visible := false;
     ClearCreateShipment;
     AddArrow(Arrows, newShipment);
+
+    Inc(newShipment^.DestinationID^.shipmentCapacity, newShipment^.Count
+        * curItem^.Data^.Volume);
+
     pbMap.Invalidate;
   end;
 
@@ -1806,6 +1834,7 @@ begin
                  );
     ApplyFilter(shops, filter);
     ApplyFilter(warehouses, filter);
+    pbMap.Invalidate;
     if cntFilter <> 0 then
       btnFilter.Caption := 'Фильтр (' + intToStr(cntFilter) + ')'
     else

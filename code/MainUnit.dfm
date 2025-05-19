@@ -1587,7 +1587,7 @@ object frMainForm: TfrMainForm
         Left = 16
         Top = 6
         Width = 236
-        Height = 30
+        Height = 23
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -1597,11 +1597,11 @@ object frMainForm: TfrMainForm
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = 30
+        Font.Height = 23
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 194
+        ExplicitWidth = 158
       end
       object lbArrowInfoSenderType: TLabel
         Left = 16

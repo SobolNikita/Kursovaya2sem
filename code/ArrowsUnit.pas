@@ -31,12 +31,34 @@ end;
 function IsPointNearLine(P, A, B: TPoint; Tolerance: Integer): Boolean;
 var
   dx, dy, numerator, denominator: Double;
+  maxx, maxy, minx, miny: integer;
 begin
+  Result := true;
+
+  maxx := A.X;
+  minx := A.X;
+  maxy := A.Y;
+  minY := A.Y;
+
+  if B.X > maxx then
+    maxx := B.X;
+
+  if B.X < minx then
+    minx := B.X;
+
+  if B.Y > maxy then
+    maxy := B.Y;
+
+  if B.Y < miny then
+   miny  := B.Y;
+
+  Result := Result and (P.X >= minx) and (P.X <= maxx) and (P.Y >= miny) and (P.Y <= maxy);
+
   dx := B.X - A.X;
   dy := B.Y - A.Y;
   numerator := Abs(dy * P.X - dx * P.Y + B.X * A.Y - B.Y * A.X);
   denominator := Sqrt(dx * dx + dy * dy);
-  Result := (numerator / denominator) <= Tolerance;
+  Result := Result and ((numerator / denominator) <= Tolerance);
 end;
 
 procedure RemoveArrow(var arrowsList: TList<PArrow>; var Arrow: PArrow);
