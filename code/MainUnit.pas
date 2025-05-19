@@ -294,6 +294,22 @@ type
 
     procedure showArrowInfo(var arrow: PArrow; const x, y: integer);
     procedure FormResize(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure edCreateShipmentSenderIDChange(Sender: TObject);
+    procedure edCreateShipmentDestIDChange(Sender: TObject);
+    procedure edCreateShipmentItemIDChange(Sender: TObject);
+    procedure edCreateShipmentCntChange(Sender: TObject);
+    procedure edCreateObjHouseChange(Sender: TObject);
+    procedure edCreateObjBuildingChange(Sender: TObject);
+    procedure edCreateObjCapacityChange(Sender: TObject);
+    procedure edFilterHouseValChange(Sender: TObject);
+    procedure edFilterBuildingValChange(Sender: TObject);
+    procedure edEditObjHouseChange(Sender: TObject);
+    procedure edEditObjBuildingChange(Sender: TObject);
+    procedure edEditObjCapacityChange(Sender: TObject);
+    procedure edAddItemDestIDChange(Sender: TObject);
+    procedure edAddItemVolChange(Sender: TObject);
+    procedure edAddItemCntChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -331,9 +347,19 @@ implementation
 {$R *.dfm}
 
 
+procedure TfrMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if not Saved then
+    if not getConfirmation('Подтверждение', 'Выйти без сохранения?') then
+    begin
+      Save1Click(self);
+    end;
+end;
+
 procedure TfrMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
+  Saved := true;
   startWidth := frMainForm.ClientWidth;
   startHeight := frMainForm.ClientHeight;
   Arrows := TList<PArrow>.Create;
@@ -595,8 +621,10 @@ var
   curShip: PShipment;
   siz: integer;
 begin
-  if getconfirmation then
+  if getconfirmation('Подтверждение действия', 'Сохранить данные?') then
   begin
+    Saved := true;
+
     AssignFile(shopsFile, 'shops.txt');
     Rewrite(shopsFile);
     curObject := shops;
@@ -765,7 +793,7 @@ procedure TfrMainForm.btnSelectObjDeleteClick(Sender: TObject);
 var
   curNode: PTreapNode;
 begin
-  if getConfirmation then
+  if getconfirmation('Подтверждение действия', 'Вы подтверждаете действие?') then
   begin
     hideAllPanels;
     if (pnSelectObject.tag and mask) <> 0 then
@@ -778,6 +806,7 @@ begin
         FreeAndNil(curNode^.Data^.shape);
         EraseTreap(shops, pnSelectObject.tag);
         EraseTreapName(shopsNames, getHash(string(curNode^.Data^.name)));
+        Saved := false;
         showMessage('Успешно', 'Магазин был удалён');
       end
       else
@@ -794,6 +823,7 @@ begin
       begin
         FreeAndNil(curNode^.Data^.shape);
         EraseTreap(warehouses, pnSelectObject.tag);
+        Saved := false;
         EraseTreapName(warehousesNames, getHash(string(curNode^.Data^.name)));
         showMessage('Успешно', 'Склад был удалён');
       end
@@ -1023,10 +1053,20 @@ begin
 end;
 
 
+procedure TfrMainForm.edAddItemCntChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
 procedure TfrMainForm.edAddItemCntExit(Sender: TObject);
 begin
   if validateLength(edAddItemCnt) then
     (Sender as TEdit).color := clWindow
+end;
+
+procedure TfrMainForm.edAddItemDestIDChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
 end;
 
 procedure TfrMainForm.edAddItemDestIDExit(Sender: TObject);
@@ -1050,6 +1090,11 @@ begin
     (Sender as TEdit).color := clWindow
 end;
 
+procedure TfrMainForm.edAddItemVolChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
 procedure TfrMainForm.edAddItemVolExit(Sender: TObject);
 begin
   if validateLength(edAddItemVol) then
@@ -1058,6 +1103,31 @@ end;
 
 
 
+
+procedure TfrMainForm.edCreateObjBuildingChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
+procedure TfrMainForm.edCreateObjCapacityChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
+procedure TfrMainForm.edCreateObjHouseChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
+procedure TfrMainForm.edCreateShipmentCntChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
+procedure TfrMainForm.edCreateShipmentDestIDChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
 
 procedure TfrMainForm.edCreateShipmentDestIDExit(Sender: TObject);
 begin
@@ -1074,6 +1144,11 @@ begin
   updateID(edCreateShipmentDestID,
            rbCreateShipmentDestShop,
            edCreateShipmentDestName);
+end;
+
+procedure TfrMainForm.edCreateShipmentItemIDChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
 end;
 
 procedure TfrMainForm.edCreateShipmentItemIDExit(Sender: TObject);
@@ -1118,6 +1193,11 @@ begin
   end;
 end;
 
+procedure TfrMainForm.edCreateShipmentSenderIDChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
 procedure TfrMainForm.edCreateShipmentSenderIDExit(Sender: TObject);
 begin
   updateName(edCreateShipmentSenderID,
@@ -1135,8 +1215,29 @@ begin
   edCreateShipmentItemNameExit(self);
 end;
 
+procedure TfrMainForm.edEditObjBuildingChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
+procedure TfrMainForm.edEditObjCapacityChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
+procedure TfrMainForm.edEditObjHouseChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
+procedure TfrMainForm.edFilterBuildingValChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
 procedure TfrMainForm.edFilterCapacityFromValChange(Sender: TObject);
 begin
+  validateIntegerInput(Sender);
   if validateFromTo(edFilterCapacityFromVal, edFilterCapacityToVal) then
     edFilterCapacityToVal.color := clWindow;
 end;
@@ -1149,6 +1250,7 @@ end;
 
 procedure TfrMainForm.edFilterCapacityToValChange(Sender: TObject);
 begin
+  validateIntegerInput(Sender);
   if validateFromTo(edFilterCapacityFromVal, edFilterCapacityToVal) then
     edFilterCapacityToVal.color := clWindow;
 end;
@@ -1159,8 +1261,14 @@ begin
     edFilterCapacityToVal.color := clRed;
 end;
 
+procedure TfrMainForm.edFilterHouseValChange(Sender: TObject);
+begin
+  validateIntegerInput(Sender);
+end;
+
 procedure TfrMainForm.edFilterUsedCapacityFromValChange(Sender: TObject);
 begin
+  validateIntegerInput(Sender);
   if validateFromTo(edFilterUsedCapacityFromVal, edFilterUsedCapacityToVal) then
     edFilterUsedCapacityToVal.color := clWindow;
 end;
@@ -1173,6 +1281,7 @@ end;
 
 procedure TfrMainForm.edFilterUsedCapacityToValChange(Sender: TObject);
 begin
+  validateIntegerInput(Sender);
   if validateFromTo(edFilterUsedCapacityFromVal, edFilterUsedCapacityToVal) then
     edFilterUsedCapacityToVal.color := clWindow;
 end;
@@ -1313,7 +1422,7 @@ begin
   end
   else
   begin
-    if getconfirmation then
+    if getconfirmation('Подтверждение действия', 'Вы подтверждаете действие?') then
     begin
       curShipmentID := 1;
       shopKey := 1;
@@ -1672,6 +1781,8 @@ begin
     Inc(newShipment^.DestinationID^.shipmentCapacity, newShipment^.Count
         * curItem^.Data^.Volume);
 
+    Saved := false;
+
     pbMap.Invalidate;
   end;
 
@@ -1704,7 +1815,7 @@ begin
     begin
       showMessage('Ошибка', 'Новая вместимость не позволяет вместить существующие товары!');
     end
-    else if getConfirmation then
+    else if getconfirmation('Подтверждение действия', 'Вы подтверждаете действие?') then
     begin
       edEditObjName.Text := trim(edEditObjName.Text);
       edEditObjStreet.Text := trim(edEditObjStreet.Text);
@@ -1723,6 +1834,8 @@ begin
       edEditObjBuilding.Text := '';
       edEditObjCapacity.Text := '';
       hideAllPanels;
+
+      Saved := false;
     end;
   end;
 end;
@@ -1779,6 +1892,8 @@ begin
     edFilterUsedCapacityFromVal.Text := intToStr(filter.usedCapacityFrom);
   if filter.usedCapacityTo <> -1 then
     edFilterUsedCapacityToVal.Text := intToStr(filter.usedCapacityTo);
+  pnFilterParams.left := (pnMapWrap.width - pnFilterParams.width) shr 1;
+  pnFilterParams.top := (pnMapWrap.height - pnFilterParams.height) shr 1;
   pnFilterParams.Visible := true;
 end;
 
@@ -1876,11 +1991,13 @@ begin
       begin
         //create shop
         createShop(Sender);
+        Saved := false;
       end
       else if pnCreateObj.tag = 2 then
       begin
         //create warehouse
         createWarehouse(Sender);
+        Saved := false;
       end
       else
       begin
@@ -1941,6 +2058,7 @@ begin
                                 strToInt(edAddItemCnt.Text)
                                 * strToInt(edAddItemVol.Text);
     pnAddItem.Visible := false;
+    Saved := false;
     ClearAddItem;
   end;
 end;
@@ -2021,7 +2139,7 @@ var
   allDone: boolean;
 begin
   allDone := true;
-  if getConfirmation then
+  if getconfirmation('Подтверждение действия', 'Вы подтверждаете действие?') then
   begin
     curShipment := shipments;
     while curShipment <> nil do

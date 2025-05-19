@@ -1,7 +1,7 @@
 unit shipments;
 
 interface
-uses CartesianTreeItem, Hash, Types;
+uses CartesianTreeItem, Hash, Types, Vars;
 
 function doShipment(var shipment: PShipment): boolean;
 procedure ClearShipments(var shipment: PShipment);
@@ -88,6 +88,7 @@ begin
 
       Inc(destItemNode^.Data^.Count, shipment^.Count);
     end;
+    Saved := false;
   end
   except
   begin

@@ -18,6 +18,8 @@ var
   m: integer = 40009;
   pows: array[0..255] of integer;
 
+  //MainUnit
+  Saved: boolean;
 
 const
   //MainUnitColors

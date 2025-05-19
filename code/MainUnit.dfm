@@ -1,6 +1,8 @@
 object frMainForm: TfrMainForm
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = #1052#1086#1085#1080#1090#1086#1088#1080#1085#1075' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 719
   ClientWidth = 1280
@@ -13,6 +15,7 @@ object frMainForm: TfrMainForm
   Font.Style = []
   Menu = MainMenu1
   Position = poDesigned
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
@@ -183,6 +186,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 2
+        OnChange = edCreateObjHouseChange
         OnExit = OnClickValidateLength
       end
       object btnCreateObjConfirm: TButton
@@ -221,6 +225,7 @@ object frMainForm: TfrMainForm
         ShowHint = True
         TabOrder = 5
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+        OnChange = edCreateObjBuildingChange
       end
       object edCreateObjCapacity: TEdit
         Left = 124
@@ -229,6 +234,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 6
+        OnChange = edCreateObjCapacityChange
         OnExit = OnClickValidateLength
       end
     end
@@ -373,6 +379,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 2
+        OnChange = edEditObjHouseChange
         OnExit = OnClickValidateLength
       end
       object btnEditObjConfirm: TButton
@@ -411,6 +418,7 @@ object frMainForm: TfrMainForm
         ShowHint = True
         TabOrder = 5
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+        OnChange = edEditObjBuildingChange
       end
       object edEditObjCapacity: TEdit
         Left = 124
@@ -419,6 +427,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 6
+        OnChange = edEditObjCapacityChange
         OnExit = OnClickValidateLength
       end
     end
@@ -631,8 +640,8 @@ object frMainForm: TfrMainForm
       end
     end
     object pnFilterParams: TPanel
-      Left = 349
-      Top = 218
+      Left = 370
+      Top = 225
       Width = 370
       Height = 222
       Padding.Left = 10
@@ -759,7 +768,7 @@ object frMainForm: TfrMainForm
       object pnFilterParamsStreet: TPanel
         AlignWithMargins = True
         Left = 11
-        Top = 38
+        Top = 65
         Width = 348
         Height = 22
         Margins.Left = 0
@@ -793,7 +802,7 @@ object frMainForm: TfrMainForm
       object pnFilterParamsHouse: TPanel
         AlignWithMargins = True
         Left = 11
-        Top = 65
+        Top = 38
         Width = 348
         Height = 22
         Margins.Left = 0
@@ -821,6 +830,7 @@ object frMainForm: TfrMainForm
           NumbersOnly = True
           TabOrder = 0
           TextHint = #1051#1102#1073#1086#1081
+          OnChange = edFilterHouseValChange
           ExplicitHeight = 23
         end
       end
@@ -859,6 +869,7 @@ object frMainForm: TfrMainForm
           NumbersOnly = True
           TabOrder = 0
           TextHint = #1051#1102#1073#1086#1081
+          OnChange = edFilterBuildingValChange
           ExplicitHeight = 23
         end
       end
@@ -1198,6 +1209,7 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 2
+        OnChange = edCreateShipmentSenderIDChange
         OnExit = edCreateShipmentSenderIDExit
       end
       object edCreateShipmentDestName: TEdit
@@ -1217,6 +1229,7 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 4
+        OnChange = edCreateShipmentDestIDChange
         OnExit = edCreateShipmentDestIDExit
       end
       object edCreateShipmentItemName: TEdit
@@ -1236,6 +1249,7 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 6
+        OnChange = edCreateShipmentItemIDChange
         OnExit = edCreateShipmentItemIDExit
       end
       object edCreateShipmentCnt: TEdit
@@ -1246,6 +1260,7 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 7
+        OnChange = edCreateShipmentCntChange
       end
       object btnCreateShipmentCancel: TButton
         Left = 24
@@ -1513,6 +1528,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 3
+        OnChange = edAddItemDestIDChange
         OnExit = edAddItemDestIDExit
       end
       object edAddItemVol: TEdit
@@ -1522,6 +1538,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 4
+        OnChange = edAddItemVolChange
         OnExit = edAddItemVolExit
       end
       object edAddItemCnt: TEdit
@@ -1531,6 +1548,7 @@ object frMainForm: TfrMainForm
         Height = 23
         NumbersOnly = True
         TabOrder = 5
+        OnChange = edAddItemCntChange
         OnExit = edAddItemCntExit
       end
       object btnAddItemCancel: TButton

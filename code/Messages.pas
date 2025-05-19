@@ -3,20 +3,20 @@ unit Messages;
 interface
 uses Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, System.UITypes;
 
-function getConfirmation: boolean;
-procedure showMessage(const capt: string; const text: string);
+function getConfirmation(const capt, text: string): boolean;
+procedure showMessage(const capt, text: string);
 
 implementation
 
-function getConfirmation: boolean;
+function getConfirmation(const capt, text: string): boolean;
 var
   Dlg: TForm;
   i: integer;
 begin
-  Dlg := CreateMessageDialog('Вы подтверждаете действие?',
+  Dlg := CreateMessageDialog(text,
                              mtConfirmation, [mbYes, mbNo]);
   try
-    Dlg.Caption := 'Подтверждение действия';
+    Dlg.Caption := capt;
     for i := 0 to Dlg.ComponentCount - 1 do
     begin
       if Dlg.Components[i] is TButton then
