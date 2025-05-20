@@ -52,7 +52,7 @@ object frMainForm: TfrMainForm
       OnMouseMove = pbMapMouseMove
       OnMouseUp = imgMapMouseUp
       OnPaint = pbMapPaint
-      ExplicitTop = 0
+      ExplicitTop = 20
     end
     object pnCreateSelect: TPanel
       Left = 80
@@ -169,6 +169,7 @@ object frMainForm: TfrMainForm
         ParentShowHint = False
         ShowHint = False
         TabOrder = 0
+        OnChange = edCreateObjNameChange
         OnExit = OnClickValidateLength
       end
       object edCreateObjStreet: TEdit
@@ -177,6 +178,7 @@ object frMainForm: TfrMainForm
         Width = 121
         Height = 23
         TabOrder = 1
+        OnChange = edCreateObjStreetChange
         OnExit = OnClickvalidateAll
       end
       object edCreateObjHouse: TEdit
@@ -362,6 +364,7 @@ object frMainForm: TfrMainForm
         ParentShowHint = False
         ShowHint = False
         TabOrder = 0
+        OnChange = edEditObjNameChange
         OnExit = OnClickValidateLength
       end
       object edEditObjStreet: TEdit
@@ -370,6 +373,7 @@ object frMainForm: TfrMainForm
         Width = 121
         Height = 23
         TabOrder = 1
+        OnChange = edEditObjStreetChange
         OnExit = OnClickvalidateAll
       end
       object edEditObjHouse: TEdit
@@ -1192,6 +1196,7 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         TabOrder = 0
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+        OnChange = edCreateShipmentNameChange
         OnExit = edCreateShipmentNameExit
       end
       object edCreateShipmentSenderName: TEdit
@@ -1201,6 +1206,7 @@ object frMainForm: TfrMainForm
         Height = 23
         Anchors = [akLeft, akBottom]
         TabOrder = 1
+        OnChange = edCreateShipmentSenderNameChange
         OnExit = edCreateShipmentSenderNameExit
       end
       object edCreateShipmentSenderID: TEdit
@@ -1221,6 +1227,7 @@ object frMainForm: TfrMainForm
         Height = 23
         Anchors = [akLeft, akBottom]
         TabOrder = 3
+        OnChange = edCreateShipmentDestNameChange
         OnExit = edCreateShipmentDestNameExit
       end
       object edCreateShipmentDestID: TEdit
@@ -1241,6 +1248,7 @@ object frMainForm: TfrMainForm
         Height = 23
         Anchors = [akLeft, akBottom]
         TabOrder = 5
+        OnChange = edCreateShipmentItemNameChange
         OnExit = edCreateShipmentItemNameExit
       end
       object edCreateShipmentItemID: TEdit
@@ -1380,11 +1388,10 @@ object frMainForm: TfrMainForm
       end
     end
     object pnAddItem: TPanel
-      Left = 725
-      Top = 324
+      Left = 742
+      Top = 365
       Width = 353
-      Height = 305
-      AutoSize = True
+      Height = 300
       Padding.Left = 10
       Padding.Top = 10
       Padding.Right = 10
@@ -1392,11 +1399,83 @@ object frMainForm: TfrMainForm
       ParentBackground = False
       TabOrder = 8
       Visible = False
+      DesignSize = (
+        353
+        300)
+      object lbAddItemType: TLabel
+        Left = 11
+        Top = 112
+        Width = 91
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1058#1080#1087' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
+        ExplicitTop = 74
+      end
+      object lbAddItemName: TLabel
+        Left = 11
+        Top = 54
+        Width = 95
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072':'
+        ExplicitTop = 16
+      end
+      object lbAddItemDestName: TLabel
+        Left = 11
+        Top = 141
+        Width = 132
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' ('#1053#1072#1079#1074#1072#1085#1080#1077'):'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        ExplicitTop = 103
+      end
+      object lbAddItemDestID: TLabel
+        Left = 11
+        Top = 170
+        Width = 91
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' (ID):'
+        ExplicitTop = 132
+      end
+      object lbAddItemVol: TLabel
+        Left = 11
+        Top = 199
+        Width = 162
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1054#1073#1098#1077#1084' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' ('#1091'.'#1077'.):'
+        ExplicitTop = 161
+      end
+      object lbAddItemCnt: TLabel
+        Left = 11
+        Top = 228
+        Width = 151
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1077#1076#1080#1085#1080#1094' '#1090#1086#1074#1072#1088#1072':'
+        ExplicitTop = 190
+      end
+      object lbAddItemCategory: TLabel
+        Left = 11
+        Top = 83
+        Width = 59
+        Height = 15
+        Anchors = [akLeft, akBottom]
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103':'
+        ExplicitTop = 45
+      end
       object lbAddItem: TLabel
         Left = 11
         Top = 11
         Width = 331
-        Height = 30
+        Height = 32
         Align = alTop
         Alignment = taCenter
         AutoSize = False
@@ -1407,69 +1486,13 @@ object frMainForm: TfrMainForm
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = -13
-        ExplicitTop = -5
-      end
-      object lbAddItemType: TLabel
-        Left = 11
-        Top = 117
-        Width = 91
-        Height = 15
-        Caption = #1058#1080#1087' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103':'
-      end
-      object lbAddItemName: TLabel
-        Left = 11
-        Top = 59
-        Width = 95
-        Height = 15
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072':'
-      end
-      object lbAddItemDestName: TLabel
-        Left = 11
-        Top = 146
-        Width = 132
-        Height = 15
-        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' ('#1053#1072#1079#1074#1072#1085#1080#1077'):'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-      end
-      object lbAddItemDestID: TLabel
-        Left = 11
-        Top = 175
-        Width = 91
-        Height = 15
-        Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' (ID):'
-      end
-      object lbAddItemVol: TLabel
-        Left = 11
-        Top = 204
-        Width = 162
-        Height = 15
-        Caption = #1054#1073#1098#1077#1084' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' ('#1091'.'#1077'.):'
-      end
-      object lbAddItemCnt: TLabel
-        Left = 11
-        Top = 233
-        Width = 151
-        Height = 15
-        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1077#1076#1080#1085#1080#1094' '#1090#1086#1074#1072#1088#1072':'
-      end
-      object lbAddItemCategory: TLabel
-        Left = 11
-        Top = 88
-        Width = 59
-        Height = 15
-        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103':'
       end
       object pnAddItemType: TPanel
         Left = 201
-        Top = 110
+        Top = 105
         Width = 135
         Height = 23
+        Anchors = [akLeft, akBottom]
         AutoSize = True
         BevelOuter = bvNone
         Ctl3D = False
@@ -1481,6 +1504,7 @@ object frMainForm: TfrMainForm
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
+        ExplicitTop = 67
         DesignSize = (
           135
           23)
@@ -1509,84 +1533,103 @@ object frMainForm: TfrMainForm
       end
       object edAddItemName: TEdit
         Left = 201
-        Top = 54
+        Top = 49
         Width = 141
         Height = 23
+        Anchors = [akLeft, akBottom]
         TabOrder = 1
+        OnChange = edAddItemNameChange
         OnExit = edAddItemNameExit
+        ExplicitTop = 11
       end
       object edAddItemDestName: TEdit
         Left = 201
-        Top = 141
+        Top = 136
         Width = 141
         Height = 23
+        Anchors = [akLeft, akBottom]
         TabOrder = 2
+        OnChange = edAddItemDestNameChange
         OnExit = edAddItemDestNameExit
+        ExplicitTop = 98
       end
       object edAddItemDestID: TEdit
         Left = 201
-        Top = 170
+        Top = 165
         Width = 141
         Height = 23
+        Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 3
         OnChange = edAddItemDestIDChange
         OnExit = edAddItemDestIDExit
+        ExplicitTop = 127
       end
       object edAddItemVol: TEdit
         Left = 201
-        Top = 199
+        Top = 194
         Width = 141
         Height = 23
+        Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 4
         OnChange = edAddItemVolChange
         OnExit = edAddItemVolExit
+        ExplicitTop = 156
       end
       object edAddItemCnt: TEdit
         Left = 201
-        Top = 228
+        Top = 223
         Width = 141
         Height = 23
+        Anchors = [akLeft, akBottom]
         NumbersOnly = True
         TabOrder = 5
         OnChange = edAddItemCntChange
         OnExit = edAddItemCntExit
+        ExplicitTop = 185
       end
       object btnAddItemCancel: TButton
         Left = 11
-        Top = 269
+        Top = 264
         Width = 158
         Height = 25
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
+        Anchors = [akLeft, akBottom]
         Caption = #1054#1090#1084#1077#1085#1072
         TabOrder = 6
         OnClick = btnAddItemCancelClick
+        ExplicitTop = 226
       end
       object btnAddItemConfirm: TButton
         Left = 184
-        Top = 269
+        Top = 264
         Width = 158
         Height = 25
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
+        Anchors = [akLeft, akBottom]
         Caption = #1044#1086#1073#1072#1074#1080#1090#1100
         TabOrder = 7
         OnClick = btnAddItemConfirmClick
+        ExplicitTop = 226
       end
       object edAddItemCategory: TEdit
         Left = 201
-        Top = 83
+        Top = 78
         Width = 141
         Height = 23
+        Anchors = [akLeft, akBottom]
         TabOrder = 8
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+        OnChange = edAddItemCategoryChange
         OnExit = edAddItemCategoryExit
+        ExplicitTop = 40
       end
     end
     object pnArrowInfo: TPanel

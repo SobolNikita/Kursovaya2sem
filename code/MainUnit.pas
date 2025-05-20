@@ -137,7 +137,6 @@ type
     pnCreateShipmentSenderType: TPanel;
     pnCreateShipmentDestType: TPanel;
     pnAddItem: TPanel;
-    lbAddItem: TLabel;
     pnAddItemType: TPanel;
     rbAddItemTypeShop: TRadioButton;
     rbAddItemTypeWarehouse: TRadioButton;
@@ -189,6 +188,7 @@ type
     lbArrowInfoItemCntVal: TLabel;
     lbArrowInfoItemVol: TLabel;
     lbArrowInfoItemVolVal: TLabel;
+    lbAddItem: TLabel;
 
 
     procedure createNewObj(var newObj: PLocation; const isShop: boolean);
@@ -313,6 +313,17 @@ type
     procedure edCreateShipmentNameExit(Sender: TObject);
     procedure edFilterStreetValExit(Sender: TObject);
     procedure edAddItemCategoryExit(Sender: TObject);
+    procedure edCreateShipmentNameChange(Sender: TObject);
+    procedure edCreateShipmentSenderNameChange(Sender: TObject);
+    procedure edCreateShipmentDestNameChange(Sender: TObject);
+    procedure edCreateShipmentItemNameChange(Sender: TObject);
+    procedure edCreateObjNameChange(Sender: TObject);
+    procedure edCreateObjStreetChange(Sender: TObject);
+    procedure edEditObjNameChange(Sender: TObject);
+    procedure edEditObjStreetChange(Sender: TObject);
+    procedure edAddItemNameChange(Sender: TObject);
+    procedure edAddItemCategoryChange(Sender: TObject);
+    procedure edAddItemDestNameChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -1056,6 +1067,11 @@ begin
 end;
 
 
+procedure TfrMainForm.edAddItemCategoryChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
+
 procedure TfrMainForm.edAddItemCategoryExit(Sender: TObject);
 begin
   (Sender as TEdit).Text := Trim((Sender as TEdit).Text);
@@ -1084,6 +1100,11 @@ begin
            edAddItemDestName);
 end;
 
+procedure TfrMainForm.edAddItemDestNameChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
+
 procedure TfrMainForm.edAddItemDestNameExit(Sender: TObject);
 begin
   edAddItemDestName.Text := Trim(edAddItemDestName.Text);
@@ -1092,6 +1113,11 @@ begin
            edAddItemDestName);
 end;
 
+
+procedure TfrMainForm.edAddItemNameChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
 
 procedure TfrMainForm.edAddItemNameExit(Sender: TObject);
 begin
@@ -1129,6 +1155,16 @@ begin
   validateIntegerInput(Sender);
 end;
 
+procedure TfrMainForm.edCreateObjNameChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
+
+procedure TfrMainForm.edCreateObjStreetChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
+
 procedure TfrMainForm.edCreateShipmentCntChange(Sender: TObject);
 begin
   validateIntegerInput(Sender);
@@ -1147,6 +1183,11 @@ begin
              edCreateShipmentDestName);
 end;
 
+
+procedure TfrMainForm.edCreateShipmentDestNameChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
 
 procedure TfrMainForm.edCreateShipmentDestNameExit(Sender: TObject);
 begin
@@ -1184,6 +1225,11 @@ begin
 end;
 
 
+procedure TfrMainForm.edCreateShipmentItemNameChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
+
 procedure TfrMainForm.edCreateShipmentItemNameExit(Sender: TObject);
 var
   senderNode: PTreapNode;
@@ -1204,6 +1250,11 @@ begin
   end;
 end;
 
+procedure TfrMainForm.edCreateShipmentNameChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
+
 procedure TfrMainForm.edCreateShipmentNameExit(Sender: TObject);
 begin
   edCreateShipmentName.Text := Trim(edCreateShipmentName.Text);
@@ -1222,6 +1273,11 @@ begin
   edCreateShipmentItemNameExit(self);
 end;
 
+
+procedure TfrMainForm.edCreateShipmentSenderNameChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
 
 procedure TfrMainForm.edCreateShipmentSenderNameExit(Sender: TObject);
 begin
@@ -1245,6 +1301,16 @@ end;
 procedure TfrMainForm.edEditObjHouseChange(Sender: TObject);
 begin
   validateIntegerInput(Sender);
+end;
+
+procedure TfrMainForm.edEditObjNameChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
+end;
+
+procedure TfrMainForm.edEditObjStreetChange(Sender: TObject);
+begin
+  validateLengthLess70(Sender);
 end;
 
 procedure TfrMainForm.edFilterBuildingValChange(Sender: TObject);
@@ -1317,6 +1383,7 @@ end;
 
 procedure TfrMainForm.OnClickValidateLetters(Sender: TObject);
 begin
+  validateLengthLess70(Sender);
   if validateLetters(Sender) then
   begin
     (Sender as TEdit).color := clWindow;

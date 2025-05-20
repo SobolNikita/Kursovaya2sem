@@ -8,8 +8,22 @@ interface
   function validateAll(Sender: TObject): boolean;
   function validateFromTo(const firstField, secondField: TObject): boolean;
   procedure validateIntegerInput(Sender: TObject);
+  procedure validateLengthLess70(Sender: TObject);
 
 implementation
+
+procedure validateLengthLess70(Sender: TObject);
+var
+  newString: string;
+begin
+  if Length((Sender as TEdit).Text) > 70 then
+  begin
+    newString := (Sender as TEdit).Text;
+    Delete(newString, Length(newString), 1);
+    (Sender as TEdit).Text := newString;
+    showMessage('Внимание!', 'Длина строки должна быть не более 70 символов!');
+  end;
+end;
 
 function validateAll(Sender: TObject): boolean;
 begin
@@ -20,7 +34,7 @@ end;
 procedure validateIntegerInput(Sender: TObject);
 var
   newString: string;
-  var i: integer;
+  i: integer;
 begin
   // test 0
   if (Length((Sender as TEdit).Text) > 0) and ((Sender as TEdit).Text <> '0') then
