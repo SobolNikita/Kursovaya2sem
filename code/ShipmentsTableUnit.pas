@@ -13,6 +13,8 @@ type
     procedure LoadData(var shipment: PShipment);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure sgShipmentsTableDrawCell(Sender: TObject; ACol, ARow: LongInt;
+      Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
   public
@@ -28,6 +30,7 @@ var
   startHeight, startWidth: integer;
 
 {$R *.dfm}
+
 
 procedure TfrShipmentsTable.FormClose(Sender: TObject;
   var Action: TCloseAction);
@@ -81,6 +84,22 @@ begin
   end;
 end;
 
+procedure TfrShipmentsTable.sgShipmentsTableDrawCell(Sender: TObject; ACol,
+  ARow: LongInt; Rect: TRect; State: TGridDrawState);
+var
+  S: string;
+begin
+  S := sgShipmentsTable.Cells[ACol, ARow];
+  sgShipmentsTable.Canvas.FillRect(Rect);
+
+  DrawText(
+    sgShipmentsTable.Canvas.Handle,
+    PChar(S), Length(S),
+    Rect,
+    DT_WORDBREAK or DT_NOPREFIX or DT_LEFT
+  );
+end;
+
 procedure TfrShipmentsTable.FormCreate(Sender: TObject);
 begin
   startWidth := frShipmentsTable.ClientWidth;
@@ -124,7 +143,10 @@ begin
   sgShipmentsTable.Cells[8, 0] := 'Количество';
 
   sgShipmentsTable.RowCount := 0;
+
+  sgShipmentsTable.DefaultDrawing := False;
 end;
+
 
 procedure TfrShipmentsTable.FormResize(Sender: TObject);
 begin

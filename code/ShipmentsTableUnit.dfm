@@ -20,7 +20,9 @@ object frShipmentsTable: TfrShipmentsTable
     Width = 1280
     Height = 720
     Align = alClient
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSizing, goColSizing, goThumbTracking, goFixedRowDefAlign]
     TabOrder = 0
+    OnDrawCell = sgShipmentsTableDrawCell
     ExplicitWidth = 1270
     ExplicitHeight = 688
   end

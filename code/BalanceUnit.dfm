@@ -30,7 +30,9 @@ object frBalance: TfrBalance
     Width = 1280
     Height = 640
     Align = alClient
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSizing, goColSizing, goFixedRowDefAlign]
     TabOrder = 1
+    OnDrawCell = sgBalanceTableDrawCell
     ExplicitWidth = 1270
     ExplicitHeight = 608
   end

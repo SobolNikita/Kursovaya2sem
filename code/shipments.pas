@@ -55,6 +55,17 @@ begin
       Inc(i);
     end;
 
+    found := false;
+    i := 0;
+    while (not found) and (i < Arrows.Count) do
+    begin
+      if Arrows[i]^.shipment = shipment then
+      begin
+        Arrows.Remove(Arrows[i]);
+        found := true;
+      end;
+      Inc(i);
+    end;
 
     destItemNode := FindTreapItem(shipment^.DestinationID^.Items, getHash(shipment^.ProductName));
     sendItemNode := FindTreapItem(shipment^.SourceID^.Items, getHash(shipment^.ProductName));

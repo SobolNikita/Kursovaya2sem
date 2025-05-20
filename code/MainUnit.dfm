@@ -796,6 +796,7 @@ object frMainForm: TfrMainForm
           TabOrder = 0
           TextHint = #1051#1102#1073#1072#1103
           OnChange = OnClickValidateLetters
+          OnExit = edFilterStreetValExit
           ExplicitHeight = 23
         end
       end
@@ -1191,6 +1192,7 @@ object frMainForm: TfrMainForm
         Anchors = [akLeft, akBottom]
         TabOrder = 0
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+        OnExit = edCreateShipmentNameExit
       end
       object edCreateShipmentSenderName: TEdit
         Left = 171
@@ -1584,6 +1586,7 @@ object frMainForm: TfrMainForm
         Height = 23
         TabOrder = 8
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
+        OnExit = edAddItemCategoryExit
       end
     end
     object pnArrowInfo: TPanel

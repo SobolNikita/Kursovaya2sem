@@ -59,7 +59,7 @@ begin
   begin
     sgSelectShipmentsTable.Cells[CHECKBOX_COL, i] := '1'
   end;
-  sgSelectShipmentsTable.Repaint;
+  frSelectShipments.Invalidate;
 end;
 
 procedure TfrSelectShipments.btnSelectConfirmClick(Sender: TObject);
@@ -102,7 +102,7 @@ begin
     showMessage('Ошибка', 'Произошл ошибка!');
   end;
   loadData(FShipmentsPtr);
-  sgSelectShipmentsTable.Invalidate;
+  frSelectShipments.Invalidate;
 end;
 
 procedure TfrSelectShipments.btnSelectResetClick(Sender: TObject);
@@ -113,7 +113,7 @@ begin
   begin
     sgSelectShipmentsTable.Cells[CHECKBOX_COL, i] := '0'
   end;
-  sgSelectShipmentsTable.Repaint;
+  frSelectShipments.Invalidate;
 end;
 
 procedure TfrSelectShipments.FormClose(Sender: TObject;
@@ -173,6 +173,10 @@ procedure TfrSelectShipments.sgSelectShipmentsTableDrawCell(Sender: TObject;
   ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
 var
   CheckRect: TRect;
+  S: string;
+  OldFontSize: integer;
+  OldCharSet: integer;
+  OldFontName: string;
 begin
   if (ACol = CHECKBOX_COL) and (ARow > 0) then
   begin
@@ -197,13 +201,35 @@ begin
       // Рисуем галочку если отмечено
       if sgSelectShipmentsTable.Cells[ACol, ARow] = '1' then
       begin
+        OldFontSize := Font.Size;
+        OldCharSet := DEFAULT_CHARSET;
+        OldFontName := Font.Name;
+
         Font.Size := 16;
         Font.Name := 'Arial';
         Font.CharSet := DEFAULT_CHARSET;
         TextOut(CheckRect.Left + 1, CheckRect.Top - CHECKBOX_SIZE shr 1 + 3, '+');
+
+        Font.Size := OldFontSize;
+        Font.CharSet := OldCharSet;
+        Font.Name := OldFontName;
       end;
     end;
   end;
+
+  if (ACol <> CHECKBOX_COL) or (ARow = 0) then
+  begin
+    S := sgSelectShipmentsTable.Cells[ACol, ARow];
+    sgSelectShipmentsTable.Canvas.FillRect(Rect);
+
+    DrawText(
+      sgSelectShipmentsTable.Canvas.Handle,
+      PChar(S), Length(S),
+      Rect,
+      DT_WORDBREAK or DT_NOPREFIX or DT_LEFT
+    );
+  end;
+
 end;
 
 procedure TfrSelectShipments.sgSelectShipmentsTableMouseDown(Sender: TObject;
@@ -241,7 +267,7 @@ begin
   else
     sgSelectShipmentsTable.Cells[CHECKBOX_COL, ARow] := '1';
 
-  sgSelectShipmentsTable.Repaint;
+  frSelectShipments.Invalidate;
 end;
 
 procedure TfrSelectShipments.FormCreate(Sender: TObject);
@@ -278,6 +304,8 @@ begin
                                -sgSelectShipmentsTable.ColCount * sgSelectShipmentsTable.GridLineWidth
                                -12;
 
+  sgSelectShipmentsTable.DefaultDrawing := False;
+
   sgSelectShipmentsTable.Cells[0, 0] := 'Название';
   sgSelectShipmentsTable.Cells[1, 0] := 'ID';
   sgSelectShipmentsTable.Cells[2, 0] := 'Отправитель';
@@ -287,6 +315,8 @@ begin
   sgSelectShipmentsTable.Cells[6, 0] := 'Товар';
   sgSelectShipmentsTable.Cells[7, 0] := 'Артикул';
   sgSelectShipmentsTable.Cells[8, 0] := 'Количество';
+  sgSelectShipmentsTable.Cells[CHECKBOX_COL, 0] := 'Выбрать';
+
   //sgSelectShipmentsTable.Cells[9, 0] := 'Выбрать';
 
   sgSelectShipmentsTable.RowCount := 0;
@@ -296,7 +326,7 @@ begin
   sgSelectShipmentsTable.OnDrawCell := sgSelectShipmentsTableDrawCell;
   sgSelectShipmentsTable.OnMouseDown := sgSelectShipmentsTableMouseDown;
 
-  sgSelectShipmentsTable.Cells[CHECKBOX_COL, 0] := 'Выбрать';
+
 
 end;
 

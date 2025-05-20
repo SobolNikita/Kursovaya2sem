@@ -310,6 +310,9 @@ type
     procedure edAddItemDestIDChange(Sender: TObject);
     procedure edAddItemVolChange(Sender: TObject);
     procedure edAddItemCntChange(Sender: TObject);
+    procedure edCreateShipmentNameExit(Sender: TObject);
+    procedure edFilterStreetValExit(Sender: TObject);
+    procedure edAddItemCategoryExit(Sender: TObject);
 
   private
     { Private declarations }
@@ -1053,6 +1056,11 @@ begin
 end;
 
 
+procedure TfrMainForm.edAddItemCategoryExit(Sender: TObject);
+begin
+  (Sender as TEdit).Text := Trim((Sender as TEdit).Text);
+end;
+
 procedure TfrMainForm.edAddItemCntChange(Sender: TObject);
 begin
   validateIntegerInput(Sender);
@@ -1078,6 +1086,7 @@ end;
 
 procedure TfrMainForm.edAddItemDestNameExit(Sender: TObject);
 begin
+  edAddItemDestName.Text := Trim(edAddItemDestName.Text);
   updateID(edAddItemDestID,
            rbAddItemTypeShop,
            edAddItemDestName);
@@ -1086,6 +1095,7 @@ end;
 
 procedure TfrMainForm.edAddItemNameExit(Sender: TObject);
 begin
+  edAddItemName.Text := Trim(edAddItemName.Text);
   if validateLength(edAddItemName) then
     (Sender as TEdit).color := clWindow
 end;
@@ -1124,6 +1134,7 @@ begin
   validateIntegerInput(Sender);
 end;
 
+
 procedure TfrMainForm.edCreateShipmentDestIDChange(Sender: TObject);
 begin
   validateIntegerInput(Sender);
@@ -1137,10 +1148,9 @@ begin
 end;
 
 
-
-
 procedure TfrMainForm.edCreateShipmentDestNameExit(Sender: TObject);
 begin
+  edCreateShipmentDestName.Text := Trim(edCreateShipmentDestName.Text);
   updateID(edCreateShipmentDestID,
            rbCreateShipmentDestShop,
            edCreateShipmentDestName);
@@ -1179,6 +1189,7 @@ var
   senderNode: PTreapNode;
   itemNode: PTreapItemNode;
 begin
+  edCreateShipmentItemName.Text := Trim(edCreateShipmentItemName.Text);
   if Length(edCreateShipmentSenderID.Text) > 0 then
   begin
     if rbCreateShipmentSenderShop.Checked then
@@ -1191,6 +1202,11 @@ begin
   else
     edCreateShipmentItemID.Text := '';
   end;
+end;
+
+procedure TfrMainForm.edCreateShipmentNameExit(Sender: TObject);
+begin
+  edCreateShipmentName.Text := Trim(edCreateShipmentName.Text);
 end;
 
 procedure TfrMainForm.edCreateShipmentSenderIDChange(Sender: TObject);
@@ -1209,6 +1225,7 @@ end;
 
 procedure TfrMainForm.edCreateShipmentSenderNameExit(Sender: TObject);
 begin
+  edCreateShipmentSenderName.Text := Trim(edCreateShipmentSenderName.Text);
   updateID(edCreateShipmentSenderID,
            rbCreateShipmentSenderShop,
            edCreateShipmentSenderName);
@@ -1264,6 +1281,11 @@ end;
 procedure TfrMainForm.edFilterHouseValChange(Sender: TObject);
 begin
   validateIntegerInput(Sender);
+end;
+
+procedure TfrMainForm.edFilterStreetValExit(Sender: TObject);
+begin
+  edFilterStreetVal.Text := Trim(edFilterStreetVal.Text);
 end;
 
 procedure TfrMainForm.edFilterUsedCapacityFromValChange(Sender: TObject);
@@ -1494,12 +1516,18 @@ end;
 
 procedure TfrMainForm.OnClickValidateLength(Sender: TObject);
 begin
+  edCreateObjName.Text := Trim(edCreateObjName.Text);
+  edEditObjName.Text := Trim(edEditObjName.Text);
+
   if validateLength(Sender) then
     (Sender as TEdit).color := clWindow;
 end;
 
 procedure TfrMainForm.OnClickvalidateAll(Sender: TObject);
 begin
+  edCreateObjStreet.Text := Trim(edCreateObjStreet.Text);
+  edEditObjStreet.Text := trim(edEditObjStreet.Text);
+
   if (validateLength(Sender)) and (validateLetters(Sender)) then
   begin
     (Sender as TEdit).color := clWindow;
@@ -2124,6 +2152,7 @@ begin
   frSelectShipments := TfrSelectShipments.Create(Application);
   frSelectShipments.LoadData(@shipments);
   frSelectShipments.ShowModal;
+  pbMap.Invalidate;
 end;
 
 procedure TfrMainForm.N16Click(Sender: TObject);
@@ -2149,6 +2178,7 @@ begin
       curShipment := curShipment^.next;
       Dispose(prev);
     end;
+    pbMap.Invalidate;
     if not allDone then
       ShowMessage('Ошибка', 'Произошла ошибка!')
     else

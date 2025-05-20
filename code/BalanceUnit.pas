@@ -19,6 +19,8 @@ type
     procedure showDataObject(const item: PTreapNode; var i: integer);
     procedure showDataItem(const curObject: PTreapNode; const item: PTreapItemNode; var i: integer);
     procedure FormResize(Sender: TObject);
+    procedure sgBalanceTableDrawCell(Sender: TObject; ACol, ARow: LongInt;
+      Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
   public
@@ -60,6 +62,22 @@ begin
     Result := Result + getSizObject(item^.Left);
     Result := Result + getSizObject(item^.Right);
   end;
+end;
+
+procedure TfrBalance.sgBalanceTableDrawCell(Sender: TObject; ACol,
+  ARow: LongInt; Rect: TRect; State: TGridDrawState);
+var
+  S: string;
+begin
+  S := sgBalanceTable.Cells[ACol, ARow];
+  sgBalanceTable.Canvas.FillRect(Rect);
+
+  DrawText(
+    sgBalanceTable.Canvas.Handle,
+    PChar(S), Length(S),
+    Rect,
+    DT_WORDBREAK or DT_NOPREFIX or DT_LEFT
+  );
 end;
 
 procedure TfrBalance.showDataItem(const curObject: PTreapNode; const item: PTreapItemNode; var i: integer);
@@ -151,6 +169,8 @@ begin
   sgBalanceTable.Cells[9, 0] := 'Занято товаром';
 
   sgBalanceTable.RowCount := 0;
+
+  sgBalanceTable.DefaultDrawing := false;
 end;
 
 procedure TfrBalance.FormResize(Sender: TObject);

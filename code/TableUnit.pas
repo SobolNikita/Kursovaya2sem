@@ -17,6 +17,8 @@ type
     procedure LoadData;
     procedure SetDataToTable(const root: PTreapItemNode; var i: integer);
     procedure FormResize(Sender: TObject);
+    procedure sgItemsTableDrawCell(Sender: TObject; ACol, ARow: LongInt;
+      Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
   public
@@ -58,6 +60,21 @@ begin
   end;
 end;
 
+procedure TfrTableForm.sgItemsTableDrawCell(Sender: TObject; ACol,
+  ARow: LongInt; Rect: TRect; State: TGridDrawState);
+var
+  S: string;
+begin
+  S := sgItemsTable.Cells[ACol, ARow];
+  sgItemsTable.Canvas.FillRect(Rect);
+
+  DrawText(
+    sgItemsTable.Canvas.Handle,
+    PChar(S), Length(S),
+    Rect,
+    DT_WORDBREAK or DT_NOPREFIX or DT_LEFT
+  );
+end;
 procedure TfrTableForm.LoadData;
 var
   siz, i: integer;
@@ -102,7 +119,8 @@ begin
                                -sgItemsTable.ColWidths[1]
                                -sgItemsTable.ColWidths[2]
                                -sgItemsTable.ColWidths[3]
-                               -sgItemsTable.ColCount * sgItemsTable.GridLineWidth;  // Артикул (17.1%)
+                               -sgItemsTable.ColCount * sgItemsTable.GridLineWidth
+                               - 7;  // Артикул (17.1%)
 
   sgItemsTable.Cells[0, 0] := 'Название';
   sgItemsTable.Cells[1, 0] := 'Категория';
@@ -112,6 +130,7 @@ begin
 
   sgItemsTable.RowCount := 0;
 
+  sgItemsTable.DefaultDrawing := false;
 end;
 
 procedure TfrTableForm.FormResize(Sender: TObject);
