@@ -2101,6 +2101,10 @@ begin
       resetPnCreateObj;
       hideAllPanels;
       spMapPoint.visible := false;
+
+      ApplyFilter(shops, filter);
+      ApplyFilter(warehouses, filter);
+      pbMap.Invalidate;
     end;
   end;
 end;

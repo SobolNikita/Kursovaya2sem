@@ -1504,7 +1504,6 @@ object frMainForm: TfrMainForm
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
-        ExplicitTop = 67
         DesignSize = (
           135
           23)
@@ -1540,7 +1539,6 @@ object frMainForm: TfrMainForm
         TabOrder = 1
         OnChange = edAddItemNameChange
         OnExit = edAddItemNameExit
-        ExplicitTop = 11
       end
       object edAddItemDestName: TEdit
         Left = 201
@@ -1551,7 +1549,6 @@ object frMainForm: TfrMainForm
         TabOrder = 2
         OnChange = edAddItemDestNameChange
         OnExit = edAddItemDestNameExit
-        ExplicitTop = 98
       end
       object edAddItemDestID: TEdit
         Left = 201
@@ -1563,7 +1560,6 @@ object frMainForm: TfrMainForm
         TabOrder = 3
         OnChange = edAddItemDestIDChange
         OnExit = edAddItemDestIDExit
-        ExplicitTop = 127
       end
       object edAddItemVol: TEdit
         Left = 201
@@ -1575,7 +1571,6 @@ object frMainForm: TfrMainForm
         TabOrder = 4
         OnChange = edAddItemVolChange
         OnExit = edAddItemVolExit
-        ExplicitTop = 156
       end
       object edAddItemCnt: TEdit
         Left = 201
@@ -1587,7 +1582,6 @@ object frMainForm: TfrMainForm
         TabOrder = 5
         OnChange = edAddItemCntChange
         OnExit = edAddItemCntExit
-        ExplicitTop = 185
       end
       object btnAddItemCancel: TButton
         Left = 11
@@ -1602,7 +1596,6 @@ object frMainForm: TfrMainForm
         Caption = #1054#1090#1084#1077#1085#1072
         TabOrder = 6
         OnClick = btnAddItemCancelClick
-        ExplicitTop = 226
       end
       object btnAddItemConfirm: TButton
         Left = 184
@@ -1617,7 +1610,6 @@ object frMainForm: TfrMainForm
         Caption = #1044#1086#1073#1072#1074#1080#1090#1100
         TabOrder = 7
         OnClick = btnAddItemConfirmClick
-        ExplicitTop = 226
       end
       object edAddItemCategory: TEdit
         Left = 201
@@ -1629,7 +1621,6 @@ object frMainForm: TfrMainForm
         TextHint = #1054#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090
         OnChange = edAddItemCategoryChange
         OnExit = edAddItemCategoryExit
-        ExplicitTop = 40
       end
     end
     object pnArrowInfo: TPanel
