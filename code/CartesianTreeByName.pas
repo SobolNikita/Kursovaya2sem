@@ -122,19 +122,28 @@ procedure InsertTreapName(var Root, NewNode: PTreapNameNode);
 var
   L, R: PTreapNameNode;
 begin
-
   if Root = nil then
   begin
-    SplitTreapName(Root, newNode^.Data^.Key, L, R);
+    NewNode^.Left := nil;
+    NewNode^.Right := nil;
+    Root := NewNode;
+  end
+  else if NewNode^.Priority > Root^.Priority then
+  begin
+    SplitTreapName(Root, NewNode^.Data^.Key, L, R);
     NewNode^.Left  := L;
     NewNode^.Right := R;
     Root := NewNode;
   end
-  else if newNode.Data^.Key < Root^.Data^.Key then
-    InsertTreapName(Root^.Left, NewNode)
   else
-    InsertTreapName(Root^.Right, NewNode);
+  begin
+    if NewNode^.Data^.Key < Root^.Data^.Key then
+      InsertTreapName(Root^.Left, NewNode)
+    else
+      InsertTreapName(Root^.Right, NewNode);
+  end;
 end;
+
 
 procedure EraseTreapName(var Root: PTreapNameNode; const Key: Integer);
 var

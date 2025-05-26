@@ -45,11 +45,11 @@ begin
 
     found := false;
     i := 0;
-    while (not found) and (i < shipment^.DestinationID^.OutgoingArrows.Count) do
+    while (not found) and (i < shipment^.DestinationID^.IncomingArrows.Count) do
     begin
-      if shipment^.DestinationID^.OutgoingArrows[i]^.shipment = shipment then
+      if shipment^.DestinationID^.IncomingArrows[i]^.shipment = shipment then
       begin
-        shipment^.DestinationID^.OutgoingArrows.Remove(shipment^.DestinationID^.OutgoingArrows[i]);
+        shipment^.DestinationID^.IncomingArrows.Remove(shipment^.DestinationID^.IncomingArrows[i]);
         found := true;
       end;
       Inc(i);

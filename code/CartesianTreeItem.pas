@@ -93,19 +93,28 @@ procedure InsertTreapItem(var Root, NewNode: PTreapItemNode);
 var
   L, R: PTreapItemNode;
 begin
-
   if Root = nil then
+  begin
+    NewNode^.Left := nil;
+    NewNode^.Right := nil;
+    Root := NewNode;
+  end
+  else if NewNode^.Priority > Root^.Priority then
   begin
     SplitTreapItem(Root, NewNode^.Data^.Key, L, R);
     NewNode^.Left  := L;
     NewNode^.Right := R;
     Root := NewNode;
   end
-  else if NewNode^.Data^.Key < Root^.Data^.Key then
-    InsertTreapItem(Root^.Left, NewNode)
   else
-    InsertTreapItem(Root^.Right, NewNode);
+  begin
+    if NewNode^.Data^.Key < Root^.Data^.Key then
+      InsertTreapItem(Root^.Left, NewNode)
+    else
+      InsertTreapItem(Root^.Right, NewNode);
+  end;
 end;
+
 
 procedure EraseTreapItem(var Root: PTreapItemNode; const Key: Integer);
 var

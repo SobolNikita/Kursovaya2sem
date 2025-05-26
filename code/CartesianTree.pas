@@ -71,7 +71,7 @@ end;
 
 function MergeTreap(var L, R: PTreapNode): PTreapNode;
 begin
-    if L = nil then
+  if L = nil then
     Exit(R);
   if R = nil then
     Exit(L);
@@ -95,15 +95,24 @@ var
 begin
   if Root = nil then
   begin
+    NewNode^.Left := nil;
+    NewNode^.Right := nil;
+    Root := NewNode;
+  end
+  else if NewNode^.Priority > Root^.Priority then
+  begin
     SplitTreap(Root, NewNode^.Data^.Key, L, R);
     NewNode^.Left  := L;
     NewNode^.Right := R;
     Root := NewNode;
   end
-  else if NewNode^.Data^.Key < Root^.Data^.Key then
-    InsertTreap(Root^.Left, NewNode)
   else
-    InsertTreap(Root^.Right, NewNode);
+  begin
+    if NewNode^.Data^.Key < Root^.Data^.Key then
+      InsertTreap(Root^.Left, NewNode)
+    else
+      InsertTreap(Root^.Right, NewNode);
+  end;
 end;
 
 procedure EraseTreap(var Root: PTreapNode; const Key: Integer);

@@ -31,9 +31,8 @@ object frBalance: TfrBalance
     Height = 640
     Align = alClient
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSizing, goColSizing, goFixedRowDefAlign]
+    ScrollBars = ssVertical
     TabOrder = 1
     OnDrawCell = sgBalanceTableDrawCell
-    ExplicitWidth = 1270
-    ExplicitHeight = 608
   end
 end

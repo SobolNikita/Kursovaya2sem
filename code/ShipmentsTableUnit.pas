@@ -31,7 +31,6 @@ var
 
 {$R *.dfm}
 
-
 procedure TfrShipmentsTable.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
@@ -129,8 +128,7 @@ begin
                                -sgShipmentsTable.ColWidths[5]
                                -sgShipmentsTable.ColWidths[6]
                                -sgShipmentsTable.ColWidths[7]
-                               -sgShipmentsTable.ColCount * sgShipmentsTable.GridLineWidth
-                               -11;
+                               -sgShipmentsTable.ColCount * sgShipmentsTable.GridLineWidth;
 
   sgShipmentsTable.Cells[0, 0] := 'Название';
   sgShipmentsTable.Cells[1, 0] := 'ID';

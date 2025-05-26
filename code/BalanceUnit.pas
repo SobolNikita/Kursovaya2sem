@@ -154,8 +154,7 @@ begin
                                -sgBalanceTable.ColWidths[6]
                                -sgBalanceTable.ColWidths[7]
                                -sgBalanceTable.ColWidths[8]
-                               -sgBalanceTable.ColCount * sgBalanceTable.GridLineWidth
-                               -12;
+                               -sgBalanceTable.ColCount * sgBalanceTable.GridLineWidth;
 
   sgBalanceTable.Cells[0, 0] := 'Объект';
   sgBalanceTable.Cells[1, 0] := 'Тип';

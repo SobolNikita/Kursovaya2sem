@@ -301,8 +301,7 @@ begin
                                -sgSelectShipmentsTable.ColWidths[6]
                                -sgSelectShipmentsTable.ColWidths[7]
                                -sgSelectShipmentsTable.ColWidths[8]
-                               -sgSelectShipmentsTable.ColCount * sgSelectShipmentsTable.GridLineWidth
-                               -12;
+                               -sgSelectShipmentsTable.ColCount * sgSelectShipmentsTable.GridLineWidth;
 
   sgSelectShipmentsTable.DefaultDrawing := False;
 

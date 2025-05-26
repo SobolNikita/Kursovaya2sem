@@ -36,6 +36,7 @@ object frTableForm: TfrTableForm
     Height = 623
     Align = alClient
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSizing, goColSizing, goFixedRowDefAlign]
+    ScrollBars = ssVertical
     TabOrder = 1
     OnDrawCell = sgItemsTableDrawCell
     ExplicitWidth = 1270

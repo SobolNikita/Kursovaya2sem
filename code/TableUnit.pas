@@ -119,8 +119,7 @@ begin
                                -sgItemsTable.ColWidths[1]
                                -sgItemsTable.ColWidths[2]
                                -sgItemsTable.ColWidths[3]
-                               -sgItemsTable.ColCount * sgItemsTable.GridLineWidth
-                               - 7;  // Артикул (17.1%)
+                               -sgItemsTable.ColCount * sgItemsTable.GridLineWidth;  // Артикул (17.1%)
 
   sgItemsTable.Cells[0, 0] := 'Название';
   sgItemsTable.Cells[1, 0] := 'Категория';

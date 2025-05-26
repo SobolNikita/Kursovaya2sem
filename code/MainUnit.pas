@@ -364,10 +364,11 @@ implementation
 procedure TfrMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   if not Saved then
-    if not getConfirmation('Подтверждение', 'Выйти без сохранения?') then
+    if getConfirmation('Подтверждение', 'Сохранить изменения?') then
     begin
       Save1Click(self);
     end;
+  Action := caFree;
 end;
 
 procedure TfrMainForm.FormCreate(Sender: TObject);
@@ -1242,7 +1243,9 @@ begin
       senderNode := FindTreap(shops, strToInt(edCreateShipmentSenderID.Text) or mask)
     else
       senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
-  itemNode := FindTreapItem(senderNode^.Data^.Items, getHash(edCreateShipmentItemName.Text));
+  itemNode := nil;
+  if senderNode <> nil then
+    itemNode := FindTreapItem(senderNode^.Data^.Items, getHash(edCreateShipmentItemName.Text));
   if itemNode <> nil then
     edCreateShipmentItemID.Text := intToStr(getHash(edCreateShipmentItemName.Text))
   else

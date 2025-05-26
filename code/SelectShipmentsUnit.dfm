@@ -21,10 +21,9 @@ object frSelectShipments: TfrSelectShipments
     Height = 656
     Align = alClient
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSizing, goColSizing, goFixedRowDefAlign]
+    ScrollBars = ssVertical
     TabOrder = 0
     OnDrawCell = sgSelectShipmentsTableDrawCell
-    ExplicitWidth = 1270
-    ExplicitHeight = 624
   end
   object pnSelectShipments: TPanel
     Left = 0
