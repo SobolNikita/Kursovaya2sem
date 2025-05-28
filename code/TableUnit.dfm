@@ -39,6 +39,7 @@ object frTableForm: TfrTableForm
     ScrollBars = ssVertical
     TabOrder = 1
     OnDrawCell = sgItemsTableDrawCell
+    OnTopLeftChanged = sgItemsTableTopLeftChanged
     ExplicitWidth = 1270
     ExplicitHeight = 591
     RowHeights = (

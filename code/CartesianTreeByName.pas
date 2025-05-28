@@ -5,7 +5,7 @@ interface
   uses Vcl.ExtCtrls, Hash, Types;
 
   function CreateNewNameNode(const name: string; const ID: integer): PTreapNameNode;
-  procedure SplitTreapName(var t: PTreapNameNode; const key: Integer; var L, R: PTreapNameNode);
+  procedure SplitTreapName(t: PTreapNameNode; const key: Integer; var L, R: PTreapNameNode);
   function MergeTreapName(var L, R: PTreapNameNode): PTreapNameNode;
   procedure InsertTreapName(var Root, NewNode: PTreapNameNode);
   procedure EraseTreapName(var Root: PTreapNameNode; const Key: Integer);
@@ -78,7 +78,7 @@ begin
 end;
 
 
-procedure SplitTreapName(var t: PTreapNameNode; const key: Integer; var L, R: PTreapNameNode);
+procedure SplitTreapName(t: PTreapNameNode; const key: Integer; var L, R: PTreapNameNode);
 begin
   if t = nil then
   begin

@@ -4,7 +4,7 @@ interface
   uses Vcl.ExtCtrls, Types;
 
   function CreateNewItemNode(const Data: PItem): PTreapItemNode;
-  procedure SplitTreapItem(var t: PTreapItemNode; const key: Integer; var L, R: PTreapItemNode);
+  procedure SplitTreapItem(t: PTreapItemNode; const key: Integer; var L, R: PTreapItemNode);
   function MergeTreapItem(var L, R: PTreapItemNode): PTreapItemNode;
   procedure InsertTreapItem(var Root, NewNode: PTreapItemNode);
   procedure EraseTreapItem(var Root: PTreapItemNode; const Key: Integer);
@@ -49,7 +49,7 @@ begin
 end;
 
 
-procedure SplitTreapItem(var t: PTreapItemNode; const key: Integer; var L, R: PTreapItemNode);
+procedure SplitTreapItem(t: PTreapItemNode; const key: Integer; var L, R: PTreapItemNode);
 begin
   if t = nil then
   begin

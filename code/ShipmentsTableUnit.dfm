@@ -28,5 +28,6 @@ object frShipmentsTable: TfrShipmentsTable
     ScrollBars = ssVertical
     TabOrder = 0
     OnDrawCell = sgShipmentsTableDrawCell
+    OnTopLeftChanged = sgShipmentsTableTopLeftChanged
   end
 end

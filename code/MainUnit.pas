@@ -324,7 +324,7 @@ type
     procedure edAddItemNameChange(Sender: TObject);
     procedure edAddItemCategoryChange(Sender: TObject);
     procedure edAddItemDestNameChange(Sender: TObject);
-
+    procedure CreateParams(var Params: TCreateParams); override;
   private
     { Private declarations }
     xPos, yPos: integer;
@@ -359,7 +359,11 @@ var
 implementation
 
 {$R *.dfm}
-
+procedure TfrMainForm.CreateParams(var Params: TCreateParams);
+begin
+  inherited CreateParams(Params);
+  Params.ExStyle := Params.ExStyle or WS_EX_COMPOSITED;
+end;
 
 procedure TfrMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -1215,14 +1219,17 @@ begin
     else
       senderNode := FindTreap(warehouses, strToInt(edCreateShipmentSenderID.Text));
     itemNode := nil;
-    if Length(edCreateShipmentItemID.Text) > 0 then
+    if (Length(edCreateShipmentItemID.Text) > 0) and (senderNode <> nil) then
       itemNode := FindTreapItem(senderNode^.Data^.Items, strToInt(edCreateShipmentItemID.Text));
     if itemNode <> nil then
       edCreateShipmentItemName.Text := string(itemNode^.Data^.name)
     else
       edCreateShipmentItemName.Text := '';
+  end
+  else
+  begin
+    edCreateShipmentItemName.Text := '';
   end;
-
 end;
 
 
@@ -1249,6 +1256,10 @@ begin
   if itemNode <> nil then
     edCreateShipmentItemID.Text := intToStr(getHash(edCreateShipmentItemName.Text))
   else
+    edCreateShipmentItemID.Text := '';
+  end
+  else
+  begin
     edCreateShipmentItemID.Text := '';
   end;
 end;

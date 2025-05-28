@@ -26,6 +26,7 @@ type
     procedure btnSelectResetClick(Sender: TObject);
     procedure btnSelectConfirmClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure sgSelectShipmentsTableTopLeftChanged(Sender: TObject);
   private
     { Private declarations }
     procedure ToggleCheckbox(const ARow: Integer);
@@ -258,6 +259,12 @@ begin
       ToggleCheckbox(ARow);
     end;
   end;
+end;
+
+procedure TfrSelectShipments.sgSelectShipmentsTableTopLeftChanged(
+  Sender: TObject);
+begin
+  sgSelectShipmentsTable.LeftCol := 1;
 end;
 
 procedure TfrSelectShipments.ToggleCheckbox(const ARow: Integer);

@@ -21,6 +21,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure sgBalanceTableDrawCell(Sender: TObject; ACol, ARow: LongInt;
       Rect: TRect; State: TGridDrawState);
+    procedure sgBalanceTableTopLeftChanged(Sender: TObject);
   private
     { Private declarations }
   public
@@ -78,6 +79,11 @@ begin
     Rect,
     DT_WORDBREAK or DT_NOPREFIX or DT_LEFT
   );
+end;
+
+procedure TfrBalance.sgBalanceTableTopLeftChanged(Sender: TObject);
+begin
+  sgBalanceTable.LeftCol := 1;
 end;
 
 procedure TfrBalance.showDataItem(const curObject: PTreapNode; const item: PTreapItemNode; var i: integer);

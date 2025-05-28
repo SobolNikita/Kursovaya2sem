@@ -24,6 +24,9 @@ object frSelectShipments: TfrSelectShipments
     ScrollBars = ssVertical
     TabOrder = 0
     OnDrawCell = sgSelectShipmentsTableDrawCell
+    OnTopLeftChanged = sgSelectShipmentsTableTopLeftChanged
+    ExplicitWidth = 1270
+    ExplicitHeight = 624
   end
   object pnSelectShipments: TPanel
     Left = 0

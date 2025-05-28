@@ -19,6 +19,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure sgItemsTableDrawCell(Sender: TObject; ACol, ARow: LongInt;
       Rect: TRect; State: TGridDrawState);
+    procedure sgItemsTableTopLeftChanged(Sender: TObject);
   private
     { Private declarations }
   public
@@ -75,6 +76,12 @@ begin
     DT_WORDBREAK or DT_NOPREFIX or DT_LEFT
   );
 end;
+procedure TfrTableForm.sgItemsTableTopLeftChanged(Sender: TObject);
+begin
+  sgItemsTable.LeftCol := 1;
+end;
+
+
 procedure TfrTableForm.LoadData;
 var
   siz, i: integer;

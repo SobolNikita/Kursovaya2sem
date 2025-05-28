@@ -61,7 +61,7 @@ object frMainForm: TfrMainForm
       Height = 127
       AutoSize = True
       ParentBackground = False
-      TabOrder = 0
+      TabOrder = 9
       Visible = False
       object btnCreateSelectShop: TButton
         Tag = 1
@@ -124,7 +124,7 @@ object frMainForm: TfrMainForm
       Padding.Bottom = 10
       ParentBackground = False
       ParentCtl3D = False
-      TabOrder = 1
+      TabOrder = 0
       Visible = False
       object lbCreateObjName: TLabel
         Left = 11
@@ -247,7 +247,7 @@ object frMainForm: TfrMainForm
       Height = 105
       AutoSize = True
       ParentBackground = False
-      TabOrder = 2
+      TabOrder = 1
       Visible = False
       object btnSelectObjEdit: TButton
         AlignWithMargins = True
@@ -319,7 +319,7 @@ object frMainForm: TfrMainForm
       Padding.Bottom = 10
       ParentBackground = False
       ParentCtl3D = False
-      TabOrder = 3
+      TabOrder = 2
       Visible = False
       object lbEditObjName: TLabel
         Left = 11
@@ -442,12 +442,14 @@ object frMainForm: TfrMainForm
       Height = 246
       AutoSize = True
       Ctl3D = True
+      DoubleBuffered = True
       Padding.Left = 10
       Padding.Top = 5
       Padding.Right = 10
       Padding.Bottom = 10
       ParentBackground = False
       ParentCtl3D = False
+      ParentDoubleBuffered = False
       TabOrder = 4
       Visible = False
       object lbObjInfoName: TLabel
@@ -619,7 +621,7 @@ object frMainForm: TfrMainForm
       Height = 74
       AutoSize = True
       ParentBackground = False
-      TabOrder = 5
+      TabOrder = 3
       object btnFilter: TButton
         AlignWithMargins = True
         Left = 29
@@ -653,7 +655,7 @@ object frMainForm: TfrMainForm
       Padding.Right = 10
       Padding.Bottom = 10
       ParentBackground = False
-      TabOrder = 6
+      TabOrder = 5
       Visible = False
       object pnFilterButtons: TPanel
         AlignWithMargins = True
@@ -1046,7 +1048,7 @@ object frMainForm: TfrMainForm
       Padding.Right = 10
       Padding.Bottom = 10
       ParentBackground = False
-      TabOrder = 7
+      TabOrder = 6
       Visible = False
       DesignSize = (
         335
@@ -1397,7 +1399,7 @@ object frMainForm: TfrMainForm
       Padding.Right = 10
       Padding.Bottom = 10
       ParentBackground = False
-      TabOrder = 8
+      TabOrder = 7
       Visible = False
       DesignSize = (
         353
@@ -1635,7 +1637,7 @@ object frMainForm: TfrMainForm
       Padding.Right = 15
       Padding.Bottom = 15
       ParentBackground = False
-      TabOrder = 9
+      TabOrder = 8
       Visible = False
       object lbArrowInfoShipmentName: TLabel
         AlignWithMargins = True

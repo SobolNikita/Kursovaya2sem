@@ -15,6 +15,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure sgShipmentsTableDrawCell(Sender: TObject; ACol, ARow: LongInt;
       Rect: TRect; State: TGridDrawState);
+    procedure sgShipmentsTableTopLeftChanged(Sender: TObject);
   private
     { Private declarations }
   public
@@ -97,6 +98,11 @@ begin
     Rect,
     DT_WORDBREAK or DT_NOPREFIX or DT_LEFT
   );
+end;
+
+procedure TfrShipmentsTable.sgShipmentsTableTopLeftChanged(Sender: TObject);
+begin
+  sgShipmentsTable.LeftCol := 1;
 end;
 
 procedure TfrShipmentsTable.FormCreate(Sender: TObject);

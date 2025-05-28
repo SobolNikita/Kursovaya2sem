@@ -4,7 +4,7 @@ interface
 
   uses Vcl.ExtCtrls, CartesianTreeItem, System.Generics.Collections, Types;
 
-  procedure SplitTreap(var t: PTreapNode; const key: Integer; var L, R: PTreapNode);
+  procedure SplitTreap(t: PTreapNode; const key: Integer; var L, R: PTreapNode);
   function MergeTreap(var L, R: PTreapNode): PTreapNode;
   procedure InsertTreap(var Root: PTreapNode; var NewNode: PTreapNode);
   procedure EraseTreap(var Root: PTreapNode; const Key: Integer);
@@ -49,7 +49,7 @@ begin
   end;
 end;
 
-procedure SplitTreap(var t: PTreapNode; const key: Integer; var L, R: PTreapNode);
+procedure SplitTreap(t: PTreapNode; const key: Integer; var L, R: PTreapNode);
 begin
   if t = nil then
   begin

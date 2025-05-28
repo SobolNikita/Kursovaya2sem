@@ -34,5 +34,8 @@ object frBalance: TfrBalance
     ScrollBars = ssVertical
     TabOrder = 1
     OnDrawCell = sgBalanceTableDrawCell
+    OnTopLeftChanged = sgBalanceTableTopLeftChanged
+    ExplicitWidth = 1270
+    ExplicitHeight = 608
   end
 end
